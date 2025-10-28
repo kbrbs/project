@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rooted in Knowledge — The Sweet Root of Bustos</title>
+    <!-- Tailwind via CDN for prototyping -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for interactivity -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- AOS.js for scroll animations -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <!-- Chart.js placeholder -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* soft palette and floating cookie animation */
+      :root{--cream:#FFF9F0;--leaf:#7CB67E;--brown:#8B5E3C;--gold:#D8B372}
+      .floating-cookie{animation: floaty 6s ease-in-out infinite}
+      @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+    </style>
+  </head>
+  <body class="bg-[color:var(--cream)] text-gray-800 font-sans leading-relaxed">
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-[color:var(--brown)] rounded-full flex items-center justify-center text-white font-bold">R</div>
+          <div>
+            <h1 class="text-lg font-semibold">Rooted in Knowledge</h1>
+            <p class="text-xs text-gray-500">The Sweet Root of Bustos</p>
+          </div>
+        </a>
+        <nav class="hidden md:flex gap-4 items-center">
+          <a href="/lessons/" class="text-sm hover:text-[color:var(--leaf)]">Lessons</a>
+          <a href="/festival-tour/" class="text-sm hover:text-[color:var(--leaf)]">Festival Tour</a>
+          <a href="/quizzes/" class="text-sm hover:text-[color:var(--leaf)]">Quizzes</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'core:profile' %}" class="text-sm hover:text-[color:var(--leaf)]">Profile</a>
+            <a href="{% url 'logout' %}" class="text-sm text-white bg-[color:var(--brown)] px-3 py-1 rounded">Logout</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="text-sm text-white bg-[color:var(--leaf)] px-3 py-1 rounded">Login</a>
+            <a href="{% url 'core:signup' %}" class="text-sm text-[color:var(--brown)] border border-[color:var(--brown)] px-3 py-1 rounded">Sign up</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+      {% if messages %}
+        <div class="mb-6">
+          {% for message in messages %}
+            <div class="p-4 rounded mb-2 {% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-50 border border-red-200 text-red-800{% else %}bg-gray-50 border border-gray-200 text-gray-800{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white mt-12 py-6 border-t">
+      <div class="max-w-6xl mx-auto px-4 text-sm text-gray-600">
+  © Rooted in Knowledge — Local pride, learning through play.
+      </div>
+    </footer>
+
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>
