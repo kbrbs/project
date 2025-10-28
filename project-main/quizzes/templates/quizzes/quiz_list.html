@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2 class="text-2xl font-bold">Quizzes</h2>
+  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+    {% for q in quizzes %}
+      <div class="bg-white p-4 rounded shadow">
+        <h3 class="font-semibold">{{ q.title }}</h3>
+        <a href="/quizzes/{{ q.id }}/" class="text-[color:var(--leaf)] inline-block mt-2">Open quiz →</a>
+      </div>
+    {% empty %}
+      <p>No quizzes yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
