@@ -1,59 +1,149 @@
 {% extends 'core/admin_panel/base.html' %}
 
 {% block content %}
-  <div class="flex items-center justify-between mb-4">
-    <h1 class="text-2xl font-semibold">User Management</h1>
-    <a href="{% url 'core:admin_user_add' %}" class="px-3 py-2 bg-green-600 text-white rounded">Add user</a>
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+  <div>
+    <h1 class="text-3xl font-bold text-gray-800">User Management</h1>
+    <p class="text-gray-500 mt-1">Manage student accounts and profiles</p>
   </div>
+  <a href="{% url 'core:admin_user_add' %}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+    </svg>
+    Add User
+  </a>
+</div>
 
-  <div class="bg-white shadow rounded">
-    <table class="min-w-full">
+<!-- Users Table -->
+<div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
-          <th class="px-4 py-2 text-left">User</th>
-          <th class="px-4 py-2">Name</th>
-          <th class="px-4 py-2">Email</th>
-          <th class="px-4 py-2">Grade</th>
-          <th class="px-4 py-2">Birthday / Age</th>
-          <th class="px-4 py-2">Actions</th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            User
+          </th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Name
+          </th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Email
+          </th>
+          <th scope="col" class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Grade
+          </th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Birthday / Age
+          </th>
+          <th scope="col" class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Actions
+          </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="bg-white divide-y divide-gray-200">
         {% for u in users %}
-          <tr class="border-t">
-            <td class="px-4 py-2 flex items-center gap-3">
-              {% if u.studentprofile.profile_picture %}
-                <img src="{{ u.studentprofile.profile_picture.url }}" class="w-10 h-10 rounded-full object-cover" alt="avatar" />
-              {% else %}
-                <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-600">{{ u.username|slice:":1"|upper }}</div>
-              {% endif %}
-              <div>
-                <div class="font-medium">{{ u.username }}</div>
-                <div class="text-xs text-gray-500">@{{ u.username }}</div>
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center gap-3">
+                {% if u.studentprofile.profile_picture %}
+                  <img src="{{ u.studentprofile.profile_picture.url }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-purple-100" alt="avatar" />
+                {% else %}
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center text-sm text-white font-semibold ring-2 ring-purple-100">
+                    {{ u.username|slice:":1"|upper }}
+                  </div>
+                {% endif %}
+                <div>
+                  <div class="font-medium text-gray-900">{{ u.username }}</div>
+                  <div class="text-xs text-gray-500">@{{ u.username }}</div>
+                </div>
               </div>
             </td>
-            <td class="px-4 py-2">{{ u.studentprofile.full_name|default:'-' }}</td>
-            <td class="px-4 py-2">{{ u.email }}</td>
-            <td class="px-4 py-2">{{ u.studentprofile.grade|default:'-' }}</td>
-            <td class="px-4 py-2">{{ u.studentprofile.birthday|date:'Y-m-d'|default:'-' }} <br/> <span class="text-sm text-gray-500">{{ u.studentprofile.age }}</span></td>
-            <td class="px-4 py-2">
-              <a href="{% url 'core:admin_user_edit' u.pk %}" class="text-blue-600">Edit</a>
-              <a href="{% url 'core:admin_user_delete' u.pk %}" class="ml-3 text-red-600">Delete</a>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">{{ u.studentprofile.full_name|default:'-' }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-600">{{ u.email }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-center">
+              <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                {{ u.studentprofile.grade|default:'-' }}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">{{ u.studentprofile.birthday|date:'Y-m-d'|default:'-' }}</div>
+              <div class="text-xs text-gray-500">Age: {{ u.studentprofile.age|default:'-' }}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="flex items-center justify-end gap-2">
+                <a href="{% url 'core:admin_user_edit' u.pk %}" class="inline-flex items-center gap-1 px-3 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                  Edit
+                </a>
+                <a href="{% url 'core:admin_user_delete' u.pk %}" class="inline-flex items-center gap-1 px-3 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  Delete
+                </a>
+              </div>
             </td>
           </tr>
         {% empty %}
-          <tr><td class="p-4" colspan="6">No users yet.</td></tr>
+          <tr>
+            <td colspan="6" class="px-6 py-12">
+              <div class="text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No users yet</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by creating a new user account.</p>
+                <div class="mt-6">
+                  <a href="{% url 'core:admin_user_add' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm font-medium rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    New User
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-  <div class="mt-4">
-    {% if is_paginated %}
-      <div class="flex items-center gap-2">
-        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-200 rounded">Prev</a>{% endif %}
-        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded">Next</a>{% endif %}
+  
+  <!-- Pagination -->
+  {% if is_paginated %}
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-500">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </div>
+        <div class="flex items-center gap-2">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              Previous
+            </a>
+          {% endif %}
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+              Next
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          {% endif %}
+        </div>
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
+</div>
+
 {% endblock %}
