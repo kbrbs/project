@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2 class="text-2xl font-bold">Teacher Dashboard</h2>
+  <p class="text-sm text-gray-600">Quick analytics on lessons and quizzes. Data is fetched live from the analytics API.</p>
+
+  <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="font-semibold">Top Lessons</h3>
+      <canvas id="lessonsChart" class="mt-4"></canvas>
+    </div>
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="font-semibold">Quiz Averages</h3>
+      <canvas id="quizzesChart" class="mt-4"></canvas>
+    </div>
+  </div>
+
+  <script>
+    async function loadAnalytics(){
+      const res = await fetch('/analytics/api/');
+      const data = await res.json();
+
+      // Lessons chart
+      const lessonLabels = data.top_lessons.map(x => x['article__title'] || 'Untitled');
+      const lessonData = data.top_lessons.map(x => x.visits);
+      new Chart(document.getElementById('lessonsChart'), {
+        type: 'bar',
+        data: { labels: lessonLabels, datasets: [{ label: 'Visits', data: lessonData, backgroundColor: '#7CB67E' }] },
+      });
+
+      // Quiz averages
+      const quizLabels = data.quiz_avg.map(x => 'Quiz ' + x.quiz_id);
+      const quizData = data.quiz_avg.map(x => x.avg_score);
+      new Chart(document.getElementById('quizzesChart'), {
+        type: 'bar',
+        data: { labels: quizLabels, datasets: [{ label: 'Avg Score', data: quizData, backgroundColor: '#D8B372' }] },
+      });
+    }
+    loadAnalytics().catch(console.error);
+  </script>
+
+{% endblock %}

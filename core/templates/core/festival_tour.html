@@ -1,0 +1,157 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="mb-8 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 rounded-2xl shadow-sm p-8 relative overflow-hidden">
+  <div class="relative z-10">
+    <h1 class="text-4xl font-bold text-gray-800 mb-3">Virtual Festival Tour</h1>
+    <p class="text-gray-600 max-w-2xl">Experience the vibrant Minasa Festival from anywhere! Scroll through interactive booths, explore stories, and discover the rich cultural heritage of Bustos.</p>
+  </div>
+  <div class="absolute right-0 bottom-0 opacity-20 text-9xl">🎪</div>
+</div>
+
+<!-- Progress Bar -->
+<div class="mb-8 bg-white rounded-2xl shadow-sm p-6">
+  <div class="flex items-center justify-between mb-2">
+    <span class="text-sm font-medium text-gray-700">Tour Progress</span>
+    <span class="text-sm text-gray-500">0 of 5 booths visited</span>
+  </div>
+  <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+    <div class="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+  </div>
+</div>
+
+<!-- Booths Grid -->
+<div class="space-y-6">
+  {% for b in booths %}
+    <section class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'0'|stringformat:'d'|slice:':1' }}0">
+      <div class="p-6">
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+          <!-- Booth Icon -->
+          <div class="flex-shrink-0">
+            <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-orange-100 to-yellow-100 flex items-center justify-center shadow-md">
+              <span class="text-5xl">🍪</span>
+            </div>
+          </div>
+
+          <!-- Booth Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-3 py-1 bg-purple-50 text-purple-600 rounded-full text-xs font-medium">Booth {{ forloop.counter }}</span>
+              <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-medium">Interactive</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">{{ b.title }}</h3>
+            <p class="text-gray-600 text-sm">{{ b.summary }}</p>
+          </div>
+
+          <!-- Action Button -->
+          <div class="flex-shrink-0 w-full md:w-auto">
+            <button 
+              onclick="document.getElementById('booth-{{ b.id }}').classList.toggle('hidden'); this.textContent = document.getElementById('booth-{{ b.id }}').classList.contains('hidden') ? 'Explore Booth' : 'Close'"
+              class="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-200 shadow-sm hover:shadow-md">
+              Explore Booth
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expandable Content -->
+      <div id="booth-{{ b.id }}" class="hidden border-t border-gray-100">
+        <div class="p-6 bg-gradient-to-br from-gray-50 to-white">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column - Content -->
+            <div>
+              <h4 class="text-lg font-bold text-gray-800 mb-3">{{ b.title }} — Interactive Experience</h4>
+              <p class="text-gray-600 text-sm mb-4">Dive deeper into this booth's story! Explore images, watch short videos, or take a quick quiz to test your knowledge about this aspect of the festival.</p>
+              
+              <!-- Features -->
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm text-gray-700">Photo gallery with historical images</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm text-gray-700">Video interviews with locals</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                      <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                    </svg>
+                  </div>
+                  <span class="text-sm text-gray-700">Interactive quiz challenges</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column - Actions -->
+            <div class="space-y-4">
+              <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                <h5 class="font-semibold text-gray-800 mb-3">Related Content</h5>
+                <div class="space-y-2">
+                  <a href="/lessons/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                    <span class="text-sm text-gray-700 group-hover:text-purple-600">View related lessons</span>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                  <a href="/quizzes/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                    <span class="text-sm text-gray-700 group-hover:text-purple-600">Take the booth quiz</span>
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5">
+                <div class="flex items-center gap-2 mb-2">
+                  <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                  <h5 class="font-semibold text-gray-800">Did you know?</h5>
+                </div>
+                <p class="text-sm text-gray-600">The Minasa Festival celebrates the arrowroot harvest and showcases traditional recipes passed down through generations.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% empty %}
+    <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
+      <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">No booths available yet</h3>
+      <p class="text-gray-500 text-sm">The festival tour is being prepared. Check back soon!</p>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Call to Action -->
+<div class="mt-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl shadow-lg p-8 text-center text-white">
+  <h3 class="text-2xl font-bold mb-3">Ready to Learn More?</h3>
+  <p class="mb-6 opacity-90">Explore our full collection of lessons and quizzes about Bustos' cultural heritage.</p>
+  <div class="flex flex-wrap gap-4 justify-center">
+    <a href="/lessons/" class="px-6 py-3 bg-white text-purple-600 font-medium rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-sm">
+      Browse All Lessons
+    </a>
+    <a href="/quizzes/" class="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-opacity-30 transition-all duration-200 border-2 border-white border-opacity-50">
+      Take a Quiz
+    </a>
+  </div>
+</div>
+{% endblock %}
