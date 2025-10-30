@@ -46,26 +46,48 @@ class DashboardView(TemplateView):
         return ctx
 
 
+@staff_member_required
 def visits_json(request):
     # Return visits per day for the last 14 days
     from django.utils import timezone
     from django.db.models.functions import TruncDate
     from django.db.models import Count
-    end = timezone.now()
-    start = end - timezone.timedelta(days=13)
-    qs = Visit.objects.filter(created_at__date__gte=start.date()).annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id')).order_by('day')
-    data = {'labels': [], 'data': []}
-    for r in qs:
-        data['labels'].append(r['day'].isoformat())
-        data['data'].append(r['count'])
-    return JsonResponse(data)
+    try:
+        end = timezone.now()
+        start = end - timezone.timedelta(days=13)
+        qs = Visit.objects.filter(created_at__date__gte=start.date()).annotate(day=TruncDate('created_at')).values('day').annotate(count=Count('id')).order_by('day')
+        data = {'labels': [], 'data': []}
+        
+        # Fill in missing dates with 0
+        current = start.date()
+        visit_dict = {r['day']: r['count'] for r in qs}
+        while current <= end.date():
+            data['labels'].append(current.isoformat())
+            data['data'].append(visit_dict.get(current, 0))
+            current += timezone.timedelta(days=1)
+        
+        return JsonResponse(data)
+    except Exception as e:
+        return JsonResponse({'labels': [], 'data': [], 'error': str(e)})
 
 
+@staff_member_required
 def top_pages_json(request):
     from django.db.models import Count
-    qs = Visit.objects.values('path').annotate(count=Count('id')).order_by('-count')[:10]
-    data = {'labels': [r['path'] for r in qs], 'data': [r['count'] for r in qs]}
-    return JsonResponse(data)
+    try:
+        qs = Visit.objects.values('path').annotate(count=Count('id')).order_by('-count')[:10]
+        data = {'labels': [r['path'] for r in qs], 'data': [r['count'] for r in qs]}
+        
+        # If no data, return sample data
+        if not data['labels']:
+            data = {
+                'labels': ['No visits yet'],
+                'data': [0]
+            }
+        
+        return JsonResponse(data)
+    except Exception as e:
+        return JsonResponse({'labels': ['Error'], 'data': [0], 'error': str(e)})
 
 
 # Generic CRUD views for EducationalSection
