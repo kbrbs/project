@@ -1,0 +1,33 @@
+{% extends 'core/admin_panel/base.html' %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-semibold">Content Moderation</h1>
+  </div>
+
+  <div class="bg-white shadow rounded">
+    <table class="min-w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-2">Content</th>
+          <th class="px-4 py-2">Status</th>
+          <th class="px-4 py-2">Moderator</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ item }}</td>
+            <td class="px-4 py-2">{{ item.get_status_display }}</td>
+            <td class="px-4 py-2">{{ item.moderator }}</td>
+            <td class="px-4 py-2"><a href="{% url 'core:admin_moderation_update' item.pk %}" class="text-blue-600">Manage</a></td>
+          </tr>
+        {% empty %}
+          <tr><td class="p-4" colspan="4">No moderation items yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

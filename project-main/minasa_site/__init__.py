@@ -1,1 +1,0 @@
-# minasa_site package

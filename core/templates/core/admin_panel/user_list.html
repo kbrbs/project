@@ -1,0 +1,59 @@
+{% extends 'core/admin_panel/base.html' %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-semibold">User Management</h1>
+    <a href="{% url 'core:admin_user_add' %}" class="px-3 py-2 bg-green-600 text-white rounded">Add user</a>
+  </div>
+
+  <div class="bg-white shadow rounded">
+    <table class="min-w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-2 text-left">User</th>
+          <th class="px-4 py-2">Name</th>
+          <th class="px-4 py-2">Email</th>
+          <th class="px-4 py-2">Grade</th>
+          <th class="px-4 py-2">Birthday / Age</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <tr class="border-t">
+            <td class="px-4 py-2 flex items-center gap-3">
+              {% if u.studentprofile.profile_picture %}
+                <img src="{{ u.studentprofile.profile_picture.url }}" class="w-10 h-10 rounded-full object-cover" alt="avatar" />
+              {% else %}
+                <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-600">{{ u.username|slice:":1"|upper }}</div>
+              {% endif %}
+              <div>
+                <div class="font-medium">{{ u.username }}</div>
+                <div class="text-xs text-gray-500">@{{ u.username }}</div>
+              </div>
+            </td>
+            <td class="px-4 py-2">{{ u.studentprofile.full_name|default:'-' }}</td>
+            <td class="px-4 py-2">{{ u.email }}</td>
+            <td class="px-4 py-2">{{ u.studentprofile.grade|default:'-' }}</td>
+            <td class="px-4 py-2">{{ u.studentprofile.birthday|date:'Y-m-d'|default:'-' }} <br/> <span class="text-sm text-gray-500">{{ u.studentprofile.age }}</span></td>
+            <td class="px-4 py-2">
+              <a href="{% url 'core:admin_user_edit' u.pk %}" class="text-blue-600">Edit</a>
+              <a href="{% url 'core:admin_user_delete' u.pk %}" class="ml-3 text-red-600">Delete</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td class="p-4" colspan="6">No users yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-4">
+    {% if is_paginated %}
+      <div class="flex items-center gap-2">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-gray-200 rounded">Prev</a>{% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-gray-200 rounded">Next</a>{% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

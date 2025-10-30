@@ -9,6 +9,8 @@ from django.contrib.auth import login as auth_login
 from django.shortcuts import redirect
 from django import forms
 from django.contrib.auth import authenticate, login
+from django.views.decorators.csrf import csrf_protect
+from django.middleware.csrf import get_token as get_csrf_token
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -28,21 +30,30 @@ def home(request):
     featured = Article.objects.all()[:4]
     return render(request, 'core/home.html', {'featured': featured})
 
+	
+@login_required
+def dashboard(request):
+    """
+    User dashboard showing personalized learning stats and quick actions
+    """
+    return render(request, 'core/dashboard.html')
 
+
+@login_required
 def lesson_list(request, category=None):
     qs = Article.objects.all()
     if category:
         qs = qs.filter(category=category)
     return render(request, 'core/lesson_list.html', {'articles': qs, 'category': category})
 
-
+@login_required
 def lesson_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
     # try to find a related quiz
     quiz = Quiz.objects.filter(article=article).first()
     return render(request, 'core/lesson_detail.html', {'article': article, 'quiz': quiz})
 
-
+@login_required
 def festival_tour(request):
     # static structure for festival booths
     booths = [
@@ -53,7 +64,7 @@ def festival_tour(request):
     ]
     return render(request, 'core/festival_tour.html', {'booths': booths})
 
-
+@login_required
 def profile(request):
     # placeholder profile view
     return render(request, 'core/profile.html')
@@ -142,9 +153,17 @@ class LoginForm(forms.Form):
     remember = forms.BooleanField(required=False)
 
 
+@csrf_protect
 def login_view(request):
     """Custom login view: allow login by email or username and handle 'remember me'. If user must change password, redirect there."""
     error = None
+    # Ensure CSRF cookie/token is available for the form
+    if request.method == 'GET':
+        try:
+            get_csrf_token(request)
+        except Exception:
+            pass
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -168,10 +187,16 @@ def login_view(request):
                 else:
                     request.session.set_expiry(0)  # browser session
 
-                # check if user needs to change password
+                # check if user needs to change password (applies to all users)
                 profile = getattr(user, 'studentprofile', None)
                 if profile and profile.must_change_password:
                     return redirect('core:change_password')
+
+                # If this is a staff/superuser account, send to the admin dashboard.
+                # Regular users go to their profile page.
+                if user.is_active and (user.is_staff or user.is_superuser):
+                    messages.info(request, 'Logged in as admin — redirecting to admin dashboard.')
+                    return redirect('core:admin_dashboard')
 
                 return redirect('core:profile')
             else:
@@ -209,7 +234,7 @@ def change_password(request):
                 # keep the user logged in after password change
                 update_session_auth_hash(request, request.user)
                 # Redirect to homepage for learning
-                return redirect('core:home')
+                return redirect('core:dashboard')
     return render(request, 'registration/change_password.html', {'error': error, 'success': success})
 
 

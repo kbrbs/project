@@ -1,0 +1,63 @@
+{% extends 'core/admin_panel/base.html' %}
+
+{% block content %}
+  <h1 class="text-3xl font-bold mb-4">Admin Dashboard</h1>
+  <div class="grid grid-cols-4 gap-4">
+    <div class="bg-white p-4 shadow rounded">
+      <div class="text-sm text-gray-500">Articles</div>
+      <div class="text-2xl font-semibold">{{ total_articles }}</div>
+    </div>
+    <div class="bg-white p-4 shadow rounded">
+      <div class="text-sm text-gray-500">Sections</div>
+      <div class="text-2xl font-semibold">{{ total_sections }}</div>
+    </div>
+    <div class="bg-white p-4 shadow rounded">
+      <div class="text-sm text-gray-500">Media</div>
+      <div class="text-2xl font-semibold">{{ total_media }}</div>
+    </div>
+    <div class="bg-white p-4 shadow rounded">
+      <div class="text-sm text-gray-500">Users</div>
+      <div class="text-2xl font-semibold">{{ total_users }}</div>
+    </div>
+  </div>
+
+  <section class="mt-6 grid grid-cols-2 gap-6">
+    <div class="bg-white p-4 shadow rounded">
+      <h2 class="font-semibold mb-2">Moderation</h2>
+      <ul>
+        {% for m in moderation %}
+          <li class="py-1">{{ m.status }} — {{ m.count }}</li>
+        {% empty %}
+          <li>No moderation items yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="bg-white p-4 shadow rounded">
+      <h2 class="font-semibold mb-2">Analytics</h2>
+      <div>Visits total: {{ visits_last_7 }}</div>
+      <div>Downloads total: {{ downloads }}</div>
+      <canvas id="visitsChart" width="400" height="150" class="mt-4"></canvas>
+      <canvas id="topPagesChart" width="400" height="150" class="mt-4"></canvas>
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    async function fetchJson(url){ const r = await fetch(url); return r.json(); }
+    (async function(){
+      try{
+        const visits = await fetchJson('{% url "core:admin_visits_json" %}');
+        const ctx = document.getElementById('visitsChart').getContext('2d');
+        new Chart(ctx, { type: 'line', data: { labels: visits.labels, datasets: [{ label:'Visits', data: visits.data, borderColor:'#10B981', backgroundColor:'rgba(16,185,129,0.1)'}] }, options: {} });
+
+        const top = await fetchJson('{% url "core:admin_top_pages_json" %}');
+        const ctx2 = document.getElementById('topPagesChart').getContext('2d');
+        new Chart(ctx2, { type: 'bar', data: { labels: top.labels, datasets: [{ label:'Page hits', data: top.data, backgroundColor:'#3B82F6' }] }, options: { indexAxis: 'y' } });
+      }catch(e){console.error(e)}
+    })();
+  </script>
+{% endblock %}

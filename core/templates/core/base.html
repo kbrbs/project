@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rooted in Knowledge — The Sweet Root of Bustos</title>
+    <title>Rooted in Knowledge — The Sweet Root of Bustos</title>
     <!-- Tailwind via CDN for prototyping -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js for interactivity -->
@@ -11,61 +11,315 @@
     <!-- AOS.js for scroll animations -->
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-    <!-- Chart.js placeholder -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      /* soft palette and floating cookie animation */
-      :root{--cream:#FFF9F0;--leaf:#7CB67E;--brown:#8B5E3C;--gold:#D8B372}
-      .floating-cookie{animation: floaty 6s ease-in-out infinite}
-      @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+      /* Modern color palette and animations */
+      :root {
+        --cream: #FFF9F0;
+        --leaf: #7CB67E;
+        --brown: #8B5E3C;
+        --gold: #D8B372;
+        --purple: #8B7FD8;
+        --blue: #5BA3E0;
+      }
+      
+      .floating-cookie {
+        animation: floaty 6s ease-in-out infinite;
+      }
+      
+      @keyframes floaty {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+        100% { transform: translateY(0); }
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #8B7FD8, #5BA3E0);
+        border-radius: 5px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #7A6EC7, #4A92CF);
+      }
+
+      /* Smooth transitions */
+      * {
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
     </style>
   </head>
-  <body class="bg-[color:var(--cream)] text-gray-800 font-sans leading-relaxed">
-    <header class="bg-white shadow-sm sticky top-0 z-30">
-      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-[color:var(--brown)] rounded-full flex items-center justify-center text-white font-bold">R</div>
-          <div>
-            <h1 class="text-lg font-semibold">Rooted in Knowledge</h1>
-            <p class="text-xs text-gray-500">The Sweet Root of Bustos</p>
+  <body class="bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 font-sans leading-relaxed antialiased" x-data="{ mobileMenuOpen: false }">
+    <!-- Enhanced Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <a href="/" class="flex items-center gap-3 group">
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold shadow-md group-hover:shadow-lg transition-shadow duration-300">
+              <span class="text-xl">🌱</span>
+            </div>
+            <div class="hidden sm:block">
+              <h1 class="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Rooted in Knowledge</h1>
+              <p class="text-xs text-gray-500">The Sweet Root of Bustos</p>
+            </div>
+          </a>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex items-center gap-1">
+            <a href="/lessons/" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
+                </svg>
+                Lessons
+              </span>
+            </a>
+            <a href="/festival-tour/" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
+                </svg>
+                Festival Tour
+              </span>
+            </a>
+            <a href="/quizzes/" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                  <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                </svg>
+                Quizzes
+              </span>
+            </a>
+          </nav>
+
+          <!-- User Menu / Auth Buttons -->
+          <div class="flex items-center gap-2">
+            {% if user.is_authenticated %}
+              <!-- User Dropdown -->
+              <div class="hidden md:flex items-center gap-3">
+                <a href="{% url 'core:profile' %}" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                    </svg>
+                  </div>
+                  <span>Profile</span>
+                </a>
+                <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                  Logout
+                </a>
+              </div>
+            {% else %}
+              <!-- Auth Buttons -->
+              <div class="hidden md:flex items-center gap-2">
+                <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                  Login
+                </a>
+                <a href="{% url 'core:signup' %}" class="px-4 py-2 text-sm font-medium text-purple-600 border-2 border-purple-500 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                  Sign up
+                </a>
+              </div>
+            {% endif %}
+
+            <!-- Mobile Menu Button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+              <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+              <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
           </div>
-        </a>
-        <nav class="hidden md:flex gap-4 items-center">
-          <a href="/lessons/" class="text-sm hover:text-[color:var(--leaf)]">Lessons</a>
-          <a href="/festival-tour/" class="text-sm hover:text-[color:var(--leaf)]">Festival Tour</a>
-          <a href="/quizzes/" class="text-sm hover:text-[color:var(--leaf)]">Quizzes</a>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div x-show="mobileMenuOpen" 
+           x-transition:enter="transition ease-out duration-200"
+           x-transition:enter-start="opacity-0 transform -translate-y-2"
+           x-transition:enter-end="opacity-100 transform translate-y-0"
+           x-transition:leave="transition ease-in duration-150"
+           x-transition:leave-start="opacity-100 transform translate-y-0"
+           x-transition:leave-end="opacity-0 transform -translate-y-2"
+           class="md:hidden border-t border-gray-100 bg-white shadow-lg">
+        <div class="px-4 py-4 space-y-2">
+          <a href="/lessons/" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
+            </svg>
+            Lessons
+          </a>
+          <a href="/festival-tour/" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
+            </svg>
+            Festival Tour
+          </a>
+          <a href="/quizzes/" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+            </svg>
+            Quizzes
+          </a>
+          
           {% if user.is_authenticated %}
-            <a href="{% url 'core:profile' %}" class="text-sm hover:text-[color:var(--leaf)]">Profile</a>
-            <a href="{% url 'logout' %}" class="text-sm text-white bg-[color:var(--brown)] px-3 py-1 rounded">Logout</a>
+            <div class="border-t border-gray-100 pt-4 mt-4">
+              <a href="{% url 'core:profile' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                </svg>
+                Profile
+              </a>
+              <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                Logout
+              </a>
+            </div>
           {% else %}
-            <a href="{% url 'login' %}" class="text-sm text-white bg-[color:var(--leaf)] px-3 py-1 rounded">Login</a>
-            <a href="{% url 'core:signup' %}" class="text-sm text-[color:var(--brown)] border border-[color:var(--brown)] px-3 py-1 rounded">Sign up</a>
+            <div class="border-t border-gray-100 pt-4 mt-4 space-y-2">
+              <a href="{% url 'login' %}" class="block w-full px-4 py-3 text-sm font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-lg shadow-sm">
+                Login
+              </a>
+              <a href="{% url 'core:signup' %}" class="block w-full px-4 py-3 text-sm font-medium text-center text-purple-600 border-2 border-purple-500 hover:bg-purple-50 rounded-lg">
+                Sign up
+              </a>
+            </div>
           {% endif %}
-        </nav>
+        </div>
       </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-16rem)]">
       {% if messages %}
-        <div class="mb-6">
+        <div class="mb-6 space-y-3" x-data="{ show: true }">
           {% for message in messages %}
-            <div class="p-4 rounded mb-2 {% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-50 border border-red-200 text-red-800{% else %}bg-gray-50 border border-gray-200 text-gray-800{% endif %}">
-              {{ message }}
+            <div x-show="show"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 class="relative p-4 rounded-xl shadow-sm {% if message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif message.tags == 'error' %}bg-red-50 border border-red-200 text-red-800{% elif message.tags == 'warning' %}bg-yellow-50 border border-yellow-200 text-yellow-800{% else %}bg-blue-50 border border-blue-200 text-blue-800{% endif %}">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0">
+                  {% if message.tags == 'success' %}
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                  {% elif message.tags == 'error' %}
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                    </svg>
+                  {% else %}
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                  {% endif %}
+                </div>
+                <div class="flex-1">
+                  <p class="text-sm font-medium">{{ message }}</p>
+                </div>
+                <button @click="show = false" class="flex-shrink-0 ml-3 hover:opacity-70 transition">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                  </svg>
+                </button>
+              </div>
             </div>
           {% endfor %}
         </div>
       {% endif %}
+      
       {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white mt-12 py-6 border-t">
-      <div class="max-w-6xl mx-auto px-4 text-sm text-gray-600">
-  © Rooted in Knowledge — Local pride, learning through play.
+    <!-- Enhanced Footer -->
+    <footer class="bg-white mt-16 border-t border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <!-- Brand -->
+          <div class="col-span-1 md:col-span-2">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white shadow-md">
+                <span class="text-lg">🌱</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800">Rooted in Knowledge</h3>
+                <p class="text-xs text-gray-500">The Sweet Root of Bustos</p>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">Celebrating cultural heritage through interactive learning experiences. Discover the story of arrowroot and the vibrant Minasa Festival.</p>
+            <div class="flex gap-3">
+              <a href="#" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-purple-100 flex items-center justify-center text-gray-600 hover:text-purple-600 transition-all">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="#" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-purple-100 flex items-center justify-center text-gray-600 hover:text-purple-600 transition-all">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h4 class="font-semibold text-gray-800 mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li><a href="/lessons/" class="text-sm text-gray-600 hover:text-purple-600 transition">Lessons</a></li>
+              <li><a href="/festival-tour/" class="text-sm text-gray-600 hover:text-purple-600 transition">Festival Tour</a></li>
+              <li><a href="/quizzes/" class="text-sm text-gray-600 hover:text-purple-600 transition">Quizzes</a></li>
+              <li><a href="{% url 'core:profile' %}" class="text-sm text-gray-600 hover:text-purple-600 transition">Profile</a></li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div>
+            <h4 class="font-semibold text-gray-800 mb-4">Support</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-sm text-gray-600 hover:text-purple-600 transition">Help Center</a></li>
+              <li><a href="#" class="text-sm text-gray-600 hover:text-purple-600 transition">Contact Us</a></li>
+              <li><a href="#" class="text-sm text-gray-600 hover:text-purple-600 transition">Privacy Policy</a></li>
+              <li><a href="#" class="text-sm text-gray-600 hover:text-purple-600 transition">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+          <p class="text-sm text-gray-500">© 2025 Rooted in Knowledge. Local pride, learning through play. All rights reserved.</p>
+        </div>
       </div>
     </footer>
 
     <script>
-      AOS.init();
+      // Initialize AOS animations
+      AOS.init({
+        duration: 600,
+        easing: 'ease-out',
+        once: true,
+        offset: 50
+      });
+
+      // Auto-dismiss messages after 5 seconds
+      setTimeout(() => {
+        const messages = document.querySelectorAll('[x-data]');
+        messages.forEach(msg => {
+          if (msg.__x) {
+            msg.__x.$data.show = false;
+          }
+        });
+      }, 5000);
     </script>
   </body>
 </html>

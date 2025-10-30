@@ -1,0 +1,37 @@
+{% extends 'core/admin_panel/base.html' %}
+
+{% block content %}
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-semibold">Media Assets</h1>
+    <a href="{% url 'core:admin_media_add' %}" class="px-3 py-2 bg-green-600 text-white rounded">Add media</a>
+  </div>
+
+  <div class="bg-white shadow rounded">
+    <table class="min-w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-2 text-left">Title</th>
+          <th class="px-4 py-2">Type</th>
+          <th class="px-4 py-2">Article</th>
+          <th class="px-4 py-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in media_list %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ m.title }}</td>
+            <td class="px-4 py-2">{{ m.get_asset_type_display }}</td>
+            <td class="px-4 py-2">{{ m.article }}</td>
+            <td class="px-4 py-2">
+              <a href="{% url 'core:admin_media_edit' m.pk %}" class="text-blue-600">Edit</a>
+              <a href="{% url 'core:admin_media_delete' m.pk %}" class="ml-3 text-red-600">Delete</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td class="p-4" colspan="4">No media assets yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

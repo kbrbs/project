@@ -1,0 +1,14 @@
+{% extends 'core/admin_panel/base.html' %}
+
+{% block content %}
+  <h1 class="text-2xl font-semibold mb-4">Media Asset</h1>
+  <div class="bg-white p-6 shadow rounded">
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+      {{ form.as_p }}
+      <div class="mt-4">
+        <button class="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+        <a href="{% url 'core:admin_media' %}" class="ml-2 px-3 py-2 bg-gray-200 rounded">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

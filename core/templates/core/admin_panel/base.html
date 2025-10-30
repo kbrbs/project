@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin Panel — Rooted in Knowledge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <div class="min-h-screen flex bg-gray-50">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white shadow h-screen sticky top-0">
+        <div class="p-6">
+          <div class="text-2xl font-bold text-green-600">Rooted in Knowledge</div>
+          <p class="text-sm text-gray-500 mt-1">Admin Panel</p>
+        </div>
+        <nav class="mt-6 p-4">
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li><a href="{% url 'core:admin_dashboard' %}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">🏠 <span>Dashboard</span></a></li>
+            <li><a href="{% url 'core:admin_sections' %}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">📚 <span>Sections</span></a></li>
+            <li><a href="{% url 'core:admin_media' %}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">🖼️ <span>Media</span></a></li>
+            <li><a href="{% url 'core:admin_moderation' %}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">🛡️ <span>Moderation</span></a></li>
+            <li><a href="{% url 'core:admin_quizzes' %}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">❓ <span>Quizzes</span></a></li>
+            <li><a href="{% url 'core:admin_media' %}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">⬇️ <span>Downloads</span></a></li>
+            <li><a href="{% url 'core:admin_users' %}" class="flex items-center gap-3 p-3 rounded hover:bg-gray-100">👥 <span>Users</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <div class="flex-1">
+        <header class="bg-white shadow sticky top-0 z-10">
+          <div class="max-w-7xl mx-auto py-4 px-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <button class="p-2 rounded bg-gray-100">☰</button>
+              <div class="relative w-96">
+                <input placeholder="Search" class="w-full rounded border-gray-200 px-3 py-2" />
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="text-sm text-gray-600">Admin</div>
+              <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+            </div>
+          </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto p-6">
+          {% if messages %}
+            <div>
+              {% for message in messages %}
+                <div class="mb-2 p-3 rounded {{ message.tags }} bg-white shadow">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% block content %}{% endblock %}
+          {% block extra_scripts %}{% endblock %}
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
