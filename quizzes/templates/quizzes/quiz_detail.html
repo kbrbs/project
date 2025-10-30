@@ -1,81 +1,360 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-  <h2 class="text-2xl font-bold">{{ quiz.title }}</h2>
-  <div id="quiz-root" class="mt-4 bg-white p-6 rounded shadow">
-    <p class="text-sm text-gray-600">The quiz will load via the JSON API and render a simple interactive UI.</p>
-    <div id="quiz-app" class="mt-4"></div>
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-white py-8">
+  <div class="max-w-7xl mx-auto px-4">
+    <!-- Breadcrumb -->
+    <nav class="mb-6 flex items-center text-sm text-gray-600">
+      <a href="{% url 'core:home' %}" class="hover:text-purple-600">Home</a>
+      <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+      </svg>
+      <a href="{% url 'quizzes:quiz_list' %}" class="hover:text-purple-600">Quiz List</a>
+      <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+      </svg>
+      <span class="text-green-600 font-medium" id="breadcrumb-title">{{ quiz.title }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Main Quiz Area -->
+      <div class="lg:col-span-2">
+        <!-- Quiz Title -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          <h1 class="text-3xl font-bold text-gray-800 mb-2" id="quiz-title">{{ quiz.title }}</h1>
+          <p class="text-gray-600" id="quiz-status">Answer all questions and submit to see your results</p>
+        </div>
+
+        <!-- Quiz Questions Container -->
+        <div id="questions-container">
+          <div class="flex items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div id="submit-container" class="hidden mt-6">
+          <button onclick="submitQuiz()" class="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+            Submit Answer
+          </button>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="hidden mt-6"></div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <!-- Timer Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+          <div class="flex flex-col items-center">
+            <div class="w-24 h-24 rounded-full border-4 border-green-500 flex items-center justify-center mb-4">
+              <span class="text-3xl font-bold text-gray-800" id="timer">--:--</span>
+            </div>
+            <p class="text-gray-600 text-sm">Timer Remaining</p>
+          </div>
+        </div>
+
+        <!-- Quiz Questions List -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-gray-800">Quiz Questions List</h3>
+            <button onclick="toggleQuestionList()" class="text-gray-600 hover:text-gray-800">
+              <svg id="toggle-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
+          <div id="question-list" class="space-y-2">
+            <!-- Will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <script>
-    async function loadQuiz(){
-      const res = await fetch(`/quizzes/api/{{ quiz.id }}/`);
-      const data = await res.json();
-      const container = document.getElementById('quiz-app');
-      container.innerHTML = '';
+<script>
+let quizData = null;
+let userAnswers = {};
+let startTime = Date.now();
+let timerInterval = null;
 
-      data.questions.forEach((q, idx) => {
-        const card = document.createElement('div');
-        card.className = 'p-3 border rounded mb-3';
-        const qtitle = document.createElement('div'); qtitle.textContent = (idx+1) + '. ' + q.text;
-        card.appendChild(qtitle);
-        q.choices.forEach(c => {
-          const label = document.createElement('label');
-          label.className = 'block mt-2';
-          const input = document.createElement('input');
-          input.type = 'radio';
-          input.name = 'q-' + q.id;
-          input.value = c.id;
-          label.appendChild(input);
-          label.appendChild(document.createTextNode(' ' + c.text));
-          card.appendChild(label);
-        });
-        container.appendChild(card);
-      });
+// Start timer
+function startTimer() {
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    document.getElementById('timer').textContent = 
+      `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }, 1000);
+}
 
-      const submit = document.createElement('button');
-      submit.className = 'px-3 py-2 bg-[color:var(--leaf)] text-white rounded';
-      submit.textContent = 'Submit';
-      submit.onclick = () => alert('Quiz submission placeholder — implement scoring and POST to record progress.');
-      container.appendChild(submit);
+// Toggle question list
+function toggleQuestionList() {
+  const list = document.getElementById('question-list');
+  const icon = document.getElementById('toggle-icon');
+  list.classList.toggle('hidden');
+  icon.style.transform = list.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+// Load quiz
+async function loadQuiz() {
+  try {
+    const response = await fetch('/quizzes/api/{{ quiz.id }}/');
+    quizData = await response.json();
+    renderQuestions();
+    renderQuestionList();
+    startTimer();
+    document.getElementById('submit-container').classList.remove('hidden');
+  } catch (error) {
+    console.error('Error loading quiz:', error);
+    document.getElementById('questions-container').innerHTML = 
+      '<div class="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700">Unable to load quiz. Please try again.</div>';
+  }
+}
+
+// Render questions
+function renderQuestions() {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+
+  quizData.questions.forEach((question, index) => {
+    const questionDiv = document.createElement('div');
+    questionDiv.className = 'bg-white rounded-2xl shadow-lg p-6 mb-4';
+    questionDiv.id = `question-${question.id}`;
+
+    const choicesHTML = question.choices.map(choice => {
+      const letterId = String.fromCharCode(65 + question.choices.indexOf(choice));
+      return `
+        <div class="choice-option border-2 border-gray-200 rounded-xl p-4 mb-3 cursor-pointer transition-all hover:border-purple-300 hover:bg-purple-50" 
+             onclick="selectAnswer(${question.id}, ${choice.id}, this)"
+             data-question="${question.id}"
+             data-choice="${choice.id}">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-gray-700">
+                ${letterId}
+              </div>
+              <span class="text-gray-800">${choice.text}</span>
+            </div>
+            <div class="checkmark hidden">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    questionDiv.innerHTML = `
+      <div class="flex items-start gap-3 mb-4">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center font-bold text-purple-700 flex-shrink-0">
+          ${index + 1}
+        </div>
+        <h3 class="text-lg font-semibold text-gray-800 pt-2">${question.text}</h3>
+      </div>
+      <div class="choices-container">
+        ${choicesHTML}
+      </div>
+    `;
+
+    container.appendChild(questionDiv);
+  });
+}
+
+// Render question list sidebar
+function renderQuestionList() {
+  const listContainer = document.getElementById('question-list');
+  listContainer.innerHTML = '';
+
+  quizData.questions.forEach((question, index) => {
+    const item = document.createElement('div');
+    item.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-purple-50 transition';
+    item.id = `list-item-${question.id}`;
+    item.onclick = () => scrollToQuestion(question.id);
+    
+    item.innerHTML = `
+      <span class="text-gray-700 text-sm">Quiz question ${index + 1}</span>
+      <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center answer-indicator" id="indicator-${question.id}">
+        <svg class="w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </div>
+    `;
+    
+    listContainer.appendChild(item);
+  });
+}
+
+// Scroll to question
+function scrollToQuestion(questionId) {
+  const element = document.getElementById(`question-${questionId}`);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+// Select answer
+function selectAnswer(questionId, choiceId, element) {
+  // Remove selection from other choices in this question
+  const questionDiv = document.getElementById(`question-${questionId}`);
+  const allChoices = questionDiv.querySelectorAll('.choice-option');
+  allChoices.forEach(choice => {
+    choice.classList.remove('border-green-500', 'bg-green-50');
+    choice.classList.add('border-gray-200');
+    choice.querySelector('.checkmark').classList.add('hidden');
+  });
+
+  // Add selection to clicked choice
+  element.classList.remove('border-gray-200');
+  element.classList.add('border-green-500', 'bg-green-50');
+  element.querySelector('.checkmark').classList.remove('hidden');
+
+  // Store answer
+  userAnswers[questionId] = choiceId;
+
+  // Update sidebar indicator
+  const indicator = document.getElementById(`indicator-${questionId}`);
+  indicator.classList.remove('bg-gray-300');
+  indicator.classList.add('bg-green-500');
+  indicator.querySelector('svg').classList.remove('hidden');
+}
+
+// Submit quiz
+async function submitQuiz() {
+  if (Object.keys(userAnswers).length < quizData.questions.length) {
+    if (!confirm('You have not answered all questions. Submit anyway?')) {
+      return;
     }
-    loadQuiz().catch(console.error);
-  </script>
+  }
 
-{% endblock %}
-{% extends 'core/base.html' %}
+  // Stop timer
+  clearInterval(timerInterval);
 
-{% block content %}
-  <h2 class="text-2xl font-bold">{{ quiz.title }}</h2>
-  <p class="text-sm text-gray-600">Interactive quiz placeholder — this page uses the JSON API to fetch questions and run a small JS quiz UI.</p>
+  try {
+    const response = await fetch('/quizzes/submit/{{ quiz.id }}/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify(userAnswers)
+    });
 
-  <div id="quiz-root" class="mt-4 bg-white p-4 rounded shadow">
-    <p class="text-gray-600">Loading...</p>
-  </div>
+    const results = await response.json();
+    displayResults(results);
+  } catch (error) {
+    console.error('Error submitting quiz:', error);
+    alert('Error submitting quiz. Please try again.');
+  }
+}
 
-  <script>
-    (function(){
-      const root = document.getElementById('quiz-root');
-      fetch('/quizzes/api/{{ quiz.id }}/')
-        .then(r=>r.json())
-        .then(data=>{
-          root.innerHTML = '';
-          data.questions.forEach((q, idx)=>{
-            const qdiv = document.createElement('div');
-            qdiv.className = 'mb-4';
-            qdiv.innerHTML = `<p class="font-semibold">${idx+1}. ${q.text}</p>`;
-            q.choices.forEach(c=>{
-              const btn = document.createElement('button');
-              btn.className = 'mt-2 mr-2 px-3 py-1 border rounded';
-              btn.textContent = c.text;
-              btn.onclick = ()=>{ alert('Answer recorded (placeholder)'); };
-              qdiv.appendChild(btn);
-            });
-            root.appendChild(qdiv);
-          });
-        })
-        .catch(err=>{ root.innerHTML = '<p class="text-red-500">Unable to load quiz.</p>'; });
-    })();
-  </script>
+// Display results
+function displayResults(results) {
+  // Hide submit button
+  document.getElementById('submit-container').classList.add('hidden');
+
+  // Show results
+  const resultsContainer = document.getElementById('results-container');
+  resultsContainer.classList.remove('hidden');
+
+  const percentage = results.score_percentage;
+  const passed = percentage >= 70;
+
+  resultsContainer.innerHTML = `
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+      <div class="text-center mb-6">
+        <div class="w-32 h-32 mx-auto rounded-full ${passed ? 'bg-green-100' : 'bg-red-100'} flex items-center justify-center mb-4">
+          <span class="text-4xl font-bold ${passed ? 'text-green-600' : 'text-red-600'}">${percentage}%</span>
+        </div>
+        <h2 class="text-2xl font-bold ${passed ? 'text-green-600' : 'text-red-600'} mb-2">
+          ${passed ? '🎉 Congratulations!' : '😔 Keep Trying!'}
+        </h2>
+        <p class="text-gray-600">You scored ${results.correct_count} out of ${results.total_questions} correct</p>
+      </div>
+
+      <div class="space-y-4">
+        <h3 class="font-bold text-gray-800 mb-4">Answer Review</h3>
+        ${results.results.map((result, index) => `
+          <div class="border-2 ${result.is_correct ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'} rounded-xl p-4">
+            <div class="flex items-start gap-3 mb-3">
+              <div class="w-8 h-8 rounded-lg ${result.is_correct ? 'bg-green-500' : 'bg-red-500'} flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  ${result.is_correct 
+                    ? '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>'
+                    : '<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>'
+                  }
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="font-semibold text-gray-800 mb-2">${index + 1}. ${result.question_text}</p>
+                ${result.answered 
+                  ? `<p class="text-sm text-gray-700 mb-1"><strong>Your answer:</strong> ${result.user_answer}</p>`
+                  : `<p class="text-sm text-gray-500 mb-1"><em>Not answered</em></p>`
+                }
+                ${!result.is_correct 
+                  ? `<p class="text-sm ${result.is_correct ? 'text-green-700' : 'text-red-700'}"><strong>Correct answer:</strong> ${result.correct_answer}</p>`
+                  : ''
+                }
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="mt-6 flex gap-4">
+        <a href="{% url 'quizzes:quiz_list' %}" class="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-xl text-center transition-all duration-300">
+          Back to Quiz List
+        </a>
+        <button onclick="location.reload()" class="flex-1 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300">
+          Retry Quiz
+        </button>
+      </div>
+    </div>
+  `;
+
+  // Update status
+  document.getElementById('quiz-status').textContent = 
+    `Quiz completed! You scored ${percentage}%`;
+
+  // Scroll to results
+  resultsContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Initialize
+loadQuiz();
+</script>
+
+<style>
+.choice-option {
+  transition: all 0.2s ease;
+}
+
+.choice-option:hover {
+  transform: translateX(4px);
+}
+
+.checkmark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#questions-container > div {
+  animation: fadeIn 0.3s ease-out;
+}
+</style>
 
 {% endblock %}
