@@ -30,14 +30,6 @@ def home(request):
     featured = Article.objects.all()[:4]
     return render(request, 'core/home.html', {'featured': featured})
 
-	
-@login_required
-def dashboard(request):
-    """
-    User dashboard showing personalized learning stats and quick actions
-    """
-    return render(request, 'core/dashboard.html')
-
 
 @login_required
 def lesson_list(request, category=None):
@@ -233,8 +225,8 @@ def change_password(request):
                     profile.save()
                 # keep the user logged in after password change
                 update_session_auth_hash(request, request.user)
-                # Redirect to homepage for learning
-                return redirect('core:dashboard')
+                # Redirect to profile page
+                return redirect('core:profile')
     return render(request, 'registration/change_password.html', {'error': error, 'success': success})
 
 
