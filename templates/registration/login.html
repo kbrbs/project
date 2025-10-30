@@ -14,8 +14,21 @@
     }
   }
   
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
   .slide-up-animation {
-    animation: slideUp 0.6s ease-out;
+    animation: slideUp 0.8s ease-out;
+  }
+  
+  .fade-in-animation {
+    animation: fadeIn 1s ease-out;
   }
   
   /* Override base.html main container styling for this page */
@@ -23,72 +36,161 @@
     max-width: 100% !important;
     padding: 0 !important;
   }
+
+  /* Custom focus styles */
+  .focus-ring:focus {
+    outline: none;
+    border-color: #8B7FD8;
+    box-shadow: 0 0 0 3px rgba(139, 127, 216, 0.15);
+  }
 </style>
 
-<div class="fixed inset-0 top-[72px] flex items-center justify-center p-4">
-  <div class="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 bg-white rounded-2xl overflow-hidden shadow-2xl slide-up-animation">
-    <!-- Left illustration / marketing -->
-    <div class="hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-[color:var(--cream)] to-white p-16 relative">
-      <!-- Background Image -->
-      <img src="{% static 'pictures/pic3.jpg' %}" alt="Login Illustration" class="absolute inset-0 w-full h-full object-cover">
-      
-      <div class="w-full max-w-sm relative z-10">
-        <!-- You can replace this with your own image -->
-        <div class="w-full h-72 mb-8 flex items-center justify-center">
-          <img src="{% static 'pictures/main logo.png' %}" alt="Welcome" class="w-full h-full object-contain">
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <!-- Left: Marketing / Illustration -->
+      <div class="hidden lg:block slide-up-animation">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="relative h-96 bg-gradient-to-br from-purple-500 to-blue-500">
+            <img src="{% static 'pictures/pic3.jpg' %}" alt="Login Illustration" class="absolute inset-0 w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 flex items-center justify-center p-12">
+              <div class="text-center">
+                <div class="w-56 h-56 mx-auto mb-8 bg-white/10 backdrop-blur-sm rounded-3xl p-8 flex items-center justify-center">
+                  <img src="{% static 'pictures/main logo.png' %}" alt="Welcome" class="w-full h-full object-contain">
+                </div>
+                <h2 class="text-4xl font-bold text-white mb-4">Welcome Back!</h2>
+                <p class="text-white/90 text-lg mb-6">Continue your learning journey with us</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="p-8 bg-gradient-to-br from-purple-50 to-blue-50">
+            <div class="space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <p class="text-gray-700 font-medium">Access all your saved progress and achievements</p>
+              </div>
+              
+              <div class="flex items-center gap-3">
+                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <p class="text-gray-700 font-medium">Take quizzes and test your knowledge</p>
+              </div>
+              
+              <div class="flex items-center gap-3">
+                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                  <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+                  </svg>
+                </div>
+                <p class="text-gray-700 font-medium">Join a community of learners</p>
+              </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-white rounded-xl border-2 border-purple-200">
+              <p class="text-sm text-gray-600">
+                <span class="font-semibold text-purple-600">Teachers:</span> Access the admin panel for management features
+              </p>
+            </div>
+          </div>
         </div>
-
-        <h2 class="text-3xl font-bold text-white">Welcome back!</h2>
-        <p class="mt-4 text-white text-lg">Sign in to track progress, save your quiz results, and pick up where you left off. New here? Create an account — it's free.</p>
-        <p class="mt-6 text-sm text-white">Students and teachers can both sign in. For teacher access use the admin panel.</p>
       </div>
-    </div>
 
-    <!-- Right: form card -->
-    <div class="p-12 flex items-center justify-center">
-      <div class="w-full max-w-md">
-        <h3 class="text-3xl font-extrabold mb-3">Login!</h3>
-        <p class="text-sm text-gray-500 mb-8">Nice to see you! Please log in with your account.</p>
-
-        {% if form.non_field_errors %}
-          <div class="mb-4 text-red-600">{{ form.non_field_errors }}</div>
-        {% endif %}
-
-        <form method="post" action="{% url 'login' %}" class="space-y-5">
-          {% csrf_token %}
-
-          <div>
-            <label for="id_username" class="block text-sm font-medium text-gray-700">Email address / Username</label>
-            <input id="id_username" name="username" type="text" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm px-4 py-3 focus:ring-2 focus:ring-[color:var(--leaf)]" />
-            {% if form.username.errors %}
-              <p class="text-sm text-red-600 mt-1">{{ form.username.errors.0 }}</p>
-            {% endif %}
+      <!-- Right: Login Form -->
+      <div class="slide-up-animation" style="animation-delay: 0.2s;">
+        <div class="bg-white rounded-2xl shadow-xl p-8 lg:p-12">
+          <div class="text-center lg:text-left mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-3">Sign In</h1>
+            <p class="text-gray-600 text-lg">Welcome back! Please enter your credentials</p>
           </div>
 
-          <div>
-            <label for="id_password" class="block text-sm font-medium text-gray-700">Password</label>
-            <input id="id_password" name="password" type="password" required class="mt-1 block w-full rounded-md border-gray-200 shadow-sm px-4 py-3 focus:ring-2 focus:ring-[color:var(--leaf)]" />
-            {% if form.password.errors %}
-              <p class="text-sm text-red-600 mt-1">{{ form.password.errors.0 }}</p>
-            {% endif %}
-          </div>
+          {% if form.non_field_errors %}
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="text-red-800 font-medium">{{ form.non_field_errors }}</p>
+              </div>
+            </div>
+          {% endif %}
 
-          <div class="flex items-center justify-between">
-            <label class="inline-flex items-center gap-2 text-sm text-gray-600">
-              <input type="checkbox" name="remember" class="h-4 w-4 text-[color:var(--leaf)] border-gray-300 rounded" />
-              Remember me
-            </label>
-            <a href="{% url 'password_reset' %}" class="text-sm text-[color:var(--leaf)]">Forgot password?</a>
-          </div>
+          <form method="post" action="{% url 'login' %}" class="space-y-6">
+            {% csrf_token %}
 
-          <div>
-            <button type="submit" class="w-full py-3 rounded-md bg-[color:var(--leaf)] text-white font-semibold hover:opacity-90">Login</button>
-          </div>
-        </form>
+            <div>
+              <label for="id_username" class="block text-sm font-semibold text-gray-700 mb-2">
+                Email or Username
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <input id="id_username" name="username" type="text" required class="focus-ring block w-full rounded-lg border-2 border-gray-200 pl-12 pr-4 py-3 text-gray-900 placeholder-gray-400 transition-all" placeholder="Enter your email or username" />
+              </div>
+              {% if form.username.errors %}
+                <p class="text-sm text-red-600 mt-2 flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  {{ form.username.errors.0 }}
+                </p>
+              {% endif %}
+            </div>
 
-        <div class="mt-4 text-center text-sm">
-          <span class="text-gray-600">Don't have an account?</span>
-          <a href="{% url 'core:signup' %}" class="text-[color:var(--leaf)] font-medium ml-2">Create account</a>
+            <div>
+              <label for="id_password" class="block text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <input id="id_password" name="password" type="password" required class="focus-ring block w-full rounded-lg border-2 border-gray-200 pl-12 pr-4 py-3 text-gray-900 placeholder-gray-400 transition-all" placeholder="Enter your password" />
+              </div>
+              {% if form.password.errors %}
+                <p class="text-sm text-red-600 mt-2 flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  {{ form.password.errors.0 }}
+                </p>
+              {% endif %}
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="remember" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500" />
+                <span class="text-sm text-gray-700 font-medium">Remember me</span>
+              </label>
+              <a href="{% url 'password_reset' %}" class="text-sm font-semibold text-purple-600 hover:text-purple-700">Forgot password?</a>
+            </div>
+
+            <div class="pt-2">
+              <button type="submit" class="w-full py-4 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold text-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                Sign In
+              </button>
+            </div>
+          </form>
+
+          <div class="mt-8 text-center">
+            <p class="text-gray-600">
+              Don't have an account?
+              <a href="{% url 'core:signup' %}" class="font-semibold text-purple-600 hover:text-purple-700 ml-1">Create account</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
