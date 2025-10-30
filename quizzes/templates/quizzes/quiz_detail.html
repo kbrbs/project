@@ -13,7 +13,7 @@
       <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
       </svg>
-      <span class="text-green-600 font-medium" id="breadcrumb-title">{{ quiz.title }}</span>
+      <span class="text-purple-600 font-medium" id="breadcrumb-title">{{ quiz.title }}</span>
     </nav>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -34,7 +34,7 @@
 
         <!-- Submit Button -->
         <div id="submit-container" class="hidden mt-6">
-          <button onclick="submitQuiz()" class="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
+          <button onclick="submitQuiz()" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105">
             Submit Answer
           </button>
         </div>
@@ -48,7 +48,7 @@
         <!-- Timer Card -->
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <div class="flex flex-col items-center">
-            <div class="w-24 h-24 rounded-full border-4 border-green-500 flex items-center justify-center mb-4">
+            <div class="w-24 h-24 rounded-full border-4 border-purple-500 flex items-center justify-center mb-4">
               <span class="text-3xl font-bold text-gray-800" id="timer">--:--</span>
             </div>
             <p class="text-gray-600 text-sm">Timer Remaining</p>
@@ -203,14 +203,14 @@ function selectAnswer(questionId, choiceId, element) {
   const questionDiv = document.getElementById(`question-${questionId}`);
   const allChoices = questionDiv.querySelectorAll('.choice-option');
   allChoices.forEach(choice => {
-    choice.classList.remove('border-green-500', 'bg-green-50');
+    choice.classList.remove('border-purple-500', 'bg-purple-50');
     choice.classList.add('border-gray-200');
     choice.querySelector('.checkmark').classList.add('hidden');
   });
 
   // Add selection to clicked choice
   element.classList.remove('border-gray-200');
-  element.classList.add('border-green-500', 'bg-green-50');
+  element.classList.add('border-purple-500', 'bg-purple-50');
   element.querySelector('.checkmark').classList.remove('hidden');
 
   // Store answer
@@ -219,7 +219,7 @@ function selectAnswer(questionId, choiceId, element) {
   // Update sidebar indicator
   const indicator = document.getElementById(`indicator-${questionId}`);
   indicator.classList.remove('bg-gray-300');
-  indicator.classList.add('bg-green-500');
+  indicator.classList.add('bg-purple-500');
   indicator.querySelector('svg').classList.remove('hidden');
 }
 
@@ -309,7 +309,7 @@ function displayResults(results) {
         <a href="{% url 'quizzes:quiz_list' %}" class="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-xl text-center transition-all duration-300">
           Back to Quiz List
         </a>
-        <button onclick="location.reload()" class="flex-1 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300">
+        <button onclick="location.reload()" class="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300">
           Retry Quiz
         </button>
       </div>
@@ -341,7 +341,7 @@ loadQuiz();
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #8B5CF6, #3B82F6);
   display: flex;
   align-items: center;
   justify-content: center;
