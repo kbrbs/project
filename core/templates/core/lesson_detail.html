@@ -168,6 +168,119 @@
         <div id="quiz-app" class="p-6">
           <p class="text-sm text-gray-600">Loading quiz...</p>
         </div>
+        <div id="quiz-data" data-quiz-id="{{ quiz.id }}" data-api-url="{% url 'quizzes:quiz_api_detail' pk=quiz.id %}" data-submit-url="{% url 'quizzes:quiz_submit' pk=quiz.id %}" class="hidden"></div>
+        <script>
+          (function() {
+            // Quiz bootstrap
+            const quizAppEl = document.getElementById('quiz-app');
+            const quizDataEl = document.getElementById('quiz-data');
+            const quizId = quizDataEl ? quizDataEl.getAttribute('data-quiz-id') : null;
+            const apiUrl = quizDataEl ? quizDataEl.getAttribute('data-api-url') : null;
+            const submitUrl = quizDataEl ? quizDataEl.getAttribute('data-submit-url') : null;
+
+            function escapeHtml(str) {
+              return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+            }
+
+            function renderQuiz(quizData) {
+              const parts = [];
+              parts.push('<div class="space-y-6">');
+              quizData.questions.forEach(function(q, idx) {
+                parts.push(
+                  '<div class="border border-gray-100 rounded-xl p-4">' +
+                    '<div class="font-medium text-gray-800 mb-3">' + (idx + 1) + '. ' + escapeHtml(q.text) + '</div>' +
+                    '<div class="space-y-2">'
+                );
+                (q.choices || []).forEach(function(choice) {
+                  const inputId = 'q' + q.id + '_c' + choice.id;
+                  parts.push(
+                    '<label for="' + inputId + '" class="flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">' +
+                      '<input type="radio" name="q_' + q.id + '" id="' + inputId + '" value="' + choice.id + '" class="mt-1">' +
+                      '<span class="text-gray-700">' + escapeHtml(choice.text) + '</span>' +
+                    '</label>'
+                  );
+                });
+                parts.push('</div></div>');
+              });
+              parts.push(
+                '<div class="pt-2">' +
+                  '<button id="submit-quiz" class="px-5 py-2.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all">Submit</button>' +
+                '</div>'
+              );
+              parts.push('</div>');
+              quizAppEl.innerHTML = parts.join('');
+
+              const submitBtn = document.getElementById('submit-quiz');
+              submitBtn.addEventListener('click', async function() {
+                const answers = {};
+                (quizData.questions || []).forEach(function(q) {
+                  const selected = document.querySelector('input[name="q_' + q.id + '"]:checked');
+                  if (selected) {
+                    answers[String(q.id)] = selected.value;
+                  }
+                });
+
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-70');
+                try {
+                  const resp = await fetch(submitUrl, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(answers)
+                  });
+                  const result = await resp.json();
+                  renderResults(result);
+                } catch (e) {
+                  quizAppEl.innerHTML = '<p class="text-red-600">Failed to submit quiz. Please try again.</p>';
+                }
+              });
+            }
+
+            function renderResults(result) {
+              const parts = [];
+              parts.push(
+                '<div class="space-y-4">' +
+                  '<div class="p-4 rounded-xl bg-purple-50 text-purple-700 font-medium">' +
+                    'Score: ' + (result.score_percentage || 0) + '% (' + (result.correct_count || 0) + '/' + (result.total_questions || 0) + ')' +
+                  '</div>'
+              );
+              (result.results || []).forEach(function(r, idx) {
+                parts.push(
+                  '<div class="border border-gray-100 rounded-xl p-4">' +
+                    '<div class="font-medium text-gray-800 mb-2">' + (idx + 1) + '. ' + escapeHtml(r.question_text) + '</div>' +
+                    '<div class="text-sm ' + (r.is_correct ? 'text-green-700' : 'text-red-700') + '">' + (r.is_correct ? 'Correct' : 'Incorrect') + '</div>' +
+                    '<div class="text-sm text-gray-600 mt-1">Your answer: ' + (r.user_answer ? escapeHtml(r.user_answer) : '—') + '</div>' +
+                    '<div class="text-sm text-gray-600">Correct answer: ' + (r.correct_answer ? escapeHtml(r.correct_answer) : '—') + '</div>' +
+                  '</div>'
+                );
+              });
+              parts.push('</div>');
+              quizAppEl.innerHTML = parts.join('');
+            }
+
+            async function loadQuiz() {
+              quizAppEl.innerHTML = '<p class="text-sm text-gray-600">Loading quiz...</p>';
+              try {
+                const resp = await fetch(apiUrl, { credentials: 'same-origin' });
+                const data = await resp.json();
+                renderQuiz(data);
+              } catch (e) {
+                quizAppEl.innerHTML = '<p class="text-red-600">Failed to load quiz.</p>';
+              }
+            }
+
+            window.addEventListener('open-quiz', loadQuiz);
+          })();
+        </script>
       </div>
     </div>
   </div>

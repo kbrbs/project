@@ -27,7 +27,7 @@ from django.contrib.auth import logout as auth_logout
 
 def home(request):
     # sample hero articles and categories
-    featured = Article.objects.all()[:4]
+    featured = Article.objects.order_by('-created_at')[:6]
     return render(request, 'core/home.html', {'featured': featured})
 
 

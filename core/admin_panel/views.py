@@ -119,6 +119,37 @@ class SectionCreateView(CreateView):
     template_name = 'core/admin_panel/section_form.html'
     success_url = reverse_lazy('core:admin_dashboard')
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Auto-create a corresponding Article so it shows up on the public lesson list
+        try:
+            section = self.object
+            # Prefer using the section slug as the article slug if available
+            base_slug = section.slug or section.title
+            slug_candidate = base_slug
+            # Ensure uniqueness
+            i = 1
+            while Article.objects.filter(slug=slug_candidate).exists():
+                i += 1
+                slug_candidate = f"{base_slug}-{i}"
+
+            # Map section slug to Article.category when valid, fallback to 'creative'
+            valid_cats = {c[0] for c in Article.CATEGORY_CHOICES}
+            category_value = section.slug if section.slug in valid_cats else 'creative'
+
+            Article.objects.create(
+                title=section.title,
+                slug=slug_candidate,
+                category=category_value,
+                excerpt=section.description,
+                content=section.content or section.description or section.title,
+            )
+            messages.success(self.request, 'Section saved and lesson created for the public list.')
+        except Exception:
+            # If article creation fails, we keep section creation but warn softly
+            messages.warning(self.request, 'Section saved, but creating the public lesson failed.')
+        return response
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class SectionUpdateView(UpdateView):
@@ -126,6 +157,31 @@ class SectionUpdateView(UpdateView):
     form_class = SectionForm
     template_name = 'core/admin_panel/section_form.html'
     success_url = reverse_lazy('core:admin_dashboard')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Try to keep a related Article in sync based on matching title or excerpt
+        try:
+            section = self.object
+            # Find an article that looks linked (same title or excerpt)
+            article = (
+                Article.objects.filter(title=section.title).first()
+                or Article.objects.filter(excerpt=section.description).first()
+            )
+            if article:
+                # Update fields to reflect section changes
+                valid_cats = {c[0] for c in Article.CATEGORY_CHOICES}
+                category_value = section.slug if section.slug in valid_cats else article.category
+                article.title = section.title
+                article.excerpt = section.description
+                article.content = section.content or section.description or section.title
+                article.category = category_value
+                article.save()
+                messages.success(self.request, 'Section and corresponding lesson updated.')
+        except Exception:
+            # If syncing fails, continue without blocking
+            pass
+        return response
 
 
 @method_decorator(staff_member_required, name='dispatch')
