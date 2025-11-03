@@ -140,15 +140,15 @@
                   
                   <label>Sentence with Blanks</label>
                   {{ f.sentence_template }}
-                  <p class="helptext">Example: "Peter * picked a * peckpeck" → "Peter _____ picked a _____ peckpeck"</p>
+                  <p class="helptext">Example: "The city of * is famous for its * product" → "The city of _____ is famous for its _____ product"</p>
                   
                   <label class="mt-4">Correct Answers (comma-separated)</label>
                   {{ f.correct_answers }}
-                  <p class="helptext">Example: "piper, peck of" (in order of blanks). These will automatically become draggable choices.</p>
+                  <p class="helptext">Example: "Bustos, Minasa" (in order of blanks). These will automatically become draggable choices.</p>
                   
                   <label class="mt-4">Additional Choices (comma-separated, optional)</label>
                   {{ f.extra_choices }}
-                  <p class="helptext">Example: "pepper, pack, pick" (wrong answers to make it challenging)</p>
+                  <p class="helptext">Example: "Manila, rice cake, Bataan" (wrong answers to make it challenging)</p>
                 </div>
                 
                 <!-- Image ID / MCQ fields -->
@@ -215,15 +215,15 @@
                 
                 <label>Sentence with Blanks</label>
                 {{ formset.empty_form.sentence_template }}
-                <p class="helptext">Example: "Peter * picked a * peckpeck" → "Peter _____ picked a _____ peckpeck"</p>
+                <p class="helptext">Example: "The city of * is famous for its * product" → "The city of _____ is famous for its _____ product"</p>
                 
                 <label class="mt-4">Correct Answers (comma-separated)</label>
                 {{ formset.empty_form.correct_answers }}
-                <p class="helptext">Example: "piper, peck of" (in order of blanks). These will automatically become draggable choices.</p>
+                <p class="helptext">Example: "Bustos, Minasa" (in order of blanks). These will automatically become draggable choices.</p>
                 
                 <label class="mt-4">Additional Choices (comma-separated, optional)</label>
                 {{ formset.empty_form.extra_choices }}
-                <p class="helptext">Example: "pepper, pack, pick" (wrong answers to make it challenging)</p>
+                <p class="helptext">Example: "Manila, rice cake, Bataan" (wrong answers to make it challenging)</p>
               </div>
               
               <div class="field-correct_answer" style="display:none;">
@@ -352,11 +352,11 @@
         fields: ['drag_drop'],
         help: [
           '✅ <strong>What to add:</strong> A sentence with blanks marked by * or _',
-          '📝 <strong>Example:</strong> "Peter * picked a * peckpeck" will show as "Peter _____ picked a _____ peckpeck"',
-          '✓ <strong>Correct answers:</strong> Enter comma-separated answers in order: "piper, peck of"',
-          '🎯 <strong>Extra choices:</strong> Add wrong options to make it harder: "pepper, pack, pick"',
+          '📝 <strong>Example:</strong> "The city of * is famous for *" will show as "The city of _____ is famous for _____"',
+          '✓ <strong>Correct answers:</strong> Enter comma-separated answers in order: "Bustos, Minasa"',
+          '🎯 <strong>Extra choices:</strong> Add wrong options to make it harder: "Manila, rice cake, Bataan"',
           '🔀 <strong>Automatic shuffling:</strong> All choices (correct + extra) will be shuffled for players to drag',
-          '� <strong>Tip:</strong> Correct answers automatically become draggable choices'
+          '💡 <strong>Tip:</strong> Correct answers automatically become draggable choices'
         ]
       },
       'image_identification': {
