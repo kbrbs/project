@@ -70,7 +70,7 @@
             </div>
             <div class="hidden sm:block">
               <h1 class="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Rooted in Knowledge</h1>
-              <p class="text-xs text-gray-500">The Sweet Root of Bustos</p>
+              <p class="text-xs text-gray-500">The Sweet Root of Minasa</p>
             </div>
           </a>
 
@@ -115,7 +115,13 @@
                       <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                     </svg>
                   </div>
-                  <span>Profile</span>
+                  <span>
+                    {% if user.first_name %}
+                      {{ user.first_name }}
+                    {% else %}
+                      {{ user.username }}
+                    {% endif %}
+                  </span>
                 </a>
                 <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
                   Logout
@@ -187,7 +193,11 @@
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                 </svg>
-                Profile
+                {% if user.first_name %}
+                  {{ user.first_name }}
+                {% else %}
+                  {{ user.username }}
+                {% endif %}
               </a>
               <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
