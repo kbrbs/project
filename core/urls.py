@@ -10,6 +10,7 @@ urlpatterns = [
     path('lessons/<slug:slug>/', views.lesson_detail, name='lesson_detail'),
     path('festival-tour/', views.festival_tour, name='festival_tour'),
     path('profile/', views.profile, name='profile'),
+    path('profile/upload-picture/', views.upload_profile_picture, name='upload_profile_picture'),
     path('accounts/signup/', views.signup, name='signup'),
     path('accounts/change-password/', views.change_password, name='change_password'),
     # Custom admin panel
