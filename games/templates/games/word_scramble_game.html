@@ -1,0 +1,236 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ game.title }} - Word Scramble{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-6 py-8">
+  <!-- Game Header -->
+  <div class="bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-2xl p-8 mb-8 shadow-lg">
+    <div class="flex items-center gap-2 text-pink-100 mb-2">
+      <a href="{% url 'games:game_list' %}" class="hover:text-white">← Back to Games</a>
+    </div>
+    <h1 class="text-4xl font-bold mb-2">🔤 {{ game.title }}</h1>
+    <p class="text-pink-100">{{ game.description }}</p>
+    <div class="mt-4 flex items-center gap-4 text-sm">
+      <span class="bg-white/20 px-3 py-1 rounded-full">Word Scramble</span>
+      {% if game.time_limit %}<span>⏱️ {{ game.time_limit }}s limit</span>{% endif %}
+      <span>🎯 {{ game.points_per_correct }} pts per word</span>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div id="game-container" class="bg-white rounded-2xl shadow-lg p-8">
+    <!-- Timer (if applicable) -->
+    {% if game.time_limit %}
+    <div class="mb-6 text-center">
+      <div class="inline-block bg-pink-100 px-6 py-3 rounded-lg">
+        <span class="text-pink-800 font-bold text-2xl">⏱️ <span id="timer">{{ game.time_limit }}</span>s</span>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Progress -->
+    <div class="mb-6">
+      <div class="flex justify-between text-sm text-gray-600 mb-2">
+        <span>Question <span id="current-question">1</span> of <span id="total-questions">0</span></span>
+        <span>Score: <span id="score">0</span> / <span id="max-score">0</span></span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Question Display -->
+    <div id="question-area" class="text-center">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6" id="question-text">Loading...</h2>
+      
+      <!-- Scrambled Word Display -->
+      <div class="mb-6">
+        <div id="scrambled-word" class="text-5xl font-bold text-pink-600 tracking-wider mb-4">
+          LOADING
+        </div>
+        <p class="text-gray-500">Unscramble the letters to form the correct word</p>
+      </div>
+
+      <!-- Answer Input -->
+      <div class="mb-6">
+        <input type="text" id="answer-input" class="w-full max-w-md mx-auto text-center text-3xl font-bold px-6 py-4 border-4 border-pink-300 rounded-lg focus:border-pink-500 focus:outline-none uppercase" placeholder="TYPE HERE" autocomplete="off">
+      </div>
+
+      <!-- Feedback -->
+      <div id="feedback" class="hidden mb-6 p-4 rounded-lg"></div>
+
+      <!-- Submit Button -->
+      <button id="submit-btn" class="px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xl font-bold rounded-lg hover:from-pink-600 hover:to-rose-600 transition-all shadow-lg hover:shadow-xl">
+        Submit Answer
+      </button>
+    </div>
+
+    <!-- Results (hidden initially) -->
+    <div id="results" class="hidden text-center">
+      <div class="mb-6">
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Game Complete!</h2>
+        <p class="text-xl text-gray-600 mb-6">Your final score:</p>
+        <div class="text-6xl font-bold text-pink-600 mb-2">
+          <span id="final-score">0</span> / <span id="final-max-score">0</span>
+        </div>
+        <div class="text-2xl font-semibold text-gray-700 mb-6">
+          <span id="final-percentage">0</span>%
+        </div>
+      </div>
+      <div class="flex gap-4 justify-center">
+        <a href="{% url 'games:game_detail' game.pk %}" class="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 font-semibold">
+          Play Again
+        </a>
+        <a href="{% url 'games:game_list' %}" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold">
+          Back to Games
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const gameData = {{ game_data_json|safe }};
+let currentQuestionIndex = 0;
+let userAnswers = {};
+let score = 0;
+let startTime = Date.now();
+let timerInterval = null;
+
+// Initialize game
+document.addEventListener('DOMContentLoaded', function() {
+  initGame();
+});
+
+function initGame() {
+  document.getElementById('total-questions').textContent = gameData.questions.length;
+  document.getElementById('max-score').textContent = gameData.questions.length * gameData.points_per_correct;
+  
+  if (gameData.time_limit) {
+    startTimer();
+  }
+  
+  loadQuestion();
+  
+  // Event listeners
+  document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+  document.getElementById('answer-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') submitAnswer();
+  });
+}
+
+function startTimer() {
+  let timeLeft = gameData.time_limit;
+  const timerEl = document.getElementById('timer');
+  
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame();
+    }
+  }, 1000);
+}
+
+function loadQuestion() {
+  if (currentQuestionIndex >= gameData.questions.length) {
+    endGame();
+    return;
+  }
+  
+  const q = gameData.questions[currentQuestionIndex];
+  document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('scrambled-word').textContent = q.scrambled;
+  document.getElementById('answer-input').value = '';
+  document.getElementById('answer-input').focus();
+  document.getElementById('feedback').classList.add('hidden');
+  
+  // Update progress
+  const progress = ((currentQuestionIndex) / gameData.questions.length) * 100;
+  document.getElementById('progress-bar').style.width = progress + '%';
+}
+
+function submitAnswer() {
+  const q = gameData.questions[currentQuestionIndex];
+  const userAnswer = document.getElementById('answer-input').value.toUpperCase().trim();
+  
+  if (!userAnswer) {
+    alert('Please enter an answer!');
+    return;
+  }
+  
+  userAnswers[q.id] = userAnswer;
+  
+  const feedback = document.getElementById('feedback');
+  feedback.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'text-green-800', 'text-red-800');
+  
+  if (userAnswer === q.answer) {
+    score += gameData.points_per_correct;
+    feedback.classList.add('bg-green-100', 'text-green-800');
+    feedback.innerHTML = `<div class="font-bold text-xl mb-2">✅ Correct!</div><p>${q.explanation || 'Well done!'}</p>`;
+  } else {
+    feedback.classList.add('bg-red-100', 'text-red-800');
+    feedback.innerHTML = `<div class="font-bold text-xl mb-2">❌ Incorrect</div><p>The correct answer was: <strong>${q.answer}</strong></p><p>${q.explanation || ''}</p>`;
+  }
+  
+  document.getElementById('score').textContent = score;
+  
+  // Move to next question after delay
+  setTimeout(() => {
+    currentQuestionIndex++;
+    loadQuestion();
+  }, 2500);
+}
+
+function endGame() {
+  if (timerInterval) clearInterval(timerInterval);
+  
+  const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+  const maxScore = gameData.questions.length * gameData.points_per_correct;
+  const percentage = Math.round((score / maxScore) * 100);
+  
+  // Update UI
+  document.getElementById('question-area').classList.add('hidden');
+  document.getElementById('results').classList.remove('hidden');
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('final-max-score').textContent = maxScore;
+  document.getElementById('final-percentage').textContent = percentage;
+  
+  // Submit to server
+  {% if user.is_authenticated %}
+  fetch('{% url "games:submit_game" game.pk %}', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify({
+      answers: userAnswers,
+      time_taken: timeTaken
+    })
+  });
+  {% endif %}
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+</script>
+
+{% endblock %}

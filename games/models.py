@@ -1,0 +1,126 @@
+from django.db import models
+from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
+import json
+
+User = get_user_model()
+
+
+class Game(models.Model):
+    """Represents a game/activity with a specific type and learning objective."""
+    
+    GAME_TYPE_CHOICES = [
+        ('word_scramble', 'Word Scramble'),
+        ('drag_drop', 'Drag and Drop Sorting'),
+        ('image_identification', 'Image Identification'),
+        ('memory_match', 'Memory Matching'),
+        ('multiple_choice_image', 'Multiple Choice with Images'),
+    ]
+    
+    title = models.CharField(max_length=200)
+    game_type = models.CharField(max_length=30, choices=GAME_TYPE_CHOICES)
+    description = models.TextField(help_text="Learning goal and game instructions")
+    article = models.ForeignKey('core.Article', on_delete=models.SET_NULL, null=True, blank=True, related_name='games')
+    difficulty = models.CharField(max_length=20, choices=[('easy', 'Easy'), ('medium', 'Medium'), ('hard', 'Hard')], default='medium')
+    time_limit = models.IntegerField(null=True, blank=True, help_text="Time limit in seconds (optional)")
+    points_per_correct = models.IntegerField(default=10, validators=[MinValueValidator(1)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.title} ({self.get_game_type_display()})"
+
+
+class GameQuestion(models.Model):
+    """Question/item within a game. Structure varies by game type."""
+    
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='questions')
+    order = models.IntegerField(default=0, help_text="Display order")
+    
+    # Common fields
+    question_text = models.TextField(help_text="Question prompt or instruction")
+    
+    # For word_scramble: word to scramble
+    word = models.CharField(max_length=100, blank=True, help_text="Word Scramble: the word to unscramble")
+    
+    # For drag_drop: correct sequence stored as JSON array
+    correct_sequence = models.TextField(blank=True, help_text="Drag-Drop: JSON array of correct order, e.g. ['Step 1', 'Step 2']")
+    
+    # For image_identification & multiple_choice_image: correct answer and options
+    correct_answer = models.CharField(max_length=200, blank=True, help_text="Image ID / MCQ: correct answer text")
+    
+    # For memory_match: pairs stored as JSON
+    memory_pairs = models.TextField(blank=True, help_text="Memory Match: JSON object of pairs, e.g. {'Arrowroot': 'Plant used for Minasa flour'}")
+    
+    # Explanation shown after answering
+    explanation = models.TextField(blank=True, help_text="Educational explanation shown after answer")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', 'id']
+    
+    def __str__(self):
+        return f"{self.game.title} - Q{self.order}"
+    
+    def get_correct_sequence_list(self):
+        """Parse correct_sequence JSON to list."""
+        if self.correct_sequence:
+            try:
+                return json.loads(self.correct_sequence)
+            except:
+                return []
+        return []
+    
+    def get_memory_pairs_dict(self):
+        """Parse memory_pairs JSON to dict."""
+        if self.memory_pairs:
+            try:
+                return json.loads(self.memory_pairs)
+            except:
+                return {}
+        return {}
+
+
+class GameOption(models.Model):
+    """Options for image identification and multiple choice games."""
+    
+    question = models.ForeignKey(GameQuestion, on_delete=models.CASCADE, related_name='options')
+    option_text = models.CharField(max_length=200, help_text="Option label/text")
+    option_image = models.ImageField(upload_to='game_images/', blank=True, null=True, help_text="Image for this option")
+    is_correct = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+    
+    class Meta:
+        ordering = ['order', 'id']
+    
+    def __str__(self):
+        return f"{self.question} - {self.option_text}"
+
+
+class GameAttempt(models.Model):
+    """Tracks student attempts at games."""
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_attempts')
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='attempts')
+    score = models.IntegerField(default=0)
+    max_score = models.IntegerField(default=0)
+    time_taken = models.IntegerField(null=True, blank=True, help_text="Time in seconds")
+    answers = models.TextField(help_text="JSON of user answers")
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.game.title} ({self.score}/{self.max_score})"
+    
+    def get_percentage(self):
+        if self.max_score > 0:
+            return round((self.score / self.max_score) * 100)
+        return 0
