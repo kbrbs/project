@@ -24,9 +24,16 @@ class GameForm(forms.ModelForm):
 class GameQuestionForm(forms.ModelForm):
     class Meta:
         model = GameQuestion
-        fields = ['order', 'question_text', 'word', 'correct_sequence', 'correct_answer', 'memory_pairs', 'explanation']
+        fields = [
+            'order', 'question_text', 'word', 
+            'sentence_template', 'correct_answers', 'extra_choices',  # New drag-drop fields
+            'correct_sequence', 'correct_answer', 'memory_pairs', 'explanation'
+        ]
         widgets = {
             'question_text': forms.Textarea(attrs={'rows': 2}),
+            'sentence_template': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Peter * picked a * peckpeck'}),
+            'correct_answers': forms.TextInput(attrs={'placeholder': 'piper, peck of'}),
+            'extra_choices': forms.TextInput(attrs={'placeholder': 'pepper, pack, pick'}),
             'correct_sequence': forms.Textarea(attrs={'rows': 2, 'placeholder': '["Step 1", "Step 2", "Step 3"]'}),
             'memory_pairs': forms.Textarea(attrs={'rows': 2, 'placeholder': '{"Term": "Definition", "Word": "Meaning"}'}),
             'explanation': forms.Textarea(attrs={'rows': 2}),

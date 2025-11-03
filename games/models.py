@@ -47,8 +47,13 @@ class GameQuestion(models.Model):
     # For word_scramble: word to scramble
     word = models.CharField(max_length=100, blank=True, help_text="Word Scramble: the word to unscramble")
     
-    # For drag_drop: correct sequence stored as JSON array
-    correct_sequence = models.TextField(blank=True, help_text="Drag-Drop: JSON array of correct order, e.g. ['Step 1', 'Step 2']")
+    # For drag_drop: fill-in-the-blanks with drag-drop
+    sentence_template = models.TextField(blank=True, help_text="Drag-Drop: Sentence with blanks marked by * or _, e.g. 'Peter * picked a * peckpeck'")
+    correct_answers = models.TextField(blank=True, help_text="Drag-Drop: Correct answers for each blank (comma-separated), e.g. 'piper, peck of'")
+    extra_choices = models.TextField(blank=True, help_text="Drag-Drop: Additional wrong choices (comma-separated), e.g. 'pepper, pack, pick'")
+    
+    # Legacy field for sorting-type drag-drop (kept for backward compatibility)
+    correct_sequence = models.TextField(blank=True, help_text="Drag-Drop Sorting: JSON array of correct order, e.g. ['Step 1', 'Step 2']")
     
     # For image_identification & multiple_choice_image: correct answer and options
     correct_answer = models.CharField(max_length=200, blank=True, help_text="Image ID / MCQ: correct answer text")
@@ -84,6 +89,24 @@ class GameQuestion(models.Model):
             except:
                 return {}
         return {}
+    
+    def get_correct_answers_list(self):
+        """Get list of correct answers for drag-drop blanks."""
+        if self.correct_answers:
+            return [answer.strip() for answer in self.correct_answers.split(',') if answer.strip()]
+        return []
+    
+    def get_extra_choices_list(self):
+        """Get list of extra wrong choices for drag-drop."""
+        if self.extra_choices:
+            return [choice.strip() for choice in self.extra_choices.split(',') if choice.strip()]
+        return []
+    
+    def get_blanks_count(self):
+        """Count number of blanks in sentence template."""
+        if self.sentence_template:
+            return self.sentence_template.count('*') + self.sentence_template.count('_')
+        return 0
 
 
 class GameOption(models.Model):

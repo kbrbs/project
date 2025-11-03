@@ -60,12 +60,46 @@ def game_detail(request, pk):
             question_data['answer'] = word
             
         elif game.game_type == 'drag_drop':
-            # Shuffle the sequence
-            sequence = q.get_correct_sequence_list()
-            shuffled = sequence.copy()
-            random.shuffle(shuffled)
-            question_data['items'] = shuffled
-            question_data['correct_order'] = sequence
+            # New fill-in-the-blanks format
+            if q.sentence_template:
+                # Parse sentence template and create blanks
+                sentence = q.sentence_template
+                correct_answers = q.get_correct_answers_list()
+                extra_choices = q.get_extra_choices_list()
+                
+                # Replace * and _ with numbered placeholders
+                blank_count = 0
+                sentence_parts = []
+                current_part = ""
+                
+                for char in sentence:
+                    if char in ['*', '_']:
+                        if current_part:
+                            sentence_parts.append({'type': 'text', 'content': current_part})
+                            current_part = ""
+                        sentence_parts.append({'type': 'blank', 'index': blank_count})
+                        blank_count += 1
+                    else:
+                        current_part += char
+                
+                if current_part:
+                    sentence_parts.append({'type': 'text', 'content': current_part})
+                
+                # Combine all choices and shuffle
+                all_choices = correct_answers + extra_choices
+                random.shuffle(all_choices)
+                
+                question_data['sentence_parts'] = sentence_parts
+                question_data['choices'] = all_choices
+                question_data['correct_answers'] = correct_answers
+                question_data['blank_count'] = blank_count
+            else:
+                # Legacy sorting format (backward compatibility)
+                sequence = q.get_correct_sequence_list()
+                shuffled = sequence.copy()
+                random.shuffle(shuffled)
+                question_data['items'] = shuffled
+                question_data['correct_order'] = sequence
             
         elif game.game_type in ['image_identification', 'multiple_choice_image']:
             # Get options
@@ -124,9 +158,35 @@ def submit_game(request, pk):
                     score += game.points_per_correct
                     
             elif game.game_type == 'drag_drop':
-                correct_sequence = question.get_correct_sequence_list()
-                if user_answer == correct_sequence:
-                    score += game.points_per_correct
+                # Check if using new fill-in-the-blanks format
+                if question.sentence_template:
+                    # user_answer is a dict/list of blank_index: answer
+                    correct_answers = question.get_correct_answers_list()
+                    
+                    if isinstance(user_answer, dict):
+                        # Check each blank
+                        all_correct = True
+                        for i, correct in enumerate(correct_answers):
+                            user_ans = user_answer.get(str(i), '').strip()
+                            if user_ans.lower() != correct.lower():
+                                all_correct = False
+                                break
+                        if all_correct:
+                            score += game.points_per_correct
+                    elif isinstance(user_answer, list):
+                        # Alternative: list format [answer1, answer2, ...]
+                        if len(user_answer) == len(correct_answers):
+                            all_correct = all(
+                                user_ans.strip().lower() == correct.lower()
+                                for user_ans, correct in zip(user_answer, correct_answers)
+                            )
+                            if all_correct:
+                                score += game.points_per_correct
+                else:
+                    # Legacy sorting format
+                    correct_sequence = question.get_correct_sequence_list()
+                    if user_answer == correct_sequence:
+                        score += game.points_per_correct
                     
             elif game.game_type in ['image_identification', 'multiple_choice_image']:
                 # user_answer is option_id

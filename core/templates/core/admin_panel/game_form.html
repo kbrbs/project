@@ -132,10 +132,23 @@
                 </div>
                 
                 <!-- Drag & Drop fields -->
-                <div class="field-correct_sequence" style="display:none;">
-                  <label>Correct Sequence (JSON Array)</label>
-                  {{ f.correct_sequence }}
-                  <p class="helptext">Example: ["Harvest", "Wash", "Grate", "Extract starch", "Dry", "Bake"]</p>
+                <div class="field-drag_drop" style="display:none;">
+                  <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-4">
+                    <h4 class="font-semibold text-blue-900 mb-2">📝 Fill-in-the-Blanks Format</h4>
+                    <p class="text-sm text-blue-800 mb-2">Use <code class="bg-white px-1 rounded">*</code> or <code class="bg-white px-1 rounded">_</code> to mark where answers should be dragged</p>
+                  </div>
+                  
+                  <label>Sentence with Blanks</label>
+                  {{ f.sentence_template }}
+                  <p class="helptext">Example: "Peter * picked a * peckpeck" → "Peter _____ picked a _____ peckpeck"</p>
+                  
+                  <label class="mt-4">Correct Answers (comma-separated)</label>
+                  {{ f.correct_answers }}
+                  <p class="helptext">Example: "piper, peck of" (in order of blanks). These will automatically become draggable choices.</p>
+                  
+                  <label class="mt-4">Additional Choices (comma-separated, optional)</label>
+                  {{ f.extra_choices }}
+                  <p class="helptext">Example: "pepper, pack, pick" (wrong answers to make it challenging)</p>
                 </div>
                 
                 <!-- Image ID / MCQ fields -->
@@ -194,10 +207,23 @@
                 <p class="helptext">Enter the correct word. It will be automatically scrambled for players.</p>
               </div>
               
-              <div class="field-correct_sequence" style="display:none;">
-                <label>Correct Sequence (JSON Array)</label>
-                {{ formset.empty_form.correct_sequence }}
-                <p class="helptext">Example: ["Harvest", "Wash", "Grate", "Extract starch", "Dry", "Bake"]</p>
+              <div class="field-drag_drop" style="display:none;">
+                <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-4">
+                  <h4 class="font-semibold text-blue-900 mb-2">📝 Fill-in-the-Blanks Format</h4>
+                  <p class="text-sm text-blue-800 mb-2">Use <code class="bg-white px-1 rounded">*</code> or <code class="bg-white px-1 rounded">_</code> to mark where answers should be dragged</p>
+                </div>
+                
+                <label>Sentence with Blanks</label>
+                {{ formset.empty_form.sentence_template }}
+                <p class="helptext">Example: "Peter * picked a * peckpeck" → "Peter _____ picked a _____ peckpeck"</p>
+                
+                <label class="mt-4">Correct Answers (comma-separated)</label>
+                {{ formset.empty_form.correct_answers }}
+                <p class="helptext">Example: "piper, peck of" (in order of blanks). These will automatically become draggable choices.</p>
+                
+                <label class="mt-4">Additional Choices (comma-separated, optional)</label>
+                {{ formset.empty_form.extra_choices }}
+                <p class="helptext">Example: "pepper, pack, pick" (wrong answers to make it challenging)</p>
               </div>
               
               <div class="field-correct_answer" style="display:none;">
@@ -321,14 +347,16 @@
         ]
       },
       'drag_drop': {
-        name: 'Drag & Drop Sorting',
+        name: 'Fill-in-the-Blanks (Drag & Drop)',
         color: 'bg-blue-50 border-blue-200 text-blue-900',
-        fields: ['correct_sequence'],
+        fields: ['drag_drop'],
         help: [
-          '✅ <strong>What to add:</strong> A JSON array of steps in the correct order',
-          '📋 <strong>Format:</strong> ["Step 1", "Step 2", "Step 3"]',
-          '🔀 <strong>Automatic shuffling:</strong> The system will randomly shuffle items for players to sort',
-          '📝 <strong>Example:</strong> ["Harvest arrowroot", "Wash roots", "Grate into pulp", "Extract starch", "Dry flour", "Bake into Minasa"]'
+          '✅ <strong>What to add:</strong> A sentence with blanks marked by * or _',
+          '📝 <strong>Example:</strong> "Peter * picked a * peckpeck" will show as "Peter _____ picked a _____ peckpeck"',
+          '✓ <strong>Correct answers:</strong> Enter comma-separated answers in order: "piper, peck of"',
+          '🎯 <strong>Extra choices:</strong> Add wrong options to make it harder: "pepper, pack, pick"',
+          '🔀 <strong>Automatic shuffling:</strong> All choices (correct + extra) will be shuffled for players to drag',
+          '� <strong>Tip:</strong> Correct answers automatically become draggable choices'
         ]
       },
       'image_identification': {
@@ -380,7 +408,7 @@
       // Show/hide fields in all question forms
       document.querySelectorAll('.question-form').forEach(form => {
         // Hide all game-type-specific fields first
-        form.querySelectorAll('.field-word, .field-correct_sequence, .field-correct_answer, .field-memory_pairs').forEach(field => {
+        form.querySelectorAll('.field-word, .field-drag_drop, .field-correct_answer, .field-memory_pairs').forEach(field => {
           field.style.display = 'none';
         });
 
