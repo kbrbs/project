@@ -7,12 +7,21 @@
     <h1 class="text-3xl font-bold text-gray-800">User Management</h1>
     <p class="text-gray-500 mt-1">Manage student accounts and profiles</p>
   </div>
-  <!-- <a href="{% url 'core:admin_user_add' %}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-    </svg>
-    Add User
-  </a> -->
+  <div class="flex items-center gap-3 w-full sm:w-auto">
+    <form method="get" class="flex items-center gap-2 w-full sm:w-auto">
+      <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Search users..." class="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+      <button type="submit" class="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Search</button>
+      {% if request.GET.q %}
+        <a href="{% url 'core:admin_users' %}" class="px-3 py-2 text-sm text-gray-600 hover:text-gray-800">Clear</a>
+      {% endif %}
+    </form>
+    <!-- <a href="{% url 'core:admin_user_add' %}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+      </svg>
+      Add
+    </a> -->
+  </div>
 </div>
 
 <!-- Users Table -->
