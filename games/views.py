@@ -101,7 +101,39 @@ def game_detail(request, pk):
                 question_data['items'] = shuffled
                 question_data['correct_order'] = sequence
             
-        elif game.game_type in ['image_identification', 'multiple_choice_image']:
+        elif game.game_type == 'image_identification':
+            # New format: image as question, text as choices
+            question_data['question_text'] = q.question_text
+            
+            # Get text choices and shuffle
+            text_choices = q.get_text_choices_list()
+            if text_choices:
+                # Using new format with uploaded image and text choices
+                random.shuffle(text_choices)
+                question_data['choices'] = text_choices
+                question_data['correct_answer'] = q.correct_answer
+                
+                # Add image URL if available
+                if q.question_image:
+                    question_data['question_image'] = q.question_image.url
+                else:
+                    # No image uploaded yet - set empty string to show warning
+                    question_data['question_image'] = None
+            else:
+                # Legacy format: text question, image choices (using GameOption)
+                options = list(q.options.all())
+                random.shuffle(options)
+                question_data['options'] = [
+                    {
+                        'id': opt.id,
+                        'text': opt.option_text,
+                        'image': opt.option_image.url if opt.option_image else None,
+                        'is_correct': opt.is_correct
+                    }
+                    for opt in options
+                ]
+            
+        elif game.game_type == 'multiple_choice_image':
             # Get options
             options = list(q.options.all())
             random.shuffle(options)
@@ -188,7 +220,22 @@ def submit_game(request, pk):
                     if user_answer == correct_sequence:
                         score += game.points_per_correct
                     
-            elif game.game_type in ['image_identification', 'multiple_choice_image']:
+            elif game.game_type == 'image_identification':
+                # New format: user_answer is text string
+                if question.question_image and question.text_choices:
+                    # Compare text answer
+                    if user_answer and user_answer.strip().lower() == question.correct_answer.strip().lower():
+                        score += game.points_per_correct
+                else:
+                    # Legacy format: user_answer is option_id
+                    try:
+                        option = question.options.get(id=int(user_answer))
+                        if option.is_correct:
+                            score += game.points_per_correct
+                    except:
+                        pass
+                        
+            elif game.game_type == 'multiple_choice_image':
                 # user_answer is option_id
                 try:
                     option = question.options.get(id=int(user_answer))

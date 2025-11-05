@@ -165,11 +165,29 @@
                   <p class="helptext">Example: "Manila, rice cake, Bataan" (wrong answers to make it challenging)</p>
                 </div>
                 
-                <!-- Image ID / MCQ fields -->
-                <div class="field-correct_answer" style="display:none;">
-                  <label>Correct Answer Text</label>
+                <!-- Image Identification fields -->
+                <div class="field-image_identification" style="display:none;">
+                  <div class="bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-4">
+                    <h4 class="font-semibold text-green-900 mb-2">🖼️ Image as Question, Text as Answers</h4>
+                    <p class="text-sm text-green-800 mb-2">Upload an image to identify, then provide text choices</p>
+                  </div>
+                  
+                  <label>Question Image (Image to Identify)</label>
+                  {{ f.question_image }}
+                  {% if f.instance.question_image %}
+                    <div class="mt-2">
+                      <img src="{{ f.instance.question_image.url }}" alt="Question image" class="w-32 h-32 object-cover rounded border">
+                    </div>
+                  {% endif %}
+                  <p class="helptext">Upload the image students need to identify</p>
+                  
+                  <label class="mt-4">Text Choices (comma-separated)</label>
+                  {{ f.text_choices }}
+                  <p class="helptext">Example: "Arrowroot leaf, Cassava root, Minasa flour, Rice grain" (provide 4 options)</p>
+                  
+                  <label class="mt-4">Correct Answer</label>
                   {{ f.correct_answer }}
-                  <p class="helptext">The text of the correct answer. Manage image options after saving.</p>
+                  <p class="helptext">Must exactly match one of the choices above. Example: "Arrowroot leaf"</p>
                 </div>
                 
                 <!-- Memory Match fields -->
@@ -243,10 +261,23 @@
                 <p class="helptext">Example: "Manila, rice cake, Bataan" (wrong answers to make it challenging)</p>
               </div>
               
-              <div class="field-correct_answer" style="display:none;">
-                <label>Correct Answer Text</label>
+              <div class="field-image_identification" style="display:none;">
+                <div class="bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-4">
+                  <h4 class="font-semibold text-green-900 mb-2">🖼️ Image as Question, Text as Answers</h4>
+                  <p class="text-sm text-green-800 mb-2">Upload an image to identify, then provide text choices</p>
+                </div>
+                
+                <label>Question Image (Image to Identify)</label>
+                {{ formset.empty_form.question_image }}
+                <p class="helptext">Upload the image students need to identify</p>
+                
+                <label class="mt-4">Text Choices (comma-separated)</label>
+                {{ formset.empty_form.text_choices }}
+                <p class="helptext">Example: "Arrowroot leaf, Cassava root, Minasa flour, Rice grain" (provide 4 options)</p>
+                
+                <label class="mt-4">Correct Answer</label>
                 {{ formset.empty_form.correct_answer }}
-                <p class="helptext">The text of the correct answer. Manage image options after saving.</p>
+                <p class="helptext">Must exactly match one of the choices above. Example: "Arrowroot leaf"</p>
               </div>
               
               <div class="field-memory_pairs" style="display:none;">
@@ -379,12 +410,13 @@
       'image_identification': {
         name: 'Image Identification',
         color: 'bg-green-50 border-green-200 text-green-900',
-        fields: ['correct_answer'],
+        fields: ['image_identification'],
         help: [
-          '✅ <strong>What to add:</strong> Question text and correct answer label',
-          '🖼️ <strong>After saving:</strong> Click "Manage Options" to upload 4 images (one correct, three wrong)',
-          '✓ <strong>Mark correct:</strong> Check the "is_correct" box for the right answer',
-          '📝 <strong>Example:</strong> "Which image shows an arrowroot leaf?"'
+          '✅ <strong>What to add:</strong> Upload an image and provide text choices',
+          '🖼️ <strong>Question format:</strong> The IMAGE is the question (e.g., photo of arrowroot leaf)',
+          '📝 <strong>Answer format:</strong> TEXT choices (e.g., "Arrowroot leaf, Cassava root, Minasa flour, Rice grain")',
+          '✓ <strong>Correct answer:</strong> Type the exact text of the correct choice',
+          '� <strong>Tip:</strong> Provide 4 choices, only one correct'
         ]
       },
       'memory_match': {
@@ -425,7 +457,7 @@
       // Show/hide fields in all question forms
       document.querySelectorAll('.question-form').forEach(form => {
         // Hide all game-type-specific fields first
-        form.querySelectorAll('.field-word, .field-drag_drop, .field-correct_answer, .field-memory_pairs').forEach(field => {
+        form.querySelectorAll('.field-word, .field-drag_drop, .field-image_identification, .field-memory_pairs').forEach(field => {
           field.style.display = 'none';
         });
 
@@ -435,10 +467,10 @@
           if (field) field.style.display = 'block';
         });
 
-        // Show/hide "Manage Options" link
+        // Show/hide "Manage Options" link (not needed anymore for image_identification)
         const manageLink = form.querySelector('.manage-options-link');
         if (manageLink) {
-          manageLink.style.display = (gameType === 'image_identification' || gameType === 'multiple_choice_image') ? 'inline-block' : 'none';
+          manageLink.style.display = (gameType === 'multiple_choice_image') ? 'inline-block' : 'none';
         }
       });
     }
@@ -521,6 +553,37 @@
         console.log('=== END DEBUG ===\n');
       });
     }
+
+    // Image file validation for image identification
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageInputs = document.querySelectorAll('input[type="file"][name*="question_image"]');
+      
+      imageInputs.forEach(input => {
+        input.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          // Check file size (max 5MB)
+          const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+          if (file.size > maxSize) {
+            alert('⚠️ File too large! Maximum size is 5MB.\nYour file: ' + (file.size / 1024 / 1024).toFixed(2) + 'MB');
+            e.target.value = ''; // Clear the input
+            return;
+          }
+
+          // Check file type
+          const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+          if (!allowedTypes.includes(file.type)) {
+            alert('⚠️ Invalid file type!\n\nAllowed: JPG, JPEG, PNG, GIF, WEBP\nYour file: ' + file.type);
+            e.target.value = ''; // Clear the input
+            return;
+          }
+
+          // Show preview (optional enhancement)
+          console.log('✅ Valid image selected:', file.name, '(' + (file.size / 1024).toFixed(2) + 'KB)');
+        });
+      });
+    });
   })();
 </script>
 

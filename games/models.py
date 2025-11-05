@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, FileExtensionValidator
 import json
 
 User = get_user_model()
@@ -55,8 +55,16 @@ class GameQuestion(models.Model):
     # Legacy field for sorting-type drag-drop (kept for backward compatibility)
     correct_sequence = models.TextField(blank=True, help_text="Drag-Drop Sorting: JSON array of correct order, e.g. ['Step 1', 'Step 2']")
     
-    # For image_identification & multiple_choice_image: correct answer and options
-    correct_answer = models.CharField(max_length=200, blank=True, help_text="Image ID / MCQ: correct answer text")
+    # For image_identification: image as question, text choices as answers
+    question_image = models.ImageField(
+        upload_to='game_images/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])],
+        help_text="Image Identification: The image to identify (jpg, jpeg, png, gif, webp only)"
+    )
+    text_choices = models.TextField(blank=True, help_text="Image Identification: Text choices (comma-separated), e.g. 'Arrowroot leaf, Cassava root, Minasa flour, Rice grain'")
+    correct_answer = models.CharField(max_length=200, blank=True, help_text="Image Identification: The correct text answer (must match one of the choices)")
     
     # For memory_match: pairs stored as JSON
     memory_pairs = models.TextField(blank=True, help_text="Memory Match: JSON object of pairs, e.g. {'Arrowroot': 'Plant used for Minasa flour'}")
@@ -107,6 +115,12 @@ class GameQuestion(models.Model):
         if self.sentence_template:
             return self.sentence_template.count('*') + self.sentence_template.count('_')
         return 0
+    
+    def get_text_choices_list(self):
+        """Get list of text choices for image identification."""
+        if self.text_choices:
+            return [choice.strip() for choice in self.text_choices.split(',') if choice.strip()]
+        return []
 
 
 class GameOption(models.Model):

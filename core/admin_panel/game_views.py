@@ -26,14 +26,18 @@ class GameQuestionForm(forms.ModelForm):
         model = GameQuestion
         fields = [
             'order', 'question_text', 'word', 
-            'sentence_template', 'correct_answers', 'extra_choices',  # New drag-drop fields
-            'correct_sequence', 'correct_answer', 'memory_pairs', 'explanation'
+            'sentence_template', 'correct_answers', 'extra_choices',  # Drag-drop fields
+            'question_image', 'text_choices', 'correct_answer',  # Image identification fields
+            'correct_sequence', 'memory_pairs', 'explanation'
         ]
         widgets = {
             'question_text': forms.Textarea(attrs={'rows': 2}),
-            'sentence_template': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Peter * picked a * peckpeck'}),
-            'correct_answers': forms.TextInput(attrs={'placeholder': 'piper, peck of'}),
-            'extra_choices': forms.TextInput(attrs={'placeholder': 'pepper, pack, pick'}),
+            'sentence_template': forms.Textarea(attrs={'rows': 2, 'placeholder': 'The city of * is famous for *'}),
+            'correct_answers': forms.TextInput(attrs={'placeholder': 'Bustos, Minasa'}),
+            'extra_choices': forms.TextInput(attrs={'placeholder': 'Manila, rice cake, Bataan'}),
+            'question_image': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp'}),
+            'text_choices': forms.TextInput(attrs={'placeholder': 'Arrowroot leaf, Cassava root, Minasa flour, Rice grain'}),
+            'correct_answer': forms.TextInput(attrs={'placeholder': 'Arrowroot leaf'}),
             'correct_sequence': forms.Textarea(attrs={'rows': 2, 'placeholder': '["Step 1", "Step 2", "Step 3"]'}),
             'memory_pairs': forms.Textarea(attrs={'rows': 2, 'placeholder': '{"Term": "Definition", "Word": "Meaning"}'}),
             'explanation': forms.Textarea(attrs={'rows': 2}),
@@ -97,7 +101,7 @@ class GameCreateView(CreateView):
     def post(self, request, *args, **kwargs):
         self.object = None
         form = self.get_form()
-        formset = GameQuestionFormSet(request.POST)
+        formset = GameQuestionFormSet(request.POST, request.FILES)  # Added request.FILES for image uploads
         if form.is_valid() and formset.is_valid():
             game = form.save()
             formset.instance = game
@@ -141,7 +145,7 @@ class GameUpdateView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        formset = GameQuestionFormSet(request.POST, instance=self.object)
+        formset = GameQuestionFormSet(request.POST, request.FILES, instance=self.object)  # Added request.FILES for image uploads
         
         # Debug: Print POST data for drag-drop fields
         print("\n=== DEBUG: POST Data for Drag-Drop Fields ===")
@@ -175,6 +179,9 @@ class GameUpdateView(UpdateView):
                         print(f"  sentence_template: '{question.sentence_template}'")
                         print(f"  correct_answers: '{question.correct_answers}'")
                         print(f"  extra_choices: '{question.extra_choices}'")
+                        print(f"  question_image: '{question.question_image}'")
+                        print(f"  text_choices: '{question.text_choices}'")
+                        print(f"  correct_answer: '{question.correct_answer}'")
                         question.save()
                         saved_count += 1
             
