@@ -118,7 +118,7 @@ class SectionCreateView(CreateView):
     model = EducationalSection
     form_class = SectionForm
     template_name = 'core/admin_panel/section_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_sections')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -161,7 +161,7 @@ class SectionUpdateView(UpdateView):
     model = EducationalSection
     form_class = SectionForm
     template_name = 'core/admin_panel/section_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_sections')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -197,7 +197,7 @@ class SectionUpdateView(UpdateView):
 class SectionDeleteView(DeleteView):
     model = EducationalSection
     template_name = 'core/admin_panel/confirm_delete.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_sections')
     
     def get_success_url(self):
         # Prefer explicit next parameter (POST/GET), otherwise fall back to HTTP_REFERER, then default
@@ -234,7 +234,7 @@ class MediaCreateView(CreateView):
     model = MediaAsset
     form_class = MediaForm
     template_name = 'core/admin_panel/media_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_media')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -249,7 +249,7 @@ class MediaUpdateView(UpdateView):
     model = MediaAsset
     form_class = MediaForm
     template_name = 'core/admin_panel/media_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_media')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -263,7 +263,7 @@ class MediaUpdateView(UpdateView):
 class MediaDeleteView(DeleteView):
     model = MediaAsset
     template_name = 'core/admin_panel/confirm_delete.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_media')
 
     def get_success_url(self):
         next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
@@ -383,39 +383,27 @@ class QuizCreateView(CreateView):
     success_url = reverse_lazy('core:admin_quizzes')
 
     def get(self, request, *args, **kwargs):
-<<<<<<< HEAD
-=======
         # Render the create form with an empty question formset
->>>>>>> 5d763c7f250538853d8d36c601fc9529c57c97d2
         self.object = None
         form = self.get_form()
         formset = QuizFormSet()
         return render(request, self.template_name, {'form': form, 'formset': formset})
 
     def post(self, request, *args, **kwargs):
-<<<<<<< HEAD
-=======
         # Handle submitted quiz form plus inline question formset
->>>>>>> 5d763c7f250538853d8d36c601fc9529c57c97d2
         self.object = None
         form = self.get_form()
         formset = QuizFormSet(request.POST)
         if form.is_valid() and formset.is_valid():
             quiz = form.save()
-<<<<<<< HEAD
-            formset.instance = quiz
-            formset.save()
-            messages.success(request, 'Quiz created')
-=======
             # associate and save questions
             formset.instance = quiz
             formset.save()
-            messages.success(request, 'Quiz saved')
+            messages.success(request, 'Quiz created')
             # Respect safe "next" parameter if provided
             next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                 return redirect(next_url)
->>>>>>> 5d763c7f250538853d8d36c601fc9529c57c97d2
             return redirect(self.success_url)
         return render(request, self.template_name, {'form': form, 'formset': formset})
 
