@@ -178,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initGame() {
+  console.log('Game Data:', gameData);
   document.getElementById('total-questions').textContent = gameData.questions.length;
   document.getElementById('max-score').textContent = gameData.questions.length * gameData.points_per_correct;
   
@@ -211,6 +212,13 @@ function loadQuestion() {
   document.getElementById('current-question').textContent = currentQuestionIndex + 1;
   document.getElementById('question-text').textContent = q.text;
   document.getElementById('feedback').classList.add('hidden');
+  
+  // Check if this is new drag-drop format
+  if (!q.sentence_parts || !q.choices) {
+    console.error('Missing sentence_parts or choices in question data:', q);
+    alert('Error: This game is not configured correctly. Please make sure to use the fill-in-the-blanks format with sentence template and choices.');
+    return;
+  }
   
   // Destroy previous sortable instances
   sortableInstances.forEach(s => s.destroy());

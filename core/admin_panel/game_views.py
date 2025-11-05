@@ -101,13 +101,28 @@ class GameCreateView(CreateView):
         if form.is_valid() and formset.is_valid():
             game = form.save()
             formset.instance = game
-            formset.save()
-            messages.success(request, f'Game "{game.title}" created successfully!')
+            
+            # Explicitly save each question to ensure all fields are committed
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.game = game  # Ensure foreign key is set
+                instance.save()
+            
+            # Delete any questions marked for deletion
+            for obj in formset.deleted_objects:
+                obj.delete()
+            
+            messages.success(request, f'Game "{game.title}" created successfully with {len(instances)} questions!')
             # Respect safe "next" parameter if provided
             next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                 return redirect(next_url)
             return redirect(self.success_url)
+        else:
+            if not form.is_valid():
+                messages.error(request, f'Game form errors: {form.errors}')
+            if not formset.is_valid():
+                messages.error(request, f'Question formset errors: {formset.errors}')
         return render(request, self.template_name, {'form': form, 'formset': formset})
 
 
@@ -128,15 +143,45 @@ class GameUpdateView(UpdateView):
         self.object = self.get_object()
         form = self.get_form()
         formset = GameQuestionFormSet(request.POST, instance=self.object)
+        
+        # Debug: Print POST data for drag-drop fields
+        print("\n=== DEBUG: POST Data for Drag-Drop Fields ===")
+        for key in request.POST:
+            if 'sentence_template' in key or 'correct_answers' in key or 'extra_choices' in key:
+                print(f"POST {key}: {request.POST[key]}")
+        print("=== END DEBUG ===\n")
+        
         if form.is_valid() and formset.is_valid():
             game = form.save()
-            formset.save()
-            messages.success(request, f'Game "{game.title}" updated successfully!')
+            
+            # Explicitly save each question form and verify drag-drop fields
+            instances = formset.save(commit=False)
+            print(f"\n=== Saving {len(instances)} question instances ===")
+            for instance in instances:
+                print(f"Question {instance.order}: sentence_template='{instance.sentence_template}', correct_answers='{instance.correct_answers}', extra_choices='{instance.extra_choices}'")
+                instance.save()
+            
+            # Delete any questions marked for deletion
+            for obj in formset.deleted_objects:
+                obj.delete()
+            
+            messages.success(request, f'Game "{game.title}" updated successfully! Saved {len(instances)} questions.')
             # Respect safe "next" parameter if provided
             next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
                 return redirect(next_url)
             return redirect(self.success_url)
+        else:
+            # Add error messages for debugging
+            if not form.is_valid():
+                messages.error(request, f'Game form errors: {form.errors}')
+            if not formset.is_valid():
+                messages.error(request, f'Question formset errors: {formset.errors}')
+                print(f"\n=== FORMSET ERRORS ===")
+                for i, form_errors in enumerate(formset.errors):
+                    if form_errors:
+                        print(f"Form {i} errors: {form_errors}")
+                print("=== END FORMSET ERRORS ===\n")
         return render(request, self.template_name, {'form': form, 'formset': formset, 'game': self.object})
 
 

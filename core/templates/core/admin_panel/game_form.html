@@ -17,6 +17,17 @@
 <!-- Form Card -->
 <div class="max-w-5xl">
   <div class="bg-white rounded-2xl shadow-sm p-8">
+    <!-- Display Django Messages (errors, success, etc) -->
+    {% if messages %}
+      <div class="mb-6">
+        {% for message in messages %}
+          <div class="p-4 rounded-lg mb-2 {% if message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'success' %}bg-green-100 text-green-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.GET.next|default:request.path }}" />
@@ -480,6 +491,28 @@
 
         // Apply field visibility to new form
         updateFieldVisibility(gameType);
+      });
+    }
+
+    // Debug: Log drag-drop field values before form submission
+    const gameForm = document.querySelector('form');
+    if (gameForm) {
+      gameForm.addEventListener('submit', function(e) {
+        console.log('\n=== FORM SUBMISSION DEBUG ===');
+        console.log('Game Type:', gameTypeSelect ? gameTypeSelect.value : 'Not found');
+        
+        // Log all drag-drop fields
+        const dragDropFields = document.querySelectorAll('[name*="sentence_template"], [name*="correct_answers"], [name*="extra_choices"]');
+        dragDropFields.forEach(field => {
+          const isVisible = field.offsetParent !== null;
+          const isDisabled = field.disabled;
+          console.log(`Field: ${field.name}`);
+          console.log(`  Value: "${field.value}"`);
+          console.log(`  Visible: ${isVisible}`);
+          console.log(`  Disabled: ${isDisabled}`);
+          console.log(`  Parent display: ${field.closest('.field-drag_drop') ? field.closest('.field-drag_drop').style.display : 'N/A'}`);
+        });
+        console.log('=== END DEBUG ===\n');
       });
     }
   })();
