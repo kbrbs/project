@@ -7,7 +7,7 @@ from django.contrib import messages
 from django import forms
 from django.db.models import Count
 
-from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download
+from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile
 from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseRedirect
 from django.conf import settings
 import os
@@ -118,7 +118,7 @@ class SectionCreateView(CreateView):
     model = EducationalSection
     form_class = SectionForm
     template_name = 'core/admin_panel/section_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_sections')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -161,7 +161,7 @@ class SectionUpdateView(UpdateView):
     model = EducationalSection
     form_class = SectionForm
     template_name = 'core/admin_panel/section_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_sections')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -197,7 +197,7 @@ class SectionUpdateView(UpdateView):
 class SectionDeleteView(DeleteView):
     model = EducationalSection
     template_name = 'core/admin_panel/confirm_delete.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_sections')
     
     def get_success_url(self):
         # Prefer explicit next parameter (POST/GET), otherwise fall back to HTTP_REFERER, then default
@@ -234,7 +234,7 @@ class MediaCreateView(CreateView):
     model = MediaAsset
     form_class = MediaForm
     template_name = 'core/admin_panel/media_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_media')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -249,7 +249,7 @@ class MediaUpdateView(UpdateView):
     model = MediaAsset
     form_class = MediaForm
     template_name = 'core/admin_panel/media_form.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_media')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -263,7 +263,7 @@ class MediaUpdateView(UpdateView):
 class MediaDeleteView(DeleteView):
     model = MediaAsset
     template_name = 'core/admin_panel/confirm_delete.html'
-    success_url = reverse_lazy('core:admin_dashboard')
+    success_url = reverse_lazy('core:admin_media')
 
     def get_success_url(self):
         next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
@@ -334,6 +334,35 @@ def export_moderation_csv(request):
     return resp
 
 
+@staff_member_required
+def export_users_csv(request):
+    User = get_user_model()
+    qs = User.objects.filter(is_superuser=False).order_by('username').select_related('studentprofile')
+    resp = HttpResponse(content_type='text/csv')
+    resp['Content-Disposition'] = 'attachment; filename="users.csv"'
+    writer = csv.writer(resp)
+    writer.writerow(['username', 'email', 'full_name', 'birthday', 'age', 'grade', 'is_active', 'is_staff', 'created_at'])
+    for u in qs:
+        profile = getattr(u, 'studentprofile', None)
+        full_name = profile.full_name if profile else ''
+        birthday = profile.birthday.isoformat() if profile and profile.birthday else ''
+        age = profile.age() if profile else ''
+        grade = profile.grade if profile else ''
+        created_at = u.date_joined.isoformat() if hasattr(u, 'date_joined') else ''
+        writer.writerow([
+            u.username,
+            u.email,
+            full_name,
+            birthday,
+            age,
+            grade,
+            u.is_active,
+            u.is_staff,
+            created_at
+        ])
+    return resp
+
+
 # Quiz CRUD with question formset
 QuizFormSet = inlineformset_factory(Quiz, Question, fields=('text', 'choices'), extra=1, can_delete=True)
 
@@ -370,7 +399,7 @@ class QuizCreateView(CreateView):
             # associate and save questions
             formset.instance = quiz
             formset.save()
-            messages.success(request, 'Quiz saved')
+            messages.success(request, 'Quiz created')
             # Respect safe "next" parameter if provided
             next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):

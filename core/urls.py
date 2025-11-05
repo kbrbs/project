@@ -33,6 +33,7 @@ urlpatterns = [
     path('admin-panel/top-pages.json', admin_views.top_pages_json, name='admin_top_pages_json'),
     path('admin-panel/export/visits.csv', admin_views.export_visits_csv, name='admin_export_visits'),
     path('admin-panel/export/moderation.csv', admin_views.export_moderation_csv, name='admin_export_moderation'),
+    path('admin-panel/export/users.csv', admin_views.export_users_csv, name='admin_export_users'),
 
     # Quizzes CRUD
     path('admin-panel/quizzes/', admin_views.QuizListView.as_view(), name='admin_quizzes'),
