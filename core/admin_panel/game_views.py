@@ -102,17 +102,16 @@ class GameCreateView(CreateView):
             game = form.save()
             formset.instance = game
             
-            # Explicitly save each question to ensure all fields are committed
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.game = game  # Ensure foreign key is set
-                instance.save()
+            # Save each form individually to ensure all fields are committed
+            saved_count = 0
+            for form_instance in formset.forms:
+                if form_instance.cleaned_data and not form_instance.cleaned_data.get('DELETE', False):
+                    question = form_instance.save(commit=False)
+                    question.game = game  # Ensure foreign key is set
+                    question.save()
+                    saved_count += 1
             
-            # Delete any questions marked for deletion
-            for obj in formset.deleted_objects:
-                obj.delete()
-            
-            messages.success(request, f'Game "{game.title}" created successfully with {len(instances)} questions!')
+            messages.success(request, f'Game "{game.title}" created successfully with {saved_count} questions!')
             # Respect safe "next" parameter if provided
             next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
@@ -154,18 +153,33 @@ class GameUpdateView(UpdateView):
         if form.is_valid() and formset.is_valid():
             game = form.save()
             
-            # Explicitly save each question form and verify drag-drop fields
-            instances = formset.save(commit=False)
-            print(f"\n=== Saving {len(instances)} question instances ===")
-            for instance in instances:
-                print(f"Question {instance.order}: sentence_template='{instance.sentence_template}', correct_answers='{instance.correct_answers}', extra_choices='{instance.extra_choices}'")
-                instance.save()
+            # Save each form in the formset individually to ensure all fields are saved
+            print(f"\n=== Saving formset with {len(formset.forms)} forms ===")
+            saved_count = 0
+            deleted_count = 0
             
-            # Delete any questions marked for deletion
-            for obj in formset.deleted_objects:
-                obj.delete()
+            for form_instance in formset.forms:
+                if form_instance.cleaned_data:
+                    # Check if marked for deletion
+                    if form_instance.cleaned_data.get('DELETE', False):
+                        # Delete the instance if it exists in DB
+                        if form_instance.instance.pk:
+                            print(f"Deleting Question ID={form_instance.instance.pk}")
+                            form_instance.instance.delete()
+                            deleted_count += 1
+                    else:
+                        # Save the instance
+                        question = form_instance.save(commit=False)
+                        question.game = game  # Ensure FK is set
+                        print(f"Saving Question ID={question.id}, Order={question.order}")
+                        print(f"  sentence_template: '{question.sentence_template}'")
+                        print(f"  correct_answers: '{question.correct_answers}'")
+                        print(f"  extra_choices: '{question.extra_choices}'")
+                        question.save()
+                        saved_count += 1
             
-            messages.success(request, f'Game "{game.title}" updated successfully! Saved {len(instances)} questions.')
+            print(f"=== Completed: Saved {saved_count} questions, deleted {deleted_count} ===\n")
+            messages.success(request, f'Game "{game.title}" updated successfully! Saved {saved_count} questions.')
             # Respect safe "next" parameter if provided
             next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):

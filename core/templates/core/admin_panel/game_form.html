@@ -110,6 +110,9 @@
         <div id="questions-container" class="space-y-4">
           {% for f in formset.forms %}
             <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition-colors question-form" data-form-index="{{ forloop.counter0 }}">
+              <!-- Hidden fields for Django formset (CRITICAL for updates) -->
+              {{ f.id }}
+              
               <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-gray-700">Question {{ forloop.counter }}</h3>
                 <div class="flex items-center gap-2">
@@ -198,6 +201,9 @@
         <!-- Empty form template for dynamic add -->
         <template id="empty-form-template">
           <div class="bg-gray-50 border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition-colors question-form" data-form-index="__prefix__">
+            <!-- Hidden fields for Django formset -->
+            {{ formset.empty_form.id }}
+            
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-semibold text-gray-700">Question __NUMBER__</h3>
               <span class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">New</span>
