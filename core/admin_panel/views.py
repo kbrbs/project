@@ -7,7 +7,7 @@ from django.contrib import messages
 from django import forms
 from django.db.models import Count
 
-from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download
+from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile
 from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseRedirect
 from django.conf import settings
 import os
@@ -298,6 +298,35 @@ def export_moderation_csv(request):
     return resp
 
 
+@staff_member_required
+def export_users_csv(request):
+    User = get_user_model()
+    qs = User.objects.filter(is_superuser=False).order_by('username').select_related('studentprofile')
+    resp = HttpResponse(content_type='text/csv')
+    resp['Content-Disposition'] = 'attachment; filename="users.csv"'
+    writer = csv.writer(resp)
+    writer.writerow(['username', 'email', 'full_name', 'birthday', 'age', 'grade', 'is_active', 'is_staff', 'created_at'])
+    for u in qs:
+        profile = getattr(u, 'studentprofile', None)
+        full_name = profile.full_name if profile else ''
+        birthday = profile.birthday.isoformat() if profile and profile.birthday else ''
+        age = profile.age() if profile else ''
+        grade = profile.grade if profile else ''
+        created_at = u.date_joined.isoformat() if hasattr(u, 'date_joined') else ''
+        writer.writerow([
+            u.username,
+            u.email,
+            full_name,
+            birthday,
+            age,
+            grade,
+            u.is_active,
+            u.is_staff,
+            created_at
+        ])
+    return resp
+
+
 # Quiz CRUD with question formset
 QuizFormSet = inlineformset_factory(Quiz, Question, fields=('text', 'choices'), extra=1, can_delete=True)
 
@@ -316,6 +345,24 @@ class QuizCreateView(CreateView):
     fields = ['title', 'article']
     template_name = 'core/admin_panel/quiz_form.html'
     success_url = reverse_lazy('core:admin_quizzes')
+
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        formset = QuizFormSet()
+        return render(request, self.template_name, {'form': form, 'formset': formset})
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        formset = QuizFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            quiz = form.save()
+            formset.instance = quiz
+            formset.save()
+            messages.success(request, 'Quiz created')
+            return redirect(self.success_url)
+        return render(request, self.template_name, {'form': form, 'formset': formset})
 
 
 @method_decorator(staff_member_required, name='dispatch')
