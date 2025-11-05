@@ -16,16 +16,19 @@
       </div>
 
       <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
-        <!-- Avatar -->
+        <!-- Avatar (click to upload) -->
         <div class="relative">
           {% if user.studentprofile.profile_picture %}
-            <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-24 h-24 rounded-full object-cover shadow-md ring-4 ring-purple-100">
+            <img id="profile-avatar-image" src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-24 h-24 rounded-full object-cover shadow-md ring-4 ring-purple-100 cursor-pointer">
           {% else %}
-            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center shadow-md ring-4 ring-purple-100">
+            <div id="profile-avatar-image" class="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center shadow-md ring-4 ring-purple-100 cursor-pointer">
               <span class="text-4xl font-bold text-white">{{ user.username|slice:":1"|upper }}</span>
             </div>
           {% endif %}
           <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-400 rounded-full border-4 border-white"></div>
+
+          <!-- Hidden file input used for uploading avatar -->
+          <input id="profile-pic-input" type="file" accept="image/*" class="hidden" />
         </div>
 
         <!-- Info -->
@@ -345,4 +348,73 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Helper to read CSRF token from cookie
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  (function () {
+    const avatar = document.getElementById('profile-avatar-image');
+    const input = document.getElementById('profile-pic-input');
+    if (!avatar || !input) return;
+
+    avatar.addEventListener('click', () => input.click());
+
+    input.addEventListener('change', async (ev) => {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+
+      const fd = new FormData();
+      fd.append('profile_picture', file);
+
+      try {
+        const resp = await fetch("{% url 'core:upload_profile_picture' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: fd
+        });
+        const data = await resp.json();
+        if (resp.ok && data.url) {
+          // Update avatar image src or replace element
+          const imgEl = document.getElementById('profile-avatar-image');
+          if (imgEl.tagName.toLowerCase() === 'img') {
+            imgEl.src = data.url;
+          } else {
+            // replace placeholder div with an img element
+            const wrapper = document.createElement('img');
+            wrapper.id = 'profile-avatar-image';
+            wrapper.src = data.url;
+            wrapper.alt = '{{ user.username }}';
+            wrapper.className = 'w-24 h-24 rounded-full object-cover shadow-md ring-4 ring-purple-100 cursor-pointer';
+            imgEl.replaceWith(wrapper);
+          }
+        } else {
+          console.error('Upload failed', data);
+          alert('Could not upload image.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Upload failed.');
+      }
+    });
+  })();
+</script>
 {% endblock %}

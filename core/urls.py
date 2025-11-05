@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .admin_panel import views as admin_views
+from .admin_panel import game_views
 
 app_name = 'core'
 
@@ -10,6 +11,7 @@ urlpatterns = [
     path('lessons/<slug:slug>/', views.lesson_detail, name='lesson_detail'),
     path('festival-tour/', views.festival_tour, name='festival_tour'),
     path('profile/', views.profile, name='profile'),
+    path('profile/upload-picture/', views.upload_profile_picture, name='upload_profile_picture'),
     path('accounts/signup/', views.signup, name='signup'),
     path('accounts/change-password/', views.change_password, name='change_password'),
     # Custom admin panel
@@ -43,4 +45,12 @@ urlpatterns = [
     path('admin-panel/users/add/', admin_views.UserCreateView.as_view(), name='admin_user_add'),
     path('admin-panel/users/<int:pk>/edit/', admin_views.UserUpdateView.as_view(), name='admin_user_edit'),
     path('admin-panel/users/<int:pk>/delete/', admin_views.UserDeleteView.as_view(), name='admin_user_delete'),
+    
+    # Games CRUD
+    path('admin-panel/games/', game_views.GameListView.as_view(), name='admin_games'),
+    path('admin-panel/games/add/', game_views.GameCreateView.as_view(), name='admin_game_create'),
+    path('admin-panel/games/<int:pk>/edit/', game_views.GameUpdateView.as_view(), name='admin_game_update'),
+    path('admin-panel/games/<int:pk>/delete/', game_views.GameDeleteView.as_view(), name='admin_game_delete'),
+    path('admin-panel/games/question/<int:pk>/options/', game_views.game_question_options, name='admin_game_question_options'),
+    path('admin-panel/games/stats/', game_views.game_stats, name='admin_game_stats'),
 ]

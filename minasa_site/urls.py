@@ -11,6 +11,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('core.urls')),
     path('quizzes/', include('quizzes.urls')),
+    path('games/', include('games.urls')),
 ]
 
 if settings.DEBUG:

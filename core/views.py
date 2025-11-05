@@ -23,6 +23,9 @@ from django.contrib.auth.password_validation import validate_password, Validatio
 import secrets
 from .models import StudentProfile
 from django.contrib.auth import logout as auth_logout
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.core.files.storage import default_storage
 
 
 def home(request):
@@ -60,6 +63,30 @@ def festival_tour(request):
 def profile(request):
     # placeholder profile view
     return render(request, 'core/profile.html')
+
+
+@login_required
+@require_POST
+def upload_profile_picture(request):
+    """Handle AJAX upload of profile picture. Expects file field 'profile_picture'.
+
+    Saves the uploaded file to the StudentProfile.profile_picture (using Django storage),
+    and returns JSON with the public URL on success.
+    """
+    user = request.user
+    profile, _ = StudentProfile.objects.get_or_create(user=user)
+    upload = request.FILES.get('profile_picture')
+    if not upload:
+        return JsonResponse({'error': 'No file provided.'}, status=400)
+
+    # Use the ImageField's save to ensure correct storage path (upload_to)
+    try:
+        # Optional: sanitize filename here if needed
+        profile.profile_picture.save(upload.name, upload, save=True)
+        url = profile.profile_picture.url
+        return JsonResponse({'url': url})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 class SignupForm(forms.Form):

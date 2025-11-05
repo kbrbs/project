@@ -20,6 +20,7 @@ from django.views.decorators.http import require_http_methods
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 from django import forms
+from django.utils.http import url_has_allowed_host_and_scheme
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -148,6 +149,10 @@ class SectionCreateView(CreateView):
         except Exception:
             # If article creation fails, we keep section creation but warn softly
             messages.warning(self.request, 'Section saved, but creating the public lesson failed.')
+        # If caller provided a safe "next" parameter, redirect there instead of default success_url
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
+            return redirect(next_url)
         return response
 
 
@@ -181,6 +186,10 @@ class SectionUpdateView(UpdateView):
         except Exception:
             # If syncing fails, continue without blocking
             pass
+        # Respect a safe "next" parameter if provided
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
+            return redirect(next_url)
         return response
 
 
@@ -189,6 +198,13 @@ class SectionDeleteView(DeleteView):
     model = EducationalSection
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_dashboard')
+    
+    def get_success_url(self):
+        # Prefer explicit next parameter (POST/GET), otherwise fall back to HTTP_REFERER, then default
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url:
+            return next_url
+        return super().get_success_url()
 
 
 # Media CRUD
@@ -220,6 +236,13 @@ class MediaCreateView(CreateView):
     template_name = 'core/admin_panel/media_form.html'
     success_url = reverse_lazy('core:admin_dashboard')
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
+            return redirect(next_url)
+        return response
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class MediaUpdateView(UpdateView):
@@ -228,12 +251,25 @@ class MediaUpdateView(UpdateView):
     template_name = 'core/admin_panel/media_form.html'
     success_url = reverse_lazy('core:admin_dashboard')
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
+            return redirect(next_url)
+        return response
+
 
 @method_decorator(staff_member_required, name='dispatch')
 class MediaDeleteView(DeleteView):
     model = MediaAsset
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_dashboard')
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url:
+            return next_url
+        return super().get_success_url()
 
 
 # Moderation list and update
@@ -347,20 +383,39 @@ class QuizCreateView(CreateView):
     success_url = reverse_lazy('core:admin_quizzes')
 
     def get(self, request, *args, **kwargs):
+<<<<<<< HEAD
+=======
+        # Render the create form with an empty question formset
+>>>>>>> 5d763c7f250538853d8d36c601fc9529c57c97d2
         self.object = None
         form = self.get_form()
         formset = QuizFormSet()
         return render(request, self.template_name, {'form': form, 'formset': formset})
 
     def post(self, request, *args, **kwargs):
+<<<<<<< HEAD
+=======
+        # Handle submitted quiz form plus inline question formset
+>>>>>>> 5d763c7f250538853d8d36c601fc9529c57c97d2
         self.object = None
         form = self.get_form()
         formset = QuizFormSet(request.POST)
         if form.is_valid() and formset.is_valid():
             quiz = form.save()
+<<<<<<< HEAD
             formset.instance = quiz
             formset.save()
             messages.success(request, 'Quiz created')
+=======
+            # associate and save questions
+            formset.instance = quiz
+            formset.save()
+            messages.success(request, 'Quiz saved')
+            # Respect safe "next" parameter if provided
+            next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                return redirect(next_url)
+>>>>>>> 5d763c7f250538853d8d36c601fc9529c57c97d2
             return redirect(self.success_url)
         return render(request, self.template_name, {'form': form, 'formset': formset})
 
@@ -386,6 +441,10 @@ class QuizUpdateView(UpdateView):
             quiz = form.save()
             formset.save()
             messages.success(request, 'Quiz saved')
+            # Respect safe "next" parameter if provided
+            next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER')
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                return redirect(next_url)
             return redirect(self.success_url)
         return render(request, self.template_name, {'form': form, 'formset': formset})
 
@@ -395,6 +454,12 @@ class QuizDeleteView(DeleteView):
     model = Quiz
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_quizzes')
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url:
+            return next_url
+        return super().get_success_url()
 
 
 # User management
@@ -440,7 +505,11 @@ class UserCreateView(CreateView):
         from core.models import StudentProfile
         StudentProfile.objects.get_or_create(user=user)
         messages.success(self.request, 'User created')
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
+            return redirect(next_url)
+        return response
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -456,6 +525,12 @@ class UserDeleteView(DeleteView):
     model = User
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_users')
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+        if next_url:
+            return next_url
+        return super().get_success_url()
 
 
 @staff_member_required

@@ -1,0 +1,403 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ game.title }} - Fill in the Blanks{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-6 py-8">
+  <!-- Game Header -->
+  <div class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl p-8 mb-8 shadow-lg">
+    <div class="flex items-center gap-2 text-blue-100 mb-2">
+      <a href="{% url 'games:game_list' %}" class="hover:text-white">← Back to Games</a>
+    </div>
+    <h1 class="text-4xl font-bold mb-2">📝 {{ game.title }}</h1>
+    <p class="text-blue-100">{{ game.description }}</p>
+    <div class="mt-4 flex flex-wrap items-center gap-4 text-sm">
+      <span class="bg-white/20 px-3 py-1 rounded-full">Fill in the Blanks</span>
+      {% if game.time_limit %}<span>⏱️ {{ game.time_limit }}s limit</span>{% endif %}
+      <span>🎯 {{ game.points_per_correct }} pts per question</span>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div id="game-container" class="bg-white rounded-2xl shadow-lg p-8">
+    {% if game.time_limit %}
+    <div class="mb-6 text-center">
+      <div class="inline-block bg-blue-100 px-6 py-3 rounded-lg">
+        <span class="text-blue-800 font-bold text-2xl">⏱️ <span id="timer">{{ game.time_limit }}</span>s</span>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Progress -->
+    <div class="mb-6">
+      <div class="flex justify-between text-sm text-gray-600 mb-2">
+        <span>Question <span id="current-question">1</span> of <span id="total-questions">0</span></span>
+        <span>Score: <span id="score">0</span> / <span id="max-score">0</span></span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Question Display -->
+    <div id="question-area">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center" id="question-text">Loading...</h2>
+      
+      <!-- Instructions -->
+      <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-6 max-w-3xl mx-auto">
+        <p class="text-blue-900 text-center">
+          <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          <strong>Drag and drop</strong> the words from the choices below into the blanks
+        </p>
+      </div>
+
+      <!-- Sentence with Drop Zones -->
+      <div id="sentence-container" class="max-w-4xl mx-auto mb-8 text-center">
+        <div id="sentence-display" class="text-2xl leading-relaxed p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-100 min-h-[120px] flex flex-wrap items-center justify-center gap-2">
+          <!-- Sentence parts will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Draggable Choices -->
+      <div class="max-w-3xl mx-auto mb-6">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3 text-center">Available Choices:</h3>
+        <div id="choices-container" class="flex flex-wrap gap-3 justify-center p-6 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-[100px]">
+          <!-- Choices will be inserted here by JS -->
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <div id="feedback" class="hidden mb-6 p-4 rounded-lg max-w-3xl mx-auto"></div>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button id="submit-btn" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl">
+          Check Answer
+        </button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="hidden text-center">
+      <div class="mb-6">
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Game Complete!</h2>
+        <p class="text-xl text-gray-600 mb-6">Your final score:</p>
+        <div class="text-6xl font-bold text-blue-600 mb-2">
+          <span id="final-score">0</span> / <span id="final-max-score">0</span>
+        </div>
+        <div class="text-2xl font-semibold text-gray-700 mb-6">
+          <span id="final-percentage">0</span>%
+        </div>
+      </div>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a href="{% url 'games:game_detail' game.pk %}" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Play Again</a>
+        <a href="{% url 'games:game_list' %}" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold">Back to Games</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<style>
+  .drop-zone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 48px;
+    padding: 8px 16px;
+    background: white;
+    border: 3px dashed #93C5FD;
+    border-radius: 8px;
+    margin: 4px;
+    transition: all 0.2s;
+  }
+  
+  .drop-zone:empty::after {
+    content: '______';
+    color: #93C5FD;
+    font-weight: bold;
+  }
+  
+  .drop-zone.drag-over {
+    background: #DBEAFE;
+    border-color: #3B82F6;
+    transform: scale(1.05);
+  }
+  
+  .choice-item {
+    display: inline-block;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #6366F1 0%, #3B82F6 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: move;
+    user-select: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+  }
+  
+  .choice-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  .choice-item.sortable-ghost {
+    opacity: 0.4;
+  }
+  
+  .choice-item.in-blank {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  }
+  
+  .sentence-text {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: 500;
+    color: #1F2937;
+    margin: 4px;
+  }
+</style>
+
+<script>
+const gameData = {{ game_data_json|safe }};
+let currentQuestionIndex = 0;
+let userAnswers = {};
+let score = 0;
+let startTime = Date.now();
+let timerInterval = null;
+let sortableInstances = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+  initGame();
+});
+
+function initGame() {
+  document.getElementById('total-questions').textContent = gameData.questions.length;
+  document.getElementById('max-score').textContent = gameData.questions.length * gameData.points_per_correct;
+  
+  if (gameData.time_limit) startTimer();
+  loadQuestion();
+  
+  document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+}
+
+function startTimer() {
+  let timeLeft = gameData.time_limit;
+  const timerEl = document.getElementById('timer');
+  
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame();
+    }
+  }, 1000);
+}
+
+function loadQuestion() {
+  if (currentQuestionIndex >= gameData.questions.length) {
+    endGame();
+    return;
+  }
+  
+  const q = gameData.questions[currentQuestionIndex];
+  document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('feedback').classList.add('hidden');
+  
+  // Destroy previous sortable instances
+  sortableInstances.forEach(s => s.destroy());
+  sortableInstances = [];
+  
+  // Build sentence with drop zones
+  const sentenceDisplay = document.getElementById('sentence-display');
+  sentenceDisplay.innerHTML = '';
+  
+  q.sentence_parts.forEach((part, index) => {
+    if (part.type === 'text') {
+      const textSpan = document.createElement('span');
+      textSpan.className = 'sentence-text';
+      textSpan.textContent = part.content;
+      sentenceDisplay.appendChild(textSpan);
+    } else if (part.type === 'blank') {
+      const dropZone = document.createElement('div');
+      dropZone.className = 'drop-zone';
+      dropZone.setAttribute('data-blank-index', part.index);
+      
+      // Initialize Sortable for this drop zone
+      const sortable = new Sortable(dropZone, {
+        group: 'shared',
+        animation: 150,
+        onAdd: function(evt) {
+          // Only allow one item per blank
+          if (dropZone.children.length > 1) {
+            const oldItem = dropZone.children[0];
+            document.getElementById('choices-container').appendChild(oldItem);
+          }
+          // Update styling
+          if (dropZone.children.length > 0) {
+            dropZone.children[0].classList.add('in-blank');
+          }
+        },
+        onRemove: function(evt) {
+          evt.item.classList.remove('in-blank');
+        }
+      });
+      sortableInstances.push(sortable);
+      
+      sentenceDisplay.appendChild(dropZone);
+    }
+  });
+  
+  // Create draggable choices
+  const choicesContainer = document.getElementById('choices-container');
+  choicesContainer.innerHTML = '';
+  
+  q.choices.forEach((choice, index) => {
+    const choiceDiv = document.createElement('div');
+    choiceDiv.className = 'choice-item';
+    choiceDiv.setAttribute('data-choice', choice);
+    choiceDiv.textContent = choice;
+    choicesContainer.appendChild(choiceDiv);
+  });
+  
+  // Initialize Sortable for choices container
+  const choicesSortable = new Sortable(choicesContainer, {
+    group: 'shared',
+    animation: 150,
+    onRemove: function(evt) {
+      evt.item.classList.add('in-blank');
+    },
+    onAdd: function(evt) {
+      evt.item.classList.remove('in-blank');
+    }
+  });
+  sortableInstances.push(choicesSortable);
+  
+  const progress = ((currentQuestionIndex) / gameData.questions.length) * 100;
+  document.getElementById('progress-bar').style.width = progress + '%';
+}
+
+function submitAnswer() {
+  const q = gameData.questions[currentQuestionIndex];
+  const dropZones = document.querySelectorAll('.drop-zone');
+  
+  // Collect answers from drop zones
+  const answers = {};
+  dropZones.forEach((zone) => {
+    const blankIndex = zone.getAttribute('data-blank-index');
+    const choiceEl = zone.querySelector('.choice-item');
+    answers[blankIndex] = choiceEl ? choiceEl.getAttribute('data-choice') : '';
+  });
+  
+  userAnswers[q.id] = answers;
+  
+  const feedback = document.getElementById('feedback');
+  feedback.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'text-green-800', 'text-red-800');
+  
+  // Check correctness
+  let isCorrect = true;
+  const correctAnswers = q.correct_answers;
+  
+  for (let i = 0; i < correctAnswers.length; i++) {
+    const userAnswer = (answers[i] || '').trim().toLowerCase();
+    const correctAnswer = correctAnswers[i].trim().toLowerCase();
+    if (userAnswer !== correctAnswer) {
+      isCorrect = false;
+      break;
+    }
+  }
+  
+  if (isCorrect) {
+    score += gameData.points_per_correct;
+    feedback.classList.add('bg-green-100', 'text-green-800');
+    feedback.innerHTML = `
+      <div class="font-bold text-xl mb-2">✅ Perfect! All Correct!</div>
+      <p>${q.explanation || 'Well done!'}</p>
+    `;
+  } else {
+    feedback.classList.add('bg-red-100', 'text-red-800');
+    const correctSentence = buildCorrectSentence(q.sentence_parts, correctAnswers);
+    feedback.innerHTML = `
+      <div class="font-bold text-xl mb-2">❌ Not Quite Right</div>
+      <p class="mb-2">Correct answer: <strong>${correctSentence}</strong></p>
+      <p>${q.explanation || ''}</p>
+    `;
+  }
+  
+  document.getElementById('score').textContent = score;
+  
+  setTimeout(() => {
+    currentQuestionIndex++;
+    loadQuestion();
+  }, 4000);
+}
+
+function buildCorrectSentence(parts, answers) {
+  let sentence = '';
+  let blankIndex = 0;
+  
+  parts.forEach(part => {
+    if (part.type === 'text') {
+      sentence += part.content;
+    } else if (part.type === 'blank') {
+      sentence += `<span class="text-green-700 font-bold">${answers[blankIndex]}</span>`;
+      blankIndex++;
+    }
+  });
+  
+  return sentence;
+}
+
+function endGame() {
+  if (timerInterval) clearInterval(timerInterval);
+  
+  const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+  const maxScore = gameData.questions.length * gameData.points_per_correct;
+  const percentage = Math.round((score / maxScore) * 100);
+  
+  document.getElementById('question-area').classList.add('hidden');
+  document.getElementById('results').classList.remove('hidden');
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('final-max-score').textContent = maxScore;
+  document.getElementById('final-percentage').textContent = percentage;
+  
+  {% if user.is_authenticated %}
+  fetch('{% url "games:submit_game" game.pk %}', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify({
+      answers: userAnswers,
+      time_taken: timeTaken
+    })
+  });
+  {% endif %}
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+</script>
+
+{% endblock %}

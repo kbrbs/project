@@ -70,7 +70,7 @@
             </div>
             <div class="hidden sm:block">
               <h1 class="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Rooted in Knowledge</h1>
-              <p class="text-xs text-gray-500">The Sweet Root of Bustos</p>
+              <p class="text-xs text-gray-500">The Sweet Root of Minasa</p>
             </div>
           </a>
 
@@ -102,6 +102,14 @@
                 Quizzes
               </span>
             </a>
+            <a href="{% url 'games:game_list' %}" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path>
+                </svg>
+                Games
+              </span>
+            </a>
           </nav>
 
           <!-- User Menu / Auth Buttons -->
@@ -115,14 +123,22 @@
                       <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                     </svg>
                   </div>
-                  <span>Profile</span>
+                  <span>
+                    {% if user.first_name %}
+                      {{ user.first_name }}
+                    {% else %}
+                      {{ user.username }}
+                    {% endif %}
+                  </span>
                 </a>
                 <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
                   Logout
-                </a>  
-                <a href="/admin-panel/" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
-                  Admin Panel
                 </a>
+                {% if user.is_superuser %}
+                  <a href="/admin-panel/" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                    Admin Panel
+                  </a>
+                {% endif %}
               </div>
             {% else %}
               <!-- Auth Buttons -->
@@ -178,6 +194,12 @@
             </svg>
             Quizzes
           </a>
+          <a href="{% url 'games:game_list' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path>
+            </svg>
+            Games
+          </a>
           
           {% if user.is_authenticated %}
             <div class="border-t border-gray-100 pt-4 mt-4">
@@ -185,7 +207,11 @@
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                 </svg>
-                Profile
+                {% if user.first_name %}
+                  {{ user.first_name }}
+                {% else %}
+                  {{ user.username }}
+                {% endif %}
               </a>
               <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-all">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -325,5 +351,6 @@
         });
       }, 5000);
     </script>
+    {% block extra_scripts %}{% endblock %}
   </body>
 </html>
