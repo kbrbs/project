@@ -148,14 +148,50 @@ def game_detail(request, pk):
             ]
             
         elif game.game_type == 'memory_match':
-            # Get pairs and create card list
-            pairs = q.get_memory_pairs_dict()
-            cards = []
-            for key, value in pairs.items():
-                cards.append({'text': key, 'pair_id': key})
-                cards.append({'text': value, 'pair_id': key})
-            random.shuffle(cards)
-            question_data['cards'] = cards
+            # Check if using new image-based format
+            if q.grid_size:
+                # New image-based memory match
+                question_data['grid_size'] = q.grid_size
+                images = []
+                
+                # Collect all uploaded images
+                for i in range(1, 19):  # Check all 18 possible image fields
+                    image_field = getattr(q, f'memory_image_{i}', None)
+                    if image_field:
+                        images.append({
+                            'id': i,
+                            'url': image_field.url,
+                            'pair_id': i  # Each image is its own pair
+                        })
+                
+                # Create pairs by duplicating each image
+                cards = []
+                for img in images:
+                    # Add two cards with the same image (matching pair)
+                    cards.append({
+                        'id': f"card_{img['id']}_1",
+                        'image': img['url'],
+                        'pair_id': img['pair_id']
+                    })
+                    cards.append({
+                        'id': f"card_{img['id']}_2",
+                        'image': img['url'],
+                        'pair_id': img['pair_id']
+                    })
+                
+                # Shuffle cards
+                random.shuffle(cards)
+                question_data['cards'] = cards
+                question_data['total_pairs'] = len(images)
+            else:
+                # Legacy text-based format
+                pairs = q.get_memory_pairs_dict()
+                cards = []
+                for key, value in pairs.items():
+                    cards.append({'text': key, 'pair_id': key})
+                    cards.append({'text': value, 'pair_id': key})
+                random.shuffle(cards)
+                question_data['cards'] = cards
         
         question_data['explanation'] = q.explanation
         game_data['questions'].append(question_data)

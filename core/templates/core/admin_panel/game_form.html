@@ -191,10 +191,166 @@
                 </div>
                 
                 <!-- Memory Match fields -->
-                <div class="field-memory_pairs" style="display:none;">
-                  <label>Memory Pairs (JSON Object)</label>
-                  {{ f.memory_pairs }}
-                  <p class="helptext">Example: {"Arrowroot": "Plant for flour", "Bustos": "City of Minasa"}</p>
+                <div class="field-memory_match" style="display:none;">
+                  <div class="bg-purple-50 border-2 border-purple-200 rounded-lg p-4 mb-4">
+                    <h4 class="font-semibold text-purple-900 mb-2">🧠 Image-Based Memory Game</h4>
+                    <p class="text-sm text-purple-800 mb-2">Upload images for card matching - system will create pairs automatically</p>
+                  </div>
+                  
+                  <label>Grid Size</label>
+                  {{ f.grid_size }}
+                  <p class="helptext">Select grid size - determines how many images you can upload</p>
+                  
+                  <!-- Dynamic image upload fields -->
+                  <div class="memory-images-container mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {% for i in "123456789" %}
+                      {% if i == "1" %}
+                        <div class="memory-image-field" data-image-number="1">
+                          <label>Image 1</label>
+                          {{ f.memory_image_1 }}
+                          {% if f.instance.memory_image_1 %}
+                            <img src="{{ f.instance.memory_image_1.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "2" %}
+                        <div class="memory-image-field" data-image-number="2">
+                          <label>Image 2</label>
+                          {{ f.memory_image_2 }}
+                          {% if f.instance.memory_image_2 %}
+                            <img src="{{ f.instance.memory_image_2.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "3" %}
+                        <div class="memory-image-field" data-image-number="3">
+                          <label>Image 3</label>
+                          {{ f.memory_image_3 }}
+                          {% if f.instance.memory_image_3 %}
+                            <img src="{{ f.instance.memory_image_3.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "4" %}
+                        <div class="memory-image-field" data-image-number="4">
+                          <label>Image 4</label>
+                          {{ f.memory_image_4 }}
+                          {% if f.instance.memory_image_4 %}
+                            <img src="{{ f.instance.memory_image_4.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "5" %}
+                        <div class="memory-image-field" data-image-number="5">
+                          <label>Image 5</label>
+                          {{ f.memory_image_5 }}
+                          {% if f.instance.memory_image_5 %}
+                            <img src="{{ f.instance.memory_image_5.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "6" %}
+                        <div class="memory-image-field" data-image-number="6">
+                          <label>Image 6</label>
+                          {{ f.memory_image_6 }}
+                          {% if f.instance.memory_image_6 %}
+                            <img src="{{ f.instance.memory_image_6.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "7" %}
+                        <div class="memory-image-field" data-image-number="7">
+                          <label>Image 7</label>
+                          {{ f.memory_image_7 }}
+                          {% if f.instance.memory_image_7 %}
+                            <img src="{{ f.instance.memory_image_7.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "8" %}
+                        <div class="memory-image-field" data-image-number="8">
+                          <label>Image 8</label>
+                          {{ f.memory_image_8 }}
+                          {% if f.instance.memory_image_8 %}
+                            <img src="{{ f.instance.memory_image_8.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% elif i == "9" %}
+                        <div class="memory-image-field" data-image-number="9">
+                          <label>Image 9</label>
+                          {{ f.memory_image_9 }}
+                          {% if f.instance.memory_image_9 %}
+                            <img src="{{ f.instance.memory_image_9.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                    
+                    <!-- Images 10-18 (initially hidden) -->
+                    <div class="memory-image-field" data-image-number="10" style="display:none;">
+                      <label>Image 10</label>
+                      {{ f.memory_image_10 }}
+                      {% if f.instance.memory_image_10 %}
+                        <img src="{{ f.instance.memory_image_10.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="11" style="display:none;">
+                      <label>Image 11</label>
+                      {{ f.memory_image_11 }}
+                      {% if f.instance.memory_image_11 %}
+                        <img src="{{ f.instance.memory_image_11.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="12" style="display:none;">
+                      <label>Image 12</label>
+                      {{ f.memory_image_12 }}
+                      {% if f.instance.memory_image_12 %}
+                        <img src="{{ f.instance.memory_image_12.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="13" style="display:none;">
+                      <label>Image 13</label>
+                      {{ f.memory_image_13 }}
+                      {% if f.instance.memory_image_13 %}
+                        <img src="{{ f.instance.memory_image_13.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="14" style="display:none;">
+                      <label>Image 14</label>
+                      {{ f.memory_image_14 }}
+                      {% if f.instance.memory_image_14 %}
+                        <img src="{{ f.instance.memory_image_14.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="15" style="display:none;">
+                      <label>Image 15</label>
+                      {{ f.memory_image_15 }}
+                      {% if f.instance.memory_image_15 %}
+                        <img src="{{ f.instance.memory_image_15.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="16" style="display:none;">
+                      <label>Image 16</label>
+                      {{ f.memory_image_16 }}
+                      {% if f.instance.memory_image_16 %}
+                        <img src="{{ f.instance.memory_image_16.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="17" style="display:none;">
+                      <label>Image 17</label>
+                      {{ f.memory_image_17 }}
+                      {% if f.instance.memory_image_17 %}
+                        <img src="{{ f.instance.memory_image_17.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                    <div class="memory-image-field" data-image-number="18" style="display:none;">
+                      <label>Image 18</label>
+                      {{ f.memory_image_18 }}
+                      {% if f.instance.memory_image_18 %}
+                        <img src="{{ f.instance.memory_image_18.url }}" class="mt-2 w-24 h-24 object-cover rounded border">
+                      {% endif %}
+                    </div>
+                  </div>
+                  
+                  <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                    <p class="text-sm text-blue-800">
+                      <strong>💡 Tip:</strong> Each image you upload will be duplicated to create matching pairs automatically.
+                      <br>2x2 = 2 pairs (2 images, 4 cards), 3x3 = 3 pairs (3 images, 6 cards), 4x4 = 4 pairs (4 images, 8 cards), etc.
+                    </p>
+                  </div>
                 </div>
                 
                 <!-- Explanation (always shown) -->
@@ -280,10 +436,90 @@
                 <p class="helptext">Must exactly match one of the choices above. Example: "Arrowroot leaf"</p>
               </div>
               
-              <div class="field-memory_pairs" style="display:none;">
-                <label>Memory Pairs (JSON Object)</label>
-                {{ formset.empty_form.memory_pairs }}
-                <p class="helptext">Example: {"Arrowroot": "Plant for flour", "Bustos": "City of Minasa"}</p>
+              <div class="field-memory_match" style="display:none;">
+                <div class="bg-purple-50 border-2 border-purple-200 rounded-lg p-4 mb-4">
+                  <h4 class="font-semibold text-purple-900 mb-2">🧠 Image-Based Memory Game</h4>
+                  <p class="text-sm text-purple-800 mb-2">Upload images for card matching</p>
+                </div>
+                
+                <label>Grid Size</label>
+                {{ formset.empty_form.grid_size }}
+                <p class="helptext">Select grid size - determines how many images you can upload</p>
+                
+                <div class="memory-images-container mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div class="memory-image-field" data-image-number="1">
+                    <label>Image 1</label>
+                    {{ formset.empty_form.memory_image_1 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="2">
+                    <label>Image 2</label>
+                    {{ formset.empty_form.memory_image_2 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="3">
+                    <label>Image 3</label>
+                    {{ formset.empty_form.memory_image_3 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="4">
+                    <label>Image 4</label>
+                    {{ formset.empty_form.memory_image_4 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="5">
+                    <label>Image 5</label>
+                    {{ formset.empty_form.memory_image_5 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="6">
+                    <label>Image 6</label>
+                    {{ formset.empty_form.memory_image_6 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="7">
+                    <label>Image 7</label>
+                    {{ formset.empty_form.memory_image_7 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="8">
+                    <label>Image 8</label>
+                    {{ formset.empty_form.memory_image_8 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="9">
+                    <label>Image 9</label>
+                    {{ formset.empty_form.memory_image_9 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="10" style="display:none;">
+                    <label>Image 10</label>
+                    {{ formset.empty_form.memory_image_10 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="11" style="display:none;">
+                    <label>Image 11</label>
+                    {{ formset.empty_form.memory_image_11 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="12" style="display:none;">
+                    <label>Image 12</label>
+                    {{ formset.empty_form.memory_image_12 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="13" style="display:none;">
+                    <label>Image 13</label>
+                    {{ formset.empty_form.memory_image_13 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="14" style="display:none;">
+                    <label>Image 14</label>
+                    {{ formset.empty_form.memory_image_14 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="15" style="display:none;">
+                    <label>Image 15</label>
+                    {{ formset.empty_form.memory_image_15 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="16" style="display:none;">
+                    <label>Image 16</label>
+                    {{ formset.empty_form.memory_image_16 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="17" style="display:none;">
+                    <label>Image 17</label>
+                    {{ formset.empty_form.memory_image_17 }}
+                  </div>
+                  <div class="memory-image-field" data-image-number="18" style="display:none;">
+                    <label>Image 18</label>
+                    {{ formset.empty_form.memory_image_18 }}
+                  </div>
+                </div>
               </div>
               
               <div class="col-span-2">
@@ -422,24 +658,14 @@
       'memory_match': {
         name: 'Memory Matching',
         color: 'bg-purple-50 border-purple-200 text-purple-900',
-        fields: ['memory_pairs'],
+        fields: ['memory_match'],
         help: [
-          '✅ <strong>What to add:</strong> JSON object with term-definition pairs',
-          '🎴 <strong>Format:</strong> {"Term": "Definition", "Word": "Meaning"}',
-          '🔀 <strong>Automatic shuffling:</strong> Cards will be shuffled and flipped face-down',
-          '📝 <strong>Example:</strong> {"Arrowroot": "Plant used for Minasa flour", "Bustos": "City famous for Minasa", "Starch": "Extracted from roots"}',
-          '💡 <strong>Tip:</strong> Add 4-6 pairs for best gameplay'
-        ]
-      },
-      'multiple_choice_image': {
-        name: 'Multiple Choice with Images',
-        color: 'bg-orange-50 border-orange-200 text-orange-900',
-        fields: ['correct_answer'],
-        help: [
-          '✅ <strong>What to add:</strong> Question and correct answer text',
-          '📸 <strong>After saving:</strong> Use "Manage Options" to upload 4 images as choices',
-          '✓ <strong>Mark correct:</strong> Check "is_correct" for the right image',
-          '📝 <strong>Example:</strong> "Which shows arrowroot flour?"'
+          '✅ <strong>What to add:</strong> Select grid size and upload images',
+          '🖼️ <strong>Grid sizes:</strong> 2x2=2 pairs, 3x3=3 pairs, 4x4=4 pairs, 5x5=5 pairs, 6x6=6 pairs, etc.',
+          '🎴 <strong>How it works:</strong> Each image you upload will be duplicated to create matching pairs',
+          '🔀 <strong>Automatic shuffling:</strong> Cards will be shuffled and placed face-down',
+          '💡 <strong>Tip:</strong> Use clear, distinct images for easier matching',
+          '⏱️ <strong>Scoring:</strong> Based on number of matches and time taken'
         ]
       }
     };
@@ -457,7 +683,7 @@
       // Show/hide fields in all question forms
       document.querySelectorAll('.question-form').forEach(form => {
         // Hide all game-type-specific fields first
-        form.querySelectorAll('.field-word, .field-drag_drop, .field-image_identification, .field-memory_pairs').forEach(field => {
+        form.querySelectorAll('.field-word, .field-drag_drop, .field-image_identification, .field-memory_match').forEach(field => {
           field.style.display = 'none';
         });
 
@@ -467,10 +693,21 @@
           if (field) field.style.display = 'block';
         });
 
-        // Show/hide "Manage Options" link (not needed anymore for image_identification)
+        // Hide "Manage Options" link (not used anymore)
         const manageLink = form.querySelector('.manage-options-link');
         if (manageLink) {
-          manageLink.style.display = (gameType === 'multiple_choice_image') ? 'inline-block' : 'none';
+          manageLink.style.display = 'none';
+        }
+        
+        // Setup grid size change handlers for memory match
+        if (gameType === 'memory_match') {
+          const gridSizeSelect = form.querySelector('[name*="grid_size"]');
+          if (gridSizeSelect) {
+            updateMemoryImageFields(form, gridSizeSelect.value);
+            gridSizeSelect.addEventListener('change', function() {
+              updateMemoryImageFields(form, this.value);
+            });
+          }
         }
       });
     }
@@ -554,9 +791,49 @@
       });
     }
 
+    // Function to show/hide memory image fields based on grid size
+    function updateMemoryImageFields(form, gridSize) {
+      const imageFields = form.querySelectorAll('.memory-image-field');
+      const gridConfig = {
+        '2x2': 2,   // 2x2 = 2 pairs = 2 images needed (4 cards total)
+        '3x3': 3,   // 3x3 = 3 pairs = 3 images needed (6 cards total)
+        '4x4': 4,   // 4x4 = 4 pairs = 4 images needed (8 cards total)
+        '5x5': 5,   // 5x5 = 5 pairs = 5 images needed (10 cards total)
+        '6x6': 6,   // 6x6 = 6 pairs = 6 images needed (12 cards total)
+        '7x7': 7,   // 7x7 = 7 pairs = 7 images needed (14 cards total)
+        '8x8': 8,   // 8x8 = 8 pairs = 8 images needed (16 cards total)
+        '9x9': 9,   // 9x9 = 9 pairs = 9 images needed (18 cards total)
+      };
+      
+      const numImages = gridConfig[gridSize] || 0;
+      
+      imageFields.forEach((field, index) => {
+        const imageNumber = parseInt(field.getAttribute('data-image-number'));
+        if (imageNumber <= numImages) {
+          field.style.display = 'block';
+        } else {
+          field.style.display = 'none';
+        }
+      });
+      
+      // Show helper text
+      const helperTexts = {
+        '2x2': 'Upload 2 images (2 pairs = 4 cards total)',
+        '3x3': 'Upload 3 images (3 pairs = 6 cards total)',
+        '4x4': 'Upload 4 images (4 pairs = 8 cards total)',
+        '5x5': 'Upload 5 images (5 pairs = 10 cards total)',
+        '6x6': 'Upload 6 images (6 pairs = 12 cards total)',
+        '7x7': 'Upload 7 images (7 pairs = 14 cards total)',
+        '8x8': 'Upload 8 images (8 pairs = 16 cards total)',
+        '9x9': 'Upload 9 images (9 pairs = 18 cards total)',
+      };
+      
+      console.log('Memory Match Grid:', gridSize, '- Show', numImages, 'image fields');
+    }
+
     // Image file validation for image identification
     document.addEventListener('DOMContentLoaded', function() {
-      const imageInputs = document.querySelectorAll('input[type="file"][name*="question_image"]');
+      const imageInputs = document.querySelectorAll('input[type="file"][name*="question_image"], input[type="file"][name*="memory_image"]');
       
       imageInputs.forEach(input => {
         input.addEventListener('change', function(e) {

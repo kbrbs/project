@@ -28,7 +28,14 @@ class GameQuestionForm(forms.ModelForm):
             'order', 'question_text', 'word', 
             'sentence_template', 'correct_answers', 'extra_choices',  # Drag-drop fields
             'question_image', 'text_choices', 'correct_answer',  # Image identification fields
-            'correct_sequence', 'memory_pairs', 'explanation'
+            'correct_sequence', 'memory_pairs', 'explanation',
+            # Memory match with images fields
+            'grid_size',
+            'memory_image_1', 'memory_image_2', 'memory_image_3', 'memory_image_4',
+            'memory_image_5', 'memory_image_6', 'memory_image_7', 'memory_image_8',
+            'memory_image_9', 'memory_image_10', 'memory_image_11', 'memory_image_12',
+            'memory_image_13', 'memory_image_14', 'memory_image_15', 'memory_image_16',
+            'memory_image_17', 'memory_image_18',
         ]
         widgets = {
             'question_text': forms.Textarea(attrs={'rows': 2}),
@@ -41,6 +48,25 @@ class GameQuestionForm(forms.ModelForm):
             'correct_sequence': forms.Textarea(attrs={'rows': 2, 'placeholder': '["Step 1", "Step 2", "Step 3"]'}),
             'memory_pairs': forms.Textarea(attrs={'rows': 2, 'placeholder': '{"Term": "Definition", "Word": "Meaning"}'}),
             'explanation': forms.Textarea(attrs={'rows': 2}),
+            # Memory match images
+            'memory_image_1': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_2': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_3': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_4': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_5': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_6': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_7': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_8': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_9': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_10': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_11': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_12': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_13': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_14': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_15': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_16': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_17': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
+            'memory_image_18': forms.ClearableFileInput(attrs={'accept': 'image/jpeg,image/jpg,image/png,image/gif,image/webp', 'class': 'memory-image-input'}),
         }
 
 

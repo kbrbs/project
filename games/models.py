@@ -66,8 +66,43 @@ class GameQuestion(models.Model):
     text_choices = models.TextField(blank=True, help_text="Image Identification: Text choices (comma-separated), e.g. 'Arrowroot leaf, Cassava root, Minasa flour, Rice grain'")
     correct_answer = models.CharField(max_length=200, blank=True, help_text="Image Identification: The correct text answer (must match one of the choices)")
     
-    # For memory_match: pairs stored as JSON
+    # For memory_match: pairs stored as JSON (legacy text-based)
     memory_pairs = models.TextField(blank=True, help_text="Memory Match: JSON object of pairs, e.g. {'Arrowroot': 'Plant used for Minasa flour'}")
+    
+    # For memory_match with images: grid size and image fields
+    grid_size = models.CharField(
+        max_length=10,
+        blank=True,
+        choices=[
+            ('2x2', '2x2 (2 pairs)'),
+            ('3x3', '3x3 (3 pairs)'),
+            ('4x4', '4x4 (4 pairs)'),
+            ('5x5', '5x5 (5 pairs)'),
+            ('6x6', '6x6 (6 pairs)'),
+            ('7x7', '7x7 (7 pairs)'),
+            ('8x8', '8x8 (8 pairs)'),
+            ('9x9', '9x9 (9 pairs)'),
+        ],
+        help_text="Memory Match: Grid size for image-based memory game"
+    )
+    memory_image_1 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_2 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_3 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_4 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_5 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_6 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_7 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_8 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_9 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_10 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_11 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_12 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_13 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_14 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_15 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_16 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_17 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
+    memory_image_18 = models.ImageField(upload_to='game_images/memory/', blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif', 'webp'])])
     
     # Explanation shown after answering
     explanation = models.TextField(blank=True, help_text="Educational explanation shown after answer")
