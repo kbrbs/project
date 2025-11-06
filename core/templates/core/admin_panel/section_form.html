@@ -14,56 +14,102 @@
   <p class="text-gray-500">Manage educational section details and organization</p>
 </div>
 
-<!-- Form Card -->
-<div class="max-w-3xl">
-  <div class="bg-white rounded-2xl shadow-sm p-8">
-    <form method="post" id="section-form">
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{ request.GET.next|default:request.path }}" />
-      
-      <div class="space-y-6">
-        {% for field in form %}
-          <div>
-            <label for="{{ field.id_for_label }}">
-              {{ field.label }}
-              {% if field.name == 'order' %}
-                <span class="text-xs text-gray-500 normal-case">(Auto-assigned)</span>
+<!-- Two-column layout: form left, preview right with border -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+  <!-- Form Card (left) -->
+  <div>
+    <div class="bg-white rounded-2xl shadow-sm p-8">
+      <form method="post" id="section-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.GET.next|default:request.path }}" />
+        
+        <div class="space-y-6">
+          {% for field in form %}
+            <div>
+              <label for="{{ field.id_for_label }}">
+                {{ field.label }}
+                {% if field.name == 'order' %}
+                  <span class="text-xs text-gray-500 normal-case">(Auto-assigned)</span>
+                {% endif %}
+              </label>
+              {{ field }}
+              {% if field.help_text %}
+                <p class="helptext">{{ field.help_text }}</p>
               {% endif %}
-            </label>
-            {{ field }}
-            {% if field.help_text %}
-              <p class="helptext">{{ field.help_text }}</p>
-            {% endif %}
-            {% if field.name == 'order' %}
-              <p class="helptext">Order is automatically assigned. This section will be placed after the last existing section.</p>
-            {% endif %}
-            {% if field.errors %}
-              <ul class="errorlist">
-                {% for error in field.errors %}
-                  <li>{{ error }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
+              {% if field.name == 'order' %}
+                <p class="helptext">Order is automatically assigned. This section will be placed after the last existing section.</p>
+              {% endif %}
+              {% if field.errors %}
+                <ul class="errorlist">
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Form Actions -->
+        <div class="mt-8 flex items-center gap-3 pt-6 border-t border-gray-200">
+          <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Save Section
+          </button>
+          <a href="{% url 'core:admin_sections' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Live Preview (right) -->
+  <div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-4 pt-4 pb-2 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-gray-800">Live Preview</h2>
+        <span id="preview-url" class="text-xs text-gray-500">/lessons/<span id="preview-slug">your-slug</span>/</span>
+      </div>
+      <div class="border-t border-gray-100"></div>
+      <article>
+        <div class="relative">
+          <img id="preview-image" class="w-full h-64 object-cover hidden" alt="Cover preview" />
+          <div id="preview-fallback" class="h-48 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center">
+            <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center">
+              <span id="preview-emoji" class="text-5xl">📚</span>
+            </div>
           </div>
-        {% endfor %}
-      </div>
-      
-      <!-- Form Actions -->
-      <div class="mt-8 flex items-center gap-3 pt-6 border-t border-gray-200">
-        <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-md hover:shadow-lg">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-          Save Section
-        </button>
-        <a href="{% url 'core:admin_sections' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-          Cancel
-        </a>
-      </div>
-    </form>
+        </div>
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span id="preview-category" class="px-3 py-1 bg-purple-50 text-purple-600 rounded-full text-xs font-medium">General</span>
+            <span class="text-sm text-gray-400">•</span>
+            <span class="text-sm text-gray-500">15 min read</span>
+          </div>
+          <h3 id="preview-title" class="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">Your Title</h3>
+          <div class="flex items-center gap-4 pb-6 mb-6 border-b border-gray-100">
+            <div class="flex items-center gap-2">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
+                <span class="text-white text-sm font-semibold">RK</span>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-800">Rooted in Knowledge</p>
+                <p class="text-xs text-gray-500">Educational Team</p>
+              </div>
+            </div>
+          </div>
+          <div id="preview-content" class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+            Start writing your content to see it here.
+          </div>
+        </div>
+      </article>
+    </div>
   </div>
 </div>
 
@@ -126,7 +172,7 @@
 </style>
 
 <script>
-  // Ensure order field is readonly on page load
+  // Ensure order field is readonly and setup live preview
   document.addEventListener('DOMContentLoaded', function() {
     const orderField = document.querySelector('input[name="order"]');
     if (orderField) {
@@ -134,6 +180,97 @@
       orderField.style.backgroundColor = '#F3F4F6';
       orderField.style.cursor = 'not-allowed';
     }
+
+    // Inputs
+    const titleInput = document.querySelector('input[name="title"]');
+    const slugInput = document.querySelector('input[name="slug"]');
+    const descInput = document.querySelector('textarea[name="description"]');
+    const contentInput = document.querySelector('textarea[name="content"]');
+    const imageInput = document.querySelector('input[name="header_image"]');
+
+    // Preview elements
+    const previewTitle = document.getElementById('preview-title');
+    const previewContent = document.getElementById('preview-content');
+    const previewSlug = document.getElementById('preview-slug');
+    const previewCategory = document.getElementById('preview-category');
+    const previewEmoji = document.getElementById('preview-emoji');
+    const previewImage = document.getElementById('preview-image');
+    const previewFallback = document.getElementById('preview-fallback');
+
+    const CATEGORY_LABELS = {
+      planting: 'Planting & Science',
+      culture: 'Culture & History',
+      economics: 'Economics & Sustainability',
+      creative: 'Creative Minasa'
+    };
+    const CATEGORY_EMOJI = {
+      planting: '🔬',
+      culture: '📜',
+      economics: '📈',
+      creative: '📚'
+    };
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function deriveCategoryFromSlug(slug) {
+      const normalized = String(slug || '').trim().toLowerCase();
+      if (CATEGORY_LABELS[normalized]) return normalized;
+      return 'creative';
+    }
+
+    function nl2br(text) {
+      return escapeHtml(text).replace(/\n/g, '<br>');
+    }
+
+    function renderPreview() {
+      const title = titleInput ? titleInput.value : '';
+      const slug = slugInput ? slugInput.value : '';
+      const description = descInput ? descInput.value : '';
+      const content = contentInput ? contentInput.value : '';
+      const category = deriveCategoryFromSlug(slug);
+
+      if (previewTitle) previewTitle.textContent = title || 'Your Title';
+      if (previewSlug) previewSlug.textContent = slug || 'your-slug';
+      if (previewCategory) previewCategory.textContent = CATEGORY_LABELS[category] || 'General';
+      if (previewEmoji) previewEmoji.textContent = CATEGORY_EMOJI[category] || '📚';
+
+      const body = content || description || 'Start writing your content to see it here.';
+      if (previewContent) previewContent.innerHTML = nl2br(body);
+    }
+
+    [titleInput, slugInput, descInput, contentInput].forEach(function(el) {
+      if (!el) return;
+      el.addEventListener('input', renderPreview);
+    });
+
+    if (imageInput) {
+      imageInput.addEventListener('change', function(ev) {
+        const file = ev.target.files && ev.target.files[0];
+        if (!file) {
+          if (previewImage) previewImage.classList.add('hidden');
+          if (previewFallback) previewFallback.classList.remove('hidden');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (previewImage) {
+            previewImage.src = e.target.result;
+            previewImage.classList.remove('hidden');
+          }
+          if (previewFallback) previewFallback.classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    renderPreview();
   });
 </script>
 

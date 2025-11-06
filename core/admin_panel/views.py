@@ -96,7 +96,7 @@ def top_pages_json(request):
 class SectionForm(forms.ModelForm):
     class Meta:
         model = EducationalSection
-        fields = ['title', 'slug', 'description', 'content', 'order']
+        fields = ['title', 'slug', 'description', 'content', 'header_image', 'order']
         widgets = {
             'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
         }
@@ -147,13 +147,20 @@ class SectionCreateView(CreateView):
             valid_cats = {c[0] for c in Article.CATEGORY_CHOICES}
             category_value = section.slug if section.slug in valid_cats else 'creative'
 
-            Article.objects.create(
+            article = Article.objects.create(
                 title=section.title,
                 slug=slug_candidate,
                 category=category_value,
                 excerpt=section.description,
                 content=section.content or section.description or section.title,
             )
+            # copy header image to article cover if provided
+            if getattr(section, 'header_image', None):
+                try:
+                    article.cover_image = section.header_image
+                    article.save(update_fields=['cover_image'])
+                except Exception:
+                    pass
             messages.success(self.request, 'Section saved and lesson created for the public list.')
         except Exception:
             # If article creation fails, we keep section creation but warn softly
@@ -190,6 +197,9 @@ class SectionUpdateView(UpdateView):
                 article.excerpt = section.description
                 article.content = section.content or section.description or section.title
                 article.category = category_value
+                # update cover image if section has one
+                if getattr(section, 'header_image', None):
+                    article.cover_image = section.header_image
                 article.save()
                 messages.success(self.request, 'Section and corresponding lesson updated.')
         except Exception:

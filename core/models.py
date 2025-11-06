@@ -17,6 +17,7 @@ class Article(models.Model):
     content = models.TextField()
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     pdf = models.FileField(upload_to='pdfs/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='article_covers/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -75,6 +76,7 @@ class EducationalSection(models.Model):
     content = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    header_image = models.ImageField(upload_to='section_headers/', blank=True, null=True)
 
     class Meta:
         ordering = ['order', '-created_at']
