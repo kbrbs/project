@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Article, Progress
+from .models import Article, Progress, EducationalSection
 from quizzes.models import Quiz
 from django.db.models import Count, Avg
 from django.contrib.auth.forms import UserCreationForm
@@ -29,16 +29,16 @@ from django.core.files.storage import default_storage
 
 
 def home(request):
-    # sample hero articles and categories
-    featured = Article.objects.order_by('-created_at')[:6]
+    # Retrieve featured lessons from EducationalSection
+    featured = EducationalSection.objects.all().order_by('order')[:6]
     return render(request, 'core/home.html', {'featured': featured})
 
 
 @login_required
 def lesson_list(request, category=None):
-    qs = Article.objects.all()
-    if category:
-        qs = qs.filter(category=category)
+    # Retrieve all educational sections
+    qs = EducationalSection.objects.all().order_by('order')
+    # Note: EducationalSection doesn't have category field, so we ignore category filter
     return render(request, 'core/lesson_list.html', {'articles': qs, 'category': category})
 
 @login_required

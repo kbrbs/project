@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django import forms
-from django.db.models import Count
+from django.db.models import Count, Max
 
 from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile
 from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseRedirect
@@ -29,14 +29,15 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['total_articles'] = Article.objects.count()
+        ctx['total_articles'] = EducationalSection.objects.count()
         ctx['total_sections'] = EducationalSection.objects.count()
         ctx['total_media'] = MediaAsset.objects.count()
         ctx['total_users'] = 0
         try:
             from django.contrib.auth import get_user_model
             User = get_user_model()
-            ctx['total_users'] = User.objects.count()
+            # Exclude admin accounts (staff and superusers)
+            ctx['total_users'] = User.objects.filter(is_staff=False, is_superuser=False).count()
         except Exception:
             ctx['total_users'] = 0
 
@@ -96,6 +97,9 @@ class SectionForm(forms.ModelForm):
     class Meta:
         model = EducationalSection
         fields = ['title', 'slug', 'description', 'content', 'order']
+        widgets = {
+            'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
+        }
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -121,6 +125,11 @@ class SectionCreateView(CreateView):
     success_url = reverse_lazy('core:admin_sections')
 
     def form_valid(self, form):
+        # Auto-assign order if not set or if creating new section
+        if not form.instance.pk or form.instance.order is None:
+            max_order = EducationalSection.objects.aggregate(Max('order'))['order__max']
+            form.instance.order = (max_order or -1) + 1
+        
         response = super().form_valid(form)
         # Auto-create a corresponding Article so it shows up on the public lesson list
         try:
@@ -199,6 +208,11 @@ class SectionDeleteView(DeleteView):
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_sections')
     
+    def delete(self, request, *args, **kwargs):
+        section = self.get_object()
+        messages.success(request, f'Section "{section.title}" has been permanently deleted.')
+        return super().delete(request, *args, **kwargs)
+    
     def get_success_url(self):
         # Prefer explicit next parameter (POST/GET), otherwise fall back to HTTP_REFERER, then default
         next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
@@ -264,6 +278,11 @@ class MediaDeleteView(DeleteView):
     model = MediaAsset
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_media')
+
+    def delete(self, request, *args, **kwargs):
+        media = self.get_object()
+        messages.success(request, f'Media asset "{media.title}" has been permanently deleted.')
+        return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
         next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
@@ -443,6 +462,11 @@ class QuizDeleteView(DeleteView):
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_quizzes')
 
+    def delete(self, request, *args, **kwargs):
+        quiz = self.get_object()
+        messages.success(request, f'Quiz "{quiz.title}" has been permanently deleted.')
+        return super().delete(request, *args, **kwargs)
+
     def get_success_url(self):
         next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
         if next_url:
@@ -513,6 +537,11 @@ class UserDeleteView(DeleteView):
     model = User
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_users')
+
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        messages.success(request, f'User "{user.username}" has been permanently deleted.')
+        return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
         next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')

@@ -1,3 +1,284 @@
-{% extends 'games/word_scramble_game.html' %}
-{# Image Identification uses a similar structure but displays images as options #}
+{% extends 'core/base.html' %}
+
 {% block title %}{{ game.title }} - Image Identification{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 py-12 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Game Header -->
+    <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
+          <svg class="w-10 h-10 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+          </svg>
+          {{ game.title }}
+        </h1>
+        <a href="{% url 'games:game_list' %}" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </a>
+      </div>
+      <p class="text-gray-600">{{ game.description }}</p>
+      
+      <!-- Progress Bar -->
+      <div class="mt-6">
+        <div class="flex justify-between text-sm text-gray-600 mb-2">
+          <span>Question <span id="current-question">1</span> of <span id="total-questions">{{ game.questions.count }}</span></span>
+          <span>Score: <span id="score" class="font-bold text-green-600">0</span> / <span id="max-score">0</span></span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3">
+          <div id="progress-bar" class="bg-gradient-to-r from-green-500 to-emerald-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Area -->
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+      <!-- Question Image -->
+      <div id="question-container" class="text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6" id="question-text">What is this?</h2>
+        
+        <!-- Image Display -->
+        <div class="mb-8 flex justify-center">
+          <div class="relative">
+            <img id="question-image" src="" alt="Question" class="max-w-full max-h-96 rounded-lg shadow-md border-4 border-green-200">
+          </div>
+        </div>
+
+        <!-- Text Choices -->
+        <div id="choices-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Choices will be inserted here by JavaScript -->
+        </div>
+
+        <!-- Feedback Message -->
+        <div id="feedback" class="mt-6 p-4 rounded-lg hidden">
+          <p id="feedback-text" class="text-lg font-semibold"></p>
+          <p id="explanation" class="mt-2 text-gray-700"></p>
+        </div>
+
+        <!-- Next Button -->
+        <button id="next-btn" class="mt-6 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg hidden">
+          Next Question →
+        </button>
+      </div>
+
+      <!-- Results Screen -->
+      <div id="results-container" class="text-center hidden">
+        <div class="mb-6">
+          <svg class="w-24 h-24 mx-auto text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+        </div>
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Game Complete! 🎉</h2>
+        <p class="text-xl text-gray-600 mb-2">Your Score: <span id="final-score" class="text-green-600 font-bold">0</span></p>
+        <p class="text-lg text-gray-500 mb-8"><span id="final-percentage">0</span>% Correct</p>
+        
+        <div class="flex gap-4 justify-center">
+          <button id="play-again-btn" class="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg">
+            Play Again
+          </button>
+          <a href="{% url 'games:game_list' %}" class="px-8 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
+            Back to Games
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const gameData = {{ game_data_json|safe }};
+  let currentQuestionIndex = 0;
+  let score = 0;
+  let userAnswers = {};  // Changed from array to object for backend compatibility
+  
+  // DOM Elements
+  const questionContainer = document.getElementById('question-container');
+  const resultsContainer = document.getElementById('results-container');
+  const questionText = document.getElementById('question-text');
+  const questionImage = document.getElementById('question-image');
+  const choicesContainer = document.getElementById('choices-container');
+  const feedback = document.getElementById('feedback');
+  const feedbackText = document.getElementById('feedback-text');
+  const explanationEl = document.getElementById('explanation');
+  const nextBtn = document.getElementById('next-btn');
+  const currentQuestionSpan = document.getElementById('current-question');
+  const totalQuestionsSpan = document.getElementById('total-questions');
+  const scoreSpan = document.getElementById('score');
+  const maxScoreSpan = document.getElementById('max-score');
+  const progressBar = document.getElementById('progress-bar');
+  const playAgainBtn = document.getElementById('play-again-btn');
+
+  function initGame() {
+    totalQuestionsSpan.textContent = gameData.questions.length;
+    maxScoreSpan.textContent = gameData.questions.length * gameData.points_per_correct;
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    if (currentQuestionIndex >= gameData.questions.length) {
+      showResults();
+      return;
+    }
+
+    const q = gameData.questions[currentQuestionIndex];
+    
+    // Update progress
+    currentQuestionSpan.textContent = currentQuestionIndex + 1;
+    const progress = ((currentQuestionIndex) / gameData.questions.length) * 100;
+    progressBar.style.width = progress + '%';
+
+    // Set question text from database (question_text field)
+    questionText.textContent = q.text || q.question_text || 'What is this?';
+    
+    // Set question image from uploaded file
+    if (q.question_image) {
+      questionImage.src = q.question_image;
+      questionImage.alt = q.text || q.question_text || 'Question image';
+      questionImage.style.display = 'block';
+    } else {
+      // No image uploaded - show warning message
+      questionImage.style.display = 'none';
+      const imageContainer = questionImage.parentElement;
+      imageContainer.innerHTML = `
+        <div class="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-6 text-center">
+          <svg class="w-16 h-16 mx-auto text-yellow-500 mb-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+          </svg>
+          <p class="text-yellow-800 font-semibold text-lg">⚠️ No Image Uploaded</p>
+          <p class="text-yellow-700 text-sm mt-2">This question is missing an image. Please contact your teacher to upload an image for this question.</p>
+        </div>
+      `;
+      console.warn('⚠️ No question image found. Question ID:', q.id, 'Text:', q.text || q.question_text);
+    }
+
+    // Clear previous choices and feedback
+    choicesContainer.innerHTML = '';
+    feedback.classList.add('hidden');
+    nextBtn.classList.add('hidden');
+
+    // Create text choice buttons
+    if (q.choices && q.choices.length > 0) {
+      q.choices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.className = 'choice-btn p-4 border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all text-lg font-medium text-gray-700';
+        button.textContent = choice;
+        button.onclick = () => selectAnswer(choice, button);
+        choicesContainer.appendChild(button);
+      });
+    } else {
+      console.error('No choices found for question:', q);
+    }
+  }
+
+  function selectAnswer(selectedChoice, buttonEl) {
+    const q = gameData.questions[currentQuestionIndex];
+    const correctAnswer = q.correct_answer || '';
+    const isCorrect = selectedChoice.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
+
+    // Disable all choice buttons
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.disabled = true;
+      btn.classList.remove('hover:border-green-500', 'hover:bg-green-50');
+      
+      // Highlight correct and incorrect answers
+      if (btn.textContent.trim().toLowerCase() === correctAnswer.trim().toLowerCase()) {
+        btn.classList.add('border-green-500', 'bg-green-100', 'text-green-800');
+      } else if (btn === buttonEl && !isCorrect) {
+        btn.classList.add('border-red-500', 'bg-red-100', 'text-red-800');
+      }
+    });
+
+    // Show feedback
+    feedback.classList.remove('hidden');
+    if (isCorrect) {
+      feedback.className = 'mt-6 p-4 rounded-lg bg-green-100 border-2 border-green-500';
+      feedbackText.textContent = '✅ Correct!';
+      feedbackText.className = 'text-lg font-semibold text-green-800';
+      score += gameData.points_per_correct;
+      scoreSpan.textContent = score;
+    } else {
+      feedback.className = 'mt-6 p-4 rounded-lg bg-red-100 border-2 border-red-500';
+      feedbackText.textContent = `❌ Incorrect. The correct answer is: ${correctAnswer}`;
+      feedbackText.className = 'text-lg font-semibold text-red-800';
+    }
+
+    // Show explanation if available
+    if (q.explanation) {
+      explanationEl.textContent = q.explanation;
+      explanationEl.classList.remove('hidden');
+    } else {
+      explanationEl.classList.add('hidden');
+    }
+
+    // Record answer (changed to match backend expectation)
+    userAnswers[q.id] = selectedChoice;
+
+    // Show next button
+    nextBtn.classList.remove('hidden');
+  }
+
+  nextBtn.addEventListener('click', () => {
+    currentQuestionIndex++;
+    loadQuestion();
+  });
+
+  function showResults() {
+    questionContainer.classList.add('hidden');
+    resultsContainer.classList.remove('hidden');
+    
+    const percentage = Math.round((score / (gameData.questions.length * gameData.points_per_correct)) * 100);
+    document.getElementById('final-score').textContent = score + ' / ' + (gameData.questions.length * gameData.points_per_correct);
+    document.getElementById('final-percentage').textContent = percentage;
+
+    // Update progress bar to 100%
+    progressBar.style.width = '100%';
+
+    // Submit results to server
+    submitResults();
+  }
+
+  function submitResults() {
+    fetch('{% url "games:submit_game" game.pk %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify({
+        answers: userAnswers,
+        score: score
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Results submitted:', data);
+      if (data.success) {
+        console.log(`Score: ${data.score}/${data.max_score} (${data.percentage}%)`);
+      }
+    })
+    .catch(error => console.error('Error submitting results:', error));
+  }
+
+  playAgainBtn.addEventListener('click', () => {
+    currentQuestionIndex = 0;
+    score = 0;
+    userAnswers = {};  // Reset as object
+    scoreSpan.textContent = '0';
+    resultsContainer.classList.add('hidden');
+    questionContainer.classList.remove('hidden');
+    loadQuestion();
+  });
+
+  // Initialize game on page load
+  initGame();
+</script>
+
+<style>
+  .choice-btn:disabled {
+    cursor: not-allowed;
+  }
+</style>
+{% endblock %}

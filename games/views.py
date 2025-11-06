@@ -101,7 +101,39 @@ def game_detail(request, pk):
                 question_data['items'] = shuffled
                 question_data['correct_order'] = sequence
             
-        elif game.game_type in ['image_identification', 'multiple_choice_image']:
+        elif game.game_type == 'image_identification':
+            # New format: image as question, text as choices
+            question_data['question_text'] = q.question_text
+            
+            # Get text choices and shuffle
+            text_choices = q.get_text_choices_list()
+            if text_choices:
+                # Using new format with uploaded image and text choices
+                random.shuffle(text_choices)
+                question_data['choices'] = text_choices
+                question_data['correct_answer'] = q.correct_answer
+                
+                # Add image URL if available
+                if q.question_image:
+                    question_data['question_image'] = q.question_image.url
+                else:
+                    # No image uploaded yet - set empty string to show warning
+                    question_data['question_image'] = None
+            else:
+                # Legacy format: text question, image choices (using GameOption)
+                options = list(q.options.all())
+                random.shuffle(options)
+                question_data['options'] = [
+                    {
+                        'id': opt.id,
+                        'text': opt.option_text,
+                        'image': opt.option_image.url if opt.option_image else None,
+                        'is_correct': opt.is_correct
+                    }
+                    for opt in options
+                ]
+            
+        elif game.game_type == 'multiple_choice_image':
             # Get options
             options = list(q.options.all())
             random.shuffle(options)
@@ -116,14 +148,50 @@ def game_detail(request, pk):
             ]
             
         elif game.game_type == 'memory_match':
-            # Get pairs and create card list
-            pairs = q.get_memory_pairs_dict()
-            cards = []
-            for key, value in pairs.items():
-                cards.append({'text': key, 'pair_id': key})
-                cards.append({'text': value, 'pair_id': key})
-            random.shuffle(cards)
-            question_data['cards'] = cards
+            # Check if using new image-based format
+            if q.grid_size:
+                # New image-based memory match
+                question_data['grid_size'] = q.grid_size
+                images = []
+                
+                # Collect all uploaded images
+                for i in range(1, 19):  # Check all 18 possible image fields
+                    image_field = getattr(q, f'memory_image_{i}', None)
+                    if image_field:
+                        images.append({
+                            'id': i,
+                            'url': image_field.url,
+                            'pair_id': i  # Each image is its own pair
+                        })
+                
+                # Create pairs by duplicating each image
+                cards = []
+                for img in images:
+                    # Add two cards with the same image (matching pair)
+                    cards.append({
+                        'id': f"card_{img['id']}_1",
+                        'image': img['url'],
+                        'pair_id': img['pair_id']
+                    })
+                    cards.append({
+                        'id': f"card_{img['id']}_2",
+                        'image': img['url'],
+                        'pair_id': img['pair_id']
+                    })
+                
+                # Shuffle cards
+                random.shuffle(cards)
+                question_data['cards'] = cards
+                question_data['total_pairs'] = len(images)
+            else:
+                # Legacy text-based format
+                pairs = q.get_memory_pairs_dict()
+                cards = []
+                for key, value in pairs.items():
+                    cards.append({'text': key, 'pair_id': key})
+                    cards.append({'text': value, 'pair_id': key})
+                random.shuffle(cards)
+                question_data['cards'] = cards
         
         question_data['explanation'] = q.explanation
         game_data['questions'].append(question_data)
@@ -188,7 +256,22 @@ def submit_game(request, pk):
                     if user_answer == correct_sequence:
                         score += game.points_per_correct
                     
-            elif game.game_type in ['image_identification', 'multiple_choice_image']:
+            elif game.game_type == 'image_identification':
+                # New format: user_answer is text string
+                if question.question_image and question.text_choices:
+                    # Compare text answer
+                    if user_answer and user_answer.strip().lower() == question.correct_answer.strip().lower():
+                        score += game.points_per_correct
+                else:
+                    # Legacy format: user_answer is option_id
+                    try:
+                        option = question.options.get(id=int(user_answer))
+                        if option.is_correct:
+                            score += game.points_per_correct
+                    except:
+                        pass
+                        
+            elif game.game_type == 'multiple_choice_image':
                 # user_answer is option_id
                 try:
                     option = question.options.get(id=int(user_answer))
@@ -198,18 +281,18 @@ def submit_game(request, pk):
                     pass
                     
             elif game.game_type == 'memory_match':
-                # For memory match, count correct pairs
-                # user_answer should be a dict of matched pairs
-                pairs = question.get_memory_pairs_dict()
+                # For memory match, check if all pairs were matched
+                # user_answer is a dict: {matched_pairs: X, attempts: Y, total_pairs: Z, time: T}
                 if isinstance(user_answer, dict):
-                    # Check if pairs match correctly
-                    correct_pairs = 0
-                    for key, value in user_answer.items():
-                        if key in pairs and pairs[key] == value:
-                            correct_pairs += 1
-                    # Award partial credit
-                    if len(pairs) > 0:
-                        score += int((correct_pairs / len(pairs)) * game.points_per_correct)
+                    matched_pairs = user_answer.get('matched_pairs', 0)
+                    total_pairs = user_answer.get('total_pairs', 0)
+                    
+                    # Award full points if all pairs matched
+                    if matched_pairs == total_pairs and total_pairs > 0:
+                        score += game.points_per_correct
+                    elif total_pairs > 0:
+                        # Award partial credit based on percentage
+                        score += int((matched_pairs / total_pairs) * game.points_per_correct)
         
         # Save attempt
         attempt = GameAttempt.objects.create(

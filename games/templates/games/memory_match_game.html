@@ -1,3 +1,435 @@
-{% extends 'games/drag_drop_game.html' %}
-{# Memory Match uses drag/drop as base with card flip logic #}
+{% extends 'core/base.html' %}
+
 {% block title %}{{ game.title }} - Memory Match{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-6 py-8">
+  <!-- Game Header -->
+  <div class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-2xl p-8 mb-8 shadow-lg">
+    <div class="flex items-center gap-2 text-purple-100 mb-2">
+      <a href="{% url 'games:game_list' %}" class="hover:text-white">← Back to Games</a>
+    </div>
+    <h1 class="text-4xl font-bold mb-2">🧠 {{ game.title }}</h1>
+    <p class="text-purple-100">{{ game.description }}</p>
+    <div class="mt-4 flex items-center gap-4 text-sm">
+      <span class="bg-white/20 px-3 py-1 rounded-full">Memory Match</span>
+      {% if game.time_limit %}<span>⏱️ {{ game.time_limit }}s limit</span>{% endif %}
+      <span>🎯 {{ game.points_per_correct }} pts per pair</span>
+    </div>
+  </div>
+
+  <!-- Game Area -->
+  <div id="game-container" class="bg-white rounded-2xl shadow-lg p-8">
+    <!-- Timer and Stats -->
+    <div class="mb-6 flex justify-between items-center flex-wrap gap-4">
+      <div class="flex gap-4 flex-wrap">
+        <div class="bg-purple-100 px-4 py-2 rounded-lg">
+          <span class="text-purple-800 font-bold">⏱️ <span id="timer">0</span>s</span>
+        </div>
+        <div class="bg-blue-100 px-4 py-2 rounded-lg">
+          <span class="text-blue-800 font-bold">🎯 Matches: <span id="matches">0</span> / <span id="total-pairs">0</span></span>
+        </div>
+        <div class="bg-green-100 px-4 py-2 rounded-lg">
+          <span class="text-green-800 font-bold">🔄 Attempts: <span id="attempts">0</span></span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-purple-600">
+        Score: <span id="score">0</span>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="mb-6">
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Game Board -->
+    <div id="game-board" class="mb-8">
+      <div id="card-grid" class="grid gap-3 justify-center">
+        <!-- Cards will be inserted here dynamically -->
+      </div>
+    </div>
+
+    <!-- Results (hidden initially) -->
+    <div id="results" class="hidden text-center">
+      <div class="mb-6">
+        <div class="text-6xl mb-4">🎉</div>
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Perfect Match!</h2>
+        <p class="text-xl text-gray-600 mb-6">You matched all pairs!</p>
+        <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-6">
+          <div class="bg-purple-50 p-4 rounded-lg">
+            <div class="text-3xl font-bold text-purple-600" id="final-score">0</div>
+            <div class="text-sm text-gray-600">Final Score</div>
+          </div>
+          <div class="bg-blue-50 p-4 rounded-lg">
+            <div class="text-3xl font-bold text-blue-600" id="final-time">0</div>
+            <div class="text-sm text-gray-600">Time (seconds)</div>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg">
+            <div class="text-3xl font-bold text-green-600" id="final-attempts">0</div>
+            <div class="text-sm text-gray-600">Total Attempts</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-4 justify-center">
+        <a href="{% url 'games:game_detail' game.pk %}" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold">
+          Play Again
+        </a>
+        <a href="{% url 'games:game_list' %}" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold">
+          Back to Games
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const gameData = {{ game_data_json|safe }};
+let currentQuestionIndex = 0;
+let flippedCards = [];
+let matchedPairs = 0;
+let attempts = 0;
+let score = 0;
+let startTime = Date.now();
+let timerInterval = null;
+let isProcessing = false;
+let allQuestionResults = {}; // Track results for each question
+
+// Initialize game
+document.addEventListener('DOMContentLoaded', function() {
+  initGame();
+});
+
+function initGame() {
+  startTimer();
+  loadQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById('timer').textContent = elapsed;
+  }, 1000);
+}
+
+function loadQuestion() {
+  if (currentQuestionIndex >= gameData.questions.length) {
+    endGame();
+    return;
+  }
+  
+  const q = gameData.questions[currentQuestionIndex];
+  const cardGrid = document.getElementById('card-grid');
+  cardGrid.innerHTML = '';
+  
+  const totalCards = q.cards.length;
+  
+  // Calculate optimal grid layout (columns x rows)
+  let cols, rows;
+  
+  // Determine best column/row distribution based on card count
+  if (totalCards === 4) {
+    // 2 pairs
+    cols = 2; rows = 2;
+  } else if (totalCards === 6) {
+    // 3 pairs
+    cols = 3; rows = 2;
+  } else if (totalCards === 8) {
+    // 4 pairs
+    cols = 4; rows = 2;
+  } else if (totalCards === 10) {
+    // 5 pairs
+    cols = 5; rows = 2;
+  } else if (totalCards === 12) {
+    // 6 pairs
+    cols = 4; rows = 3;
+  } else if (totalCards === 14) {
+    // 7 pairs
+    cols = 7; rows = 2;
+  } else if (totalCards === 16) {
+    // 8 pairs
+    cols = 4; rows = 4;
+  } else if (totalCards === 18) {
+    // 9 pairs
+    cols = 6; rows = 3;
+  } else if (totalCards === 20) {
+    // 10 pairs
+    cols = 5; rows = 4;
+  } else {
+    // For other card counts, calculate dynamically
+    cols = Math.ceil(Math.sqrt(totalCards));
+    rows = Math.ceil(totalCards / cols);
+  }
+  
+  // Set grid layout
+  cardGrid.className = `grid gap-4 justify-center mx-auto`;
+  cardGrid.style.setProperty('--grid-cols', cols); // For responsive CSS
+  cardGrid.style.setProperty('--grid-rows', rows);
+  cardGrid.style.gridTemplateColumns = `repeat(${cols}, minmax(100px, 120px))`;
+  cardGrid.style.gridTemplateRows = `repeat(${rows}, minmax(100px, 120px))`;
+  cardGrid.style.maxWidth = `${cols * 140}px`; // Limit max width
+  
+  // Update stats
+  const totalPairsForQuestion = q.total_pairs || Math.floor(totalCards / 2);
+  document.getElementById('total-pairs').textContent = totalPairsForQuestion;
+  document.getElementById('matches').textContent = '0';
+  document.getElementById('attempts').textContent = '0';
+  
+  // Reset state for this question
+  flippedCards = [];
+  matchedPairs = 0;
+  attempts = 0;
+  
+  // Initialize result tracking for this question
+  allQuestionResults[q.id] = {
+    matched_pairs: 0,
+    attempts: 0,
+    total_pairs: totalPairsForQuestion
+  };
+  
+  // Create all cards
+  q.cards.forEach((card, index) => {
+    const cardElement = createCard(card, index);
+    cardGrid.appendChild(cardElement);
+  });
+}
+
+function createCard(cardData, index) {
+  const card = document.createElement('div');
+  card.className = 'memory-card relative cursor-pointer transform transition-all duration-300 hover:scale-105';
+  card.dataset.pairId = cardData.pair_id;
+  card.dataset.cardId = cardData.id || index;
+  card.style.aspectRatio = '1'; // Keep cards perfectly square
+  card.style.width = '100%';
+  card.style.height = '100%';
+  
+  // Card inner container for flip effect
+  card.innerHTML = `
+    <div class="card-inner relative w-full h-full" style="transform-style: preserve-3d; transition: transform 0.6s;">
+      <!-- Card Back (face down) -->
+      <div class="card-back absolute w-full h-full bg-gradient-to-br from-purple-400 to-indigo-500 rounded-2xl flex items-center justify-center text-white shadow-xl border-4 border-purple-600" style="backface-visibility: hidden;">
+        <span class="text-6xl">🎴</span>
+      </div>
+      <!-- Card Front (face up) -->
+      <div class="card-front absolute w-full h-full bg-white rounded-2xl flex items-center justify-center p-3 shadow-xl border-4 border-purple-300" style="backface-visibility: hidden; transform: rotateY(180deg);">
+        ${cardData.image ? 
+          `<img src="${cardData.image}" alt="Card" class="w-full h-full object-cover rounded-lg">` :
+          `<div class="text-center text-base font-semibold text-gray-800 break-words px-2">${cardData.text || ''}</div>`
+        }
+      </div>
+    </div>
+  `;
+  
+  card.addEventListener('click', () => handleCardClick(card, cardData));
+  
+  return card;
+}
+
+function handleCardClick(cardElement, cardData) {
+  // Prevent actions during processing or if card is already flipped/matched
+  if (isProcessing || cardElement.classList.contains('flipped') || cardElement.classList.contains('matched')) {
+    return;
+  }
+  
+  // Flip the card
+  flipCard(cardElement);
+  flippedCards.push({ element: cardElement, data: cardData });
+  
+  // Check if two cards are flipped
+  if (flippedCards.length === 2) {
+    isProcessing = true;
+    attempts++;
+    document.getElementById('attempts').textContent = attempts;
+    
+    // Update tracking for current question
+    const currentQuestion = gameData.questions[currentQuestionIndex];
+    if (allQuestionResults[currentQuestion.id]) {
+      allQuestionResults[currentQuestion.id].attempts = attempts;
+    }
+    
+    setTimeout(() => {
+      checkMatch();
+    }, 800);
+  }
+}
+
+function flipCard(cardElement) {
+  cardElement.classList.add('flipped');
+  const cardInner = cardElement.querySelector('.card-inner');
+  cardInner.style.transform = 'rotateY(180deg)';
+}
+
+function unflipCard(cardElement) {
+  cardElement.classList.remove('flipped');
+  const cardInner = cardElement.querySelector('.card-inner');
+  cardInner.style.transform = 'rotateY(0deg)';
+}
+
+function checkMatch() {
+  const [card1, card2] = flippedCards;
+  
+  if (card1.data.pair_id === card2.data.pair_id) {
+    // Match found!
+    card1.element.classList.add('matched');
+    card2.element.classList.add('matched');
+    
+    // Add matched animation
+    card1.element.style.opacity = '0.6';
+    card2.element.style.opacity = '0.6';
+    card1.element.style.transform = 'scale(0.95)';
+    card2.element.style.transform = 'scale(0.95)';
+    
+    matchedPairs++;
+    score += gameData.points_per_correct;
+    
+    // Update tracking for current question
+    const currentQuestion = gameData.questions[currentQuestionIndex];
+    if (allQuestionResults[currentQuestion.id]) {
+      allQuestionResults[currentQuestion.id].matched_pairs = matchedPairs;
+      allQuestionResults[currentQuestion.id].attempts = attempts;
+    }
+    
+    document.getElementById('matches').textContent = matchedPairs;
+    document.getElementById('score').textContent = score;
+    
+    // Update progress
+    const q = gameData.questions[currentQuestionIndex];
+    const totalPairs = q.total_pairs || Math.floor(q.cards.length / 2);
+    const progress = (matchedPairs / totalPairs) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+    
+    // Check if all pairs matched
+    if (matchedPairs === totalPairs) {
+      setTimeout(() => {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < gameData.questions.length) {
+          loadQuestion();
+        } else {
+          endGame();
+        }
+      }, 1000);
+    }
+  } else {
+    // No match - flip back
+    setTimeout(() => {
+      unflipCard(card1.element);
+      unflipCard(card2.element);
+    }, 400);
+  }
+  
+  flippedCards = [];
+  isProcessing = false;
+}
+
+function endGame() {
+  if (timerInterval) clearInterval(timerInterval);
+  
+  const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+  
+  // Update progress to 100%
+  document.getElementById('progress-bar').style.width = '100%';
+  
+  // Update UI
+  document.getElementById('game-board').classList.add('hidden');
+  document.getElementById('results').classList.remove('hidden');
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('final-time').textContent = timeTaken;
+  document.getElementById('final-attempts').textContent = attempts;
+  
+  // Submit to server
+  {% if user.is_authenticated %}
+  // Build answers object with all question results
+  const userAnswers = {};
+  for (const questionId in allQuestionResults) {
+    userAnswers[questionId] = {
+      matched_pairs: allQuestionResults[questionId].matched_pairs,
+      attempts: allQuestionResults[questionId].attempts,
+      total_pairs: allQuestionResults[questionId].total_pairs,
+      time: timeTaken
+    };
+  }
+  
+  fetch('{% url "games:submit_game" game.pk %}', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify({
+      answers: userAnswers,
+      time_taken: timeTaken
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Game submitted successfully:', data);
+  })
+  .catch(error => {
+    console.error('Error submitting game:', error);
+  });
+  {% endif %}
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+</script>
+
+<style>
+.memory-card {
+  perspective: 1000px;
+}
+
+.memory-card.matched {
+  pointer-events: none;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.card-back,
+.card-front {
+  backface-visibility: hidden;
+}
+
+/* Responsive card sizes */
+@media (max-width: 768px) {
+  #card-grid {
+    gap: 0.5rem !important;
+    grid-template-columns: repeat(var(--grid-cols, 2), minmax(80px, 100px)) !important;
+    grid-template-rows: repeat(var(--grid-rows, 2), minmax(80px, 100px)) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #card-grid {
+    gap: 0.35rem !important;
+    grid-template-columns: repeat(var(--grid-cols, 2), minmax(60px, 80px)) !important;
+    grid-template-rows: repeat(var(--grid-rows, 2), minmax(60px, 80px)) !important;
+  }
+  
+  .card-back span {
+    font-size: 2rem !important;
+  }
+}
+</style>
+
+{% endblock %}
