@@ -82,6 +82,12 @@
             </div>
             
             <div>
+              <label for="id_order">Order <span class="text-xs text-gray-500">(Auto-assigned)</span></label>
+              {{ form.order }}
+              <p class="helptext">Display order in game list (automatically assigned)</p>
+            </div>
+            
+            <div>
               <label for="id_is_active">Active</label>
               {{ form.is_active }}
               <span class="text-sm text-gray-600 ml-2">Published and visible to users</span>
@@ -714,6 +720,41 @@
       });
     }
 
+    // Utility functions (must be defined before use)
+    function nextIndex() {
+      return parseInt(totalFormsInput.value, 10);
+    }
+
+    function replacePrefix(html, index) {
+      const re = new RegExp('__prefix__', 'g');
+      return html.replace(re, String(index));
+    }
+
+    function updateQuestionNumbers() {
+      const headings = container.querySelectorAll('.question-form h3.font-semibold');
+      headings.forEach((h, i) => {
+        if (h.textContent.startsWith('Question')) {
+          h.textContent = 'Question ' + (i + 1);
+        }
+      });
+    }
+
+    function updateQuestionOrders() {
+      const forms = container.querySelectorAll('.question-form');
+      forms.forEach((form, index) => {
+        // Find the order input field for this form
+        const orderInput = form.querySelector('input[name*="order"]');
+        if (orderInput) {
+          // Set order to sequential number (0-based index)
+          orderInput.value = index;
+          // Make it readonly so users can't change it
+          orderInput.setAttribute('readonly', 'readonly');
+          orderInput.style.backgroundColor = '#F3F4F6';
+          orderInput.style.cursor = 'not-allowed';
+        }
+      });
+    }
+
     // Initialize on page load
     if (gameTypeSelect && gameTypeSelect.value) {
       updateFieldVisibility(gameTypeSelect.value);
@@ -737,39 +778,6 @@
 
     // Add question button
     if (addBtn) {
-      function nextIndex() {
-        return parseInt(totalFormsInput.value, 10);
-      }
-
-      function replacePrefix(html, index) {
-        const re = new RegExp('__prefix__', 'g');
-        return html.replace(re, String(index));
-      }
-
-      function updateQuestionNumbers() {
-        const headings = container.querySelectorAll('.question-form h3.font-semibold');
-        headings.forEach((h, i) => {
-          if (h.textContent.startsWith('Question')) {
-            h.textContent = 'Question ' + (i + 1);
-          }
-        });
-      }
-
-      function updateQuestionOrders() {
-        const forms = container.querySelectorAll('.question-form');
-        forms.forEach((form, index) => {
-          // Find the order input field for this form
-          const orderInput = form.querySelector('input[name*="order"]');
-          if (orderInput) {
-            // Set order to sequential number (0-based index)
-            orderInput.value = index;
-            // Make it readonly so users can't change it
-            orderInput.setAttribute('readonly', 'readonly');
-            orderInput.style.backgroundColor = '#F3F4F6';
-            orderInput.style.cursor = 'not-allowed';
-          }
-        });
-      }
 
       addBtn.addEventListener('click', function() {
         const gameType = gameTypeSelect ? gameTypeSelect.value : '';

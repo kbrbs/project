@@ -8,16 +8,17 @@ from django.forms import inlineformset_factory, modelformset_factory
 from django import forms
 from django.utils.http import url_has_allowed_host_and_scheme
 from games.models import Game, GameQuestion, GameOption, GameAttempt
-from django.db.models import Count, Avg, Q
+from django.db.models import Count, Avg, Q, Max
 import json
 
 
 class GameForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ['title', 'game_type', 'description', 'article', 'difficulty', 'time_limit', 'points_per_correct', 'is_active']
+        fields = ['title', 'game_type', 'description', 'article', 'difficulty', 'time_limit', 'points_per_correct', 'order', 'is_active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
+            'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
         }
 
 
@@ -130,7 +131,11 @@ class GameCreateView(CreateView):
         form = self.get_form()
         formset = GameQuestionFormSet(request.POST, request.FILES)  # Added request.FILES for image uploads
         if form.is_valid() and formset.is_valid():
-            game = form.save()
+            game = form.save(commit=False)
+            # Auto-assign order (next available number)
+            max_order = Game.objects.aggregate(Max('order'))['order__max']
+            game.order = (max_order or -1) + 1
+            game.save()
             formset.instance = game
             
             # Save each form individually to ensure all fields are committed

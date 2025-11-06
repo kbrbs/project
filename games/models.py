@@ -14,7 +14,6 @@ class Game(models.Model):
         ('drag_drop', 'Drag and Drop Sorting'),
         ('image_identification', 'Image Identification'),
         ('memory_match', 'Memory Matching'),
-        ('multiple_choice_image', 'Multiple Choice with Images'),
     ]
     
     title = models.CharField(max_length=200)
@@ -24,12 +23,13 @@ class Game(models.Model):
     difficulty = models.CharField(max_length=20, choices=[('easy', 'Easy'), ('medium', 'Medium'), ('hard', 'Hard')], default='medium')
     time_limit = models.IntegerField(null=True, blank=True, help_text="Time limit in seconds (optional)")
     points_per_correct = models.IntegerField(default=10, validators=[MinValueValidator(1)])
+    order = models.PositiveIntegerField(default=0, help_text="Display order in game list")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['order', '-created_at']
     
     def __str__(self):
         return f"{self.title} ({self.get_game_type_display()})"

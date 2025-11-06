@@ -29,14 +29,15 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['total_articles'] = Article.objects.count()
+        ctx['total_articles'] = EducationalSection.objects.count()
         ctx['total_sections'] = EducationalSection.objects.count()
         ctx['total_media'] = MediaAsset.objects.count()
         ctx['total_users'] = 0
         try:
             from django.contrib.auth import get_user_model
             User = get_user_model()
-            ctx['total_users'] = User.objects.count()
+            # Exclude admin accounts (staff and superusers)
+            ctx['total_users'] = User.objects.filter(is_staff=False, is_superuser=False).count()
         except Exception:
             ctx['total_users'] = 0
 
