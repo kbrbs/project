@@ -197,6 +197,12 @@ def login_view(request):
             else:
                 username = identifier
 
+            # If the account exists but is inactive, show a clear blocked message
+            existing_user = User.objects.filter(username__iexact=username).first()
+            if existing_user and not existing_user.is_active:
+                error = 'Your account is blocked. Please contact the administrator.'
+                return render(request, 'registration/login.html', {'form': form, 'error': error})
+
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)

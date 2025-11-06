@@ -46,6 +46,9 @@
             Email
           </th>
           <th scope="col" class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Status
+          </th>
+          <th scope="col" class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Grade
           </th>
           <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -80,6 +83,17 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="text-sm text-gray-600">{{ u.email }}</div>
             </td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            {% if u.is_active %}
+              <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                Unblocked
+              </span>
+            {% else %}
+              <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-700">
+                Blocked
+              </span>
+            {% endif %}
+          </td>
             <td class="px-6 py-4 whitespace-nowrap text-center">
               <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
                 {{ u.studentprofile.grade|default:'-' }}
@@ -108,7 +122,7 @@
           </tr>
         {% empty %}
           <tr>
-            <td colspan="6" class="px-6 py-12">
+            <td colspan="7" class="px-6 py-12">
               <div class="text-center">
                 <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>

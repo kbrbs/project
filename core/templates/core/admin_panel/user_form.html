@@ -14,6 +14,22 @@
   <p class="text-gray-500">Manage user account and profile information</p>
 </div>
 
+{% if form.instance.pk and not form.instance.is_active %}
+<div class="mb-6">
+  <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+    <div class="flex items-start gap-3">
+      <svg class="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z" />
+      </svg>
+      <div>
+        <div class="text-sm font-semibold text-red-800">Account is blocked</div>
+        <div class="text-sm text-red-700">This user cannot log in until the account is unblocked.</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 <!-- Form Card -->
 <div class="max-w-3xl">
   <div class="bg-white rounded-2xl shadow-sm p-8">
@@ -22,6 +38,22 @@
       
       <div class="space-y-6">
         {{ form.as_p }}
+
+        <!-- Quick Status Actions -->
+        {% if form.instance.pk %}
+        <div class="mt-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm font-semibold text-gray-700">Account Status</div>
+              <div class="text-sm text-gray-500">Current: {% if form.instance.is_active %}<span class="text-green-700 font-medium">Unblocked</span>{% else %}<span class="text-red-700 font-medium">Blocked</span>{% endif %}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-block" class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">Block</button>
+              <button type="button" id="btn-unblock" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700">Unblock</button>
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
       
       <!-- Form Actions -->
@@ -95,5 +127,27 @@
     margin-top: 0.25rem;
   }
 </style>
+
+<script>
+  (function() {
+    var formEl = document.querySelector('form');
+    var isActiveInput = document.getElementById('id_is_active');
+    var btnBlock = document.getElementById('btn-block');
+    var btnUnblock = document.getElementById('btn-unblock');
+    if (!formEl || !isActiveInput) return;
+    if (btnBlock) {
+      btnBlock.addEventListener('click', function() {
+        isActiveInput.checked = false;
+        formEl.submit();
+      });
+    }
+    if (btnUnblock) {
+      btnUnblock.addEventListener('click', function() {
+        isActiveInput.checked = true;
+        formEl.submit();
+      });
+    }
+  })();
+</script>
 
 {% endblock %}
