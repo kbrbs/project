@@ -71,7 +71,7 @@
       <!-- Feedback -->
       <div id="feedback" class="hidden mb-6 p-4 rounded-lg max-w-3xl mx-auto"></div>
 
-      <!-- Submit Button -->
+      <!-- Submit/Next Button -->
       <div class="text-center">
         <button id="submit-btn" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl">
           Check Answer
@@ -172,6 +172,7 @@ let score = 0;
 let startTime = Date.now();
 let timerInterval = null;
 let sortableInstances = [];
+let isAnswerChecked = false; // Track if current question has been answered
 
 document.addEventListener('DOMContentLoaded', function() {
   initGame();
@@ -185,7 +186,17 @@ function initGame() {
   if (gameData.time_limit) startTimer();
   loadQuestion();
   
-  document.getElementById('submit-btn').addEventListener('click', submitAnswer);
+  document.getElementById('submit-btn').addEventListener('click', handleButtonClick);
+}
+
+function handleButtonClick() {
+  if (isAnswerChecked) {
+    // Button is in "Next" or "Finish" mode
+    goToNextQuestion();
+  } else {
+    // Button is in "Check Answer" mode
+    submitAnswer();
+  }
 }
 
 function startTimer() {
@@ -213,6 +224,12 @@ function loadQuestion() {
   document.getElementById('question-text').textContent = q.text;
   document.getElementById('feedback').classList.add('hidden');
   
+  // Reset button state for new question
+  isAnswerChecked = false;
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.textContent = 'Check Answer';
+  submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl';
+  
   // Check if this is new drag-drop format
   if (!q.sentence_parts || !q.choices) {
     console.error('Missing sentence_parts or choices in question data:', q);
@@ -221,7 +238,9 @@ function loadQuestion() {
   }
   
   // Destroy previous sortable instances
-  sortableInstances.forEach(s => s.destroy());
+  sortableInstances.forEach(s => {
+    if (s && s.destroy) s.destroy();
+  });
   sortableInstances = [];
   
   // Build sentence with drop zones
@@ -289,7 +308,9 @@ function loadQuestion() {
   });
   sortableInstances.push(choicesSortable);
   
-  const progress = ((currentQuestionIndex) / gameData.questions.length) * 100;
+  // Calculate progress: (current question number / total questions) * 100
+  // currentQuestionIndex is 0-based, so we add 1 to get current question number
+  const progress = ((currentQuestionIndex + 1) / gameData.questions.length) * 100;
   document.getElementById('progress-bar').style.width = progress + '%';
 }
 
@@ -342,10 +363,43 @@ function submitAnswer() {
   
   document.getElementById('score').textContent = score;
   
-  setTimeout(() => {
+  // Mark answer as checked and update button
+  isAnswerChecked = true;
+  updateButtonState();
+  
+  // Disable dragging after answer is checked
+  sortableInstances.forEach(instance => {
+    instance.option('disabled', true);
+  });
+}
+
+function updateButtonState() {
+  const submitBtn = document.getElementById('submit-btn');
+  const isLastQuestion = currentQuestionIndex >= gameData.questions.length - 1;
+  
+  if (isAnswerChecked) {
+    if (isLastQuestion) {
+      submitBtn.textContent = 'Finish';
+      submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xl font-bold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl';
+    } else {
+      submitBtn.textContent = 'Next Question →';
+      submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xl font-bold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl';
+    }
+  } else {
+    submitBtn.textContent = 'Check Answer';
+    submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl';
+  }
+}
+
+function goToNextQuestion() {
+  const isLastQuestion = currentQuestionIndex >= gameData.questions.length - 1;
+  
+  if (isLastQuestion) {
+    endGame();
+  } else {
     currentQuestionIndex++;
     loadQuestion();
-  }, 4000);
+  }
 }
 
 function buildCorrectSentence(parts, answers) {
@@ -371,6 +425,12 @@ function endGame() {
   const maxScore = gameData.questions.length * gameData.points_per_correct;
   const percentage = Math.round((score / maxScore) * 100);
   
+  // Update progress bar to 100% and show completion
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('current-question').textContent = gameData.questions.length;
+  document.getElementById('score').textContent = score;
+  
+  // Hide question area and show results
   document.getElementById('question-area').classList.add('hidden');
   document.getElementById('results').classList.remove('hidden');
   document.getElementById('final-score').textContent = score;

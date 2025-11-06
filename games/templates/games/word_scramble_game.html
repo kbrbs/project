@@ -150,8 +150,8 @@ function loadQuestion() {
   document.getElementById('answer-input').focus();
   document.getElementById('feedback').classList.add('hidden');
   
-  // Update progress
-  const progress = ((currentQuestionIndex) / gameData.questions.length) * 100;
+  // Update progress - Add 1 to currentQuestionIndex since it's 0-based but we want to show progress for the current question
+  const progress = ((currentQuestionIndex + 1) / gameData.questions.length) * 100;
   document.getElementById('progress-bar').style.width = progress + '%';
 }
 
@@ -193,6 +193,11 @@ function endGame() {
   const timeTaken = Math.floor((Date.now() - startTime) / 1000);
   const maxScore = gameData.questions.length * gameData.points_per_correct;
   const percentage = Math.round((score / maxScore) * 100);
+  
+  // Update progress bar to 100% and final metrics before showing results
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('current-question').textContent = gameData.questions.length;
+  document.getElementById('score').textContent = score;
   
   // Update UI
   document.getElementById('question-area').classList.add('hidden');

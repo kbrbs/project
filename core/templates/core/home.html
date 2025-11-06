@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
 <!-- Hero Section with Carousel -->
@@ -115,6 +116,369 @@
 </section>
 {% endif %}
 
+<!-- INTERACTIVE PLANT GROWTH -->
+<section class="mb-10">
+  <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden" data-aos="fade-up">
+    <div class="h-2 bg-gradient-to-r from-purple-400 to-blue-500"></div>
+    <div class="p-2 lg:p-3">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-3 items-start">
+        <!-- Left: Image Display Area with Range Slider -->
+        <div class="space-y-4">
+          <div class="relative flex justify-center items-center">
+            <div class="w-full max-w-sm mx-auto aspect-square flex justify-center items-center rounded-xl overflow-hidden relative bg-gradient-to-br from-purple-50 to-blue-50 shadow-md border-2 border-purple-100">
+              <!-- All images stacked on top of each other -->
+              <img id="growthImage1" src="{% static 'pictures/scene1.png' %}" alt="Arrowroot Growth Stage 1" 
+                   class="absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-out opacity-100" />
+              <img id="growthImage2" src="{% static 'pictures/scene2.png' %}" alt="Arrowroot Growth Stage 2" 
+                   class="absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-out opacity-0" />
+              <img id="growthImage3" src="{% static 'pictures/scene3.png' %}" alt="Arrowroot Growth Stage 3" 
+                   class="absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-out opacity-0" />
+              <img id="growthImage4" src="{% static 'pictures/scene4.png' %}" alt="Arrowroot Growth Stage 4" 
+                   class="absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-out opacity-0" />
+              <img id="growthImage5" src="{% static 'pictures/scene5.png' %}" alt="Arrowroot Growth Stage 5" 
+                   class="absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-out opacity-0" />
+              <img id="growthImage6" src="{% static 'pictures/scene6.png' %}" alt="Arrowroot Growth Stage 6" 
+                   class="absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-out opacity-0" />
+            </div>
+          </div>
+          
+          <!-- Range Slider -->
+          <div class="bg-white rounded-xl p-5 lg:p-6 border border-gray-200 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="text-sm font-semibold text-gray-800">Growth Timeline</span>
+            </div>
+            <input type="range" id="growthSlider" min="1" max="6" value="1" step="0.01"
+                   class="w-full h-3 bg-gradient-to-r from-purple-200 to-blue-600 rounded-lg appearance-none cursor-pointer slider smooth-slider mb-3">
+            <div class="grid grid-cols-6 text-xs font-medium text-gray-600 gap-1">
+              <span class="text-center">Day 1</span>
+              <span class="text-center">Week 2</span>
+              <span class="text-center">1 Month</span>
+              <span class="text-center">2-4 Mo</span>
+              <span class="text-center">5-7 Mo</span>
+              <span class="text-center">8-12 Mo</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right: Stage Information with Title -->
+        <div class="space-y-4">
+          <!-- Header Section -->
+          <div class="space-y-2">
+            <h2 class="text-xl lg:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              Arrowroot Growth Journey
+            </h2>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              Watch how arrowroot develops from rhizome to harvest-ready plant over 8-12 months
+            </p>
+          </div>
+          
+          <!-- Stage Info Card -->
+          <div id="stageInfo" class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5 lg:p-6 border-2 border-purple-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <h3 id="stageTitle" class="text-base lg:text-lg font-bold bg-gradient-to-r from-purple-700 to-blue-700 bg-clip-text text-transparent mb-3 transition-all duration-500 ease-out">
+              Seed/Tuber Stage (Day 1 – Week 2)
+            </h3>
+            <div id="stageDescription" class="text-gray-700 text-sm leading-relaxed transition-all duration-500 ease-out space-y-2">
+              <p class="flex items-start gap-2">
+                <span class="text-purple-500 font-bold">•</span>
+                <span>Planting starts with rhizomes (not true seeds)</span>
+              </p>
+              <p class="flex items-start gap-2">
+                <span class="text-purple-500 font-bold">•</span>
+                <span>Sprouts begin to emerge after a few days to 2 weeks</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Footer Description -->
+          <div class="bg-white rounded-xl p-5 lg:p-6 border border-gray-200 shadow-sm">
+            <div class="flex items-start gap-3 mb-3">
+              <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg flex items-center justify-center">
+                <span class="text-lg">🌱</span>
+              </div>
+              <h4 class="font-bold text-gray-800 text-sm">Complete Growth Cycle</h4>
+            </div>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              Arrowroot begins from a planted rhizome, sprouting into seedlings within two weeks. The plant grows steadily, producing tall leafy stems and roots over the next few months. By 5–7 months, tubers start swelling underground while leaves may flower above. After 8–10 months, the plant reaches maturity with fully formed tubers. At 10–12 months, when the leaves begin to dry, arrowroot is ready for harvest.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Custom slider styling to match the website design */
+#growthSlider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+#growthSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+}
+
+#growthSlider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+#growthSlider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+}
+
+#growthSlider::-webkit-slider-runnable-track {
+  height: 12px;
+  border-radius: 6px;
+}
+
+#growthSlider::-moz-range-track {
+  height: 12px;
+  border-radius: 6px;
+}
+
+/* Smooth slider movement */
+.smooth-slider {
+  transition: all 0.08s ease-out;
+  opacity: 0.3;
+}
+
+.smooth-slider:not(:active) {
+  transition: all 0.08s ease-out;
+}
+
+.smooth-slider:hover,
+.smooth-slider:active,
+.smooth-slider:focus {
+  opacity: 1;
+}
+
+.smooth-slider.user-interacting {
+  opacity: 1;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slider = document.getElementById('growthSlider');
+  const stageTitle = document.getElementById('stageTitle');
+  const stageDescription = document.getElementById('stageDescription');
+  
+  // Auto-play variables
+  let autoPlayInterval = null;
+  let currentValue = 1;
+  const autoPlaySpeed = 0.035;
+  const intervalDelay = 80;
+  let isUserDragging = false;
+  let isPaused = false;
+  let pauseTimeout = null;
+  let lastDisplayedStage = 1;
+  
+  const images = [
+    document.getElementById('growthImage1'),
+    document.getElementById('growthImage2'),
+    document.getElementById('growthImage3'),
+    document.getElementById('growthImage4'),
+    document.getElementById('growthImage5'),
+    document.getElementById('growthImage6')
+  ];
+  
+  const stages = [
+    {
+      title: "Seed/Tuber Stage (Day 1 – Week 2)",
+      description: [
+        "Planting starts with rhizomes (not true seeds)",
+        "Sprouts begin to emerge after a few days to 2 weeks"
+      ]
+    },
+    {
+      title: "Seedling Stage (Week 2 – 1 Month)",
+      description: [
+        "Small shoots and leaves appear above ground",
+        "Roots begin to establish in the soil"
+      ]
+    },
+    {
+      title: "Vegetative Growth (1 – 4 Months)",
+      description: [
+        "Rapid leaf and stem development",
+        "Plant grows tall with broad, arrow-shaped leaves",
+        "Root system expands underground"
+      ]
+    },
+    {
+      title: "Tuber Formation (4 – 7 Months)",
+      description: [
+        "Underground tubers (rhizomes) start to swell",
+        "Leaves continue to photosynthesize and feed the roots",
+        "Plant may produce small flowers"
+      ]
+    },
+    {
+      title: "Maturation (7 – 10 Months)",
+      description: [
+        "Tubers reach full size and store starch",
+        "Above-ground foliage remains green and healthy",
+        "Plant prepares for dormancy"
+      ]
+    },
+    {
+      title: "Harvest Ready (10 – 12 Months)",
+      description: [
+        "Leaves begin to yellow and dry out",
+        "Signal that tubers are mature and ready to harvest",
+        "Rhizomes are dug up for processing or replanting"
+      ]
+    }
+  ];
+  
+  function updateStage(sliderValue) {
+    const stage = Math.floor(sliderValue);
+    const progress = sliderValue - stage;
+    
+    // Hide all images first
+    images.forEach(img => {
+      img.style.opacity = '0';
+    });
+    
+    // Show current stage
+    if (stage >= 1 && stage <= 6) {
+      images[stage - 1].style.opacity = '1';
+    }
+    
+    // Show transition to next stage if in between
+    if (progress > 0 && stage < 6) {
+      images[stage - 1].style.opacity = (1 - progress).toString();
+      images[stage].style.opacity = progress.toString();
+    }
+    
+    // Update text with animation
+    const currentStage = Math.round(sliderValue);
+    if (currentStage >= 1 && currentStage <= 6 && currentStage !== lastDisplayedStage) {
+      stageTitle.style.transform = 'translateY(20px)';
+      stageTitle.style.opacity = '0';
+      stageDescription.style.transform = 'translateY(20px)';
+      stageDescription.style.opacity = '0';
+      
+      setTimeout(() => {
+        const stageData = stages[currentStage - 1];
+        stageTitle.textContent = stageData.title;
+        stageDescription.innerHTML = stageData.description.map(line => 
+          `<p class="flex items-start gap-2">
+            <span class="text-purple-500 font-bold">•</span>
+            <span>${line}</span>
+          </p>`
+        ).join('');
+        
+        stageTitle.style.transform = 'translateY(0)';
+        stageTitle.style.opacity = '1';
+        stageDescription.style.transform = 'translateY(0)';
+        stageDescription.style.opacity = '1';
+      }, 250);
+      
+      lastDisplayedStage = currentStage;
+    }
+    
+    // Update slider position if not being dragged
+    if (!isUserDragging) {
+      slider.value = sliderValue;
+    }
+  }
+  
+  function startAutoPlay() {
+    if (autoPlayInterval) return;
+    
+    autoPlayInterval = setInterval(() => {
+      if (!isUserDragging && !isPaused) {
+        currentValue += autoPlaySpeed;
+        
+        if (currentValue >= 6) {
+          currentValue = 6;
+          updateStage(currentValue);
+          
+          isPaused = true;
+          pauseTimeout = setTimeout(() => {
+            currentValue = 1;
+            isPaused = false;
+          }, 2000);
+        } else {
+          updateStage(currentValue);
+        }
+      }
+    }, intervalDelay);
+  }
+  
+  // Event listeners
+  slider.addEventListener('mousedown', function() {
+    isUserDragging = true;
+    this.classList.add('user-interacting');
+  });
+  
+  slider.addEventListener('mouseup', function() {
+    currentValue = parseFloat(this.value);
+    isUserDragging = false;
+    
+    if (pauseTimeout) {
+      clearTimeout(pauseTimeout);
+      pauseTimeout = null;
+      isPaused = false;
+    }
+    
+    setTimeout(() => {
+      this.classList.remove('user-interacting');
+    }, 1000);
+  });
+  
+  slider.addEventListener('input', function() {
+    if (isUserDragging) {
+      updateStage(parseFloat(this.value));
+    }
+  });
+  
+  // Touch events for mobile
+  slider.addEventListener('touchstart', function() {
+    isUserDragging = true;
+    this.classList.add('user-interacting');
+  });
+  
+  slider.addEventListener('touchend', function() {
+    currentValue = parseFloat(this.value);
+    isUserDragging = false;
+    
+    if (pauseTimeout) {
+      clearTimeout(pauseTimeout);
+      pauseTimeout = null;
+      isPaused = false;
+    }
+    
+    setTimeout(() => {
+      this.classList.remove('user-interacting');
+    }, 1000);
+  });
+  
+  // Initialize and start auto-play
+  updateStage(1);
+  startAutoPlay();
+});
+</script>
+
 <!-- Feature Cards -->
 <section class="mb-10">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -195,22 +559,23 @@
         <!-- Card Header -->
         <div class="h-32 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
           <div class="w-16 h-16 bg-white rounded-xl shadow-md flex items-center justify-center">
-            <span class="text-4xl">
-              {% if a.category == 'planting' %}🌱{% elif a.category == 'culture' %}🎭{% elif a.category == 'economics' %}💹{% else %}📚{% endif %}
-            </span>
+            <span class="text-4xl">📚</span>
           </div>
         </div>
         
         <!-- Card Body -->
         <div class="p-5">
           <h4 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors">{{ a.title }}</h4>
-          <div class="mb-2">
-            <span class="px-2 py-0.5 bg-purple-50 text-purple-600 rounded-full text-xs font-medium">{{ a.get_category_display|default:'General' }}</span>
-          </div>
           <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ a.excerpt }}</p>
           
           <!-- Footer -->
-          <div class="flex items-center justify-end pt-4 border-t border-gray-100">
+          <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+              </svg>
+              <span>15 min read</span>
+            </div>
             <a href="/lessons/{{ a.slug }}/" class="inline-flex items-center gap-1 text-sm font-semibold text-purple-600 hover:text-purple-700 group-hover:gap-2 transition-all">
               Read more
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
