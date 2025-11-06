@@ -134,8 +134,9 @@
                   {{ f.question_text }}
                 </div>
                 <div class="col-span-2">
-                  <label>Order</label>
+                  <label>Order (Auto-assigned)</label>
                   {{ f.order }}
+                  <p class="helptext">Order is automatically assigned based on position. Drag to reorder questions.</p>
                 </div>
                 
                 <!-- Word Scramble fields -->
@@ -388,8 +389,9 @@
                 {{ formset.empty_form.question_text }}
               </div>
               <div class="col-span-2">
-                <label>Order</label>
+                <label>Order (Auto-assigned)</label>
                 {{ formset.empty_form.order }}
+                <p class="helptext">Order is automatically assigned based on position. Drag to reorder questions.</p>
               </div>
               
               <div class="field-word" style="display:none;">
@@ -721,6 +723,11 @@
       helpContent.innerHTML = '<p class="text-yellow-900">👆 <strong>Please select a game type above</strong> to see instructions and relevant question fields.</p>';
     }
 
+    // Initialize automatic order numbering on page load
+    if (container) {
+      updateQuestionOrders();
+    }
+
     // Update on game type change
     if (gameTypeSelect) {
       gameTypeSelect.addEventListener('change', function() {
@@ -748,6 +755,22 @@
         });
       }
 
+      function updateQuestionOrders() {
+        const forms = container.querySelectorAll('.question-form');
+        forms.forEach((form, index) => {
+          // Find the order input field for this form
+          const orderInput = form.querySelector('input[name*="order"]');
+          if (orderInput) {
+            // Set order to sequential number (0-based index)
+            orderInput.value = index;
+            // Make it readonly so users can't change it
+            orderInput.setAttribute('readonly', 'readonly');
+            orderInput.style.backgroundColor = '#F3F4F6';
+            orderInput.style.cursor = 'not-allowed';
+          }
+        });
+      }
+
       addBtn.addEventListener('click', function() {
         const gameType = gameTypeSelect ? gameTypeSelect.value : '';
         if (!gameType) {
@@ -763,16 +786,20 @@
         container.appendChild(node);
         totalFormsInput.value = String(idx + 1);
         updateQuestionNumbers();
+        updateQuestionOrders();
 
         // Apply field visibility to new form
         updateFieldVisibility(gameType);
       });
     }
 
-    // Debug: Log drag-drop field values before form submission
+    // Update orders before form submission to ensure they're sequential
     const gameForm = document.querySelector('form');
     if (gameForm) {
       gameForm.addEventListener('submit', function(e) {
+        // Update all order fields to be sequential before submitting
+        updateQuestionOrders();
+        
         console.log('\n=== FORM SUBMISSION DEBUG ===');
         console.log('Game Type:', gameTypeSelect ? gameTypeSelect.value : 'Not found');
         
@@ -786,6 +813,13 @@
           console.log(`  Visible: ${isVisible}`);
           console.log(`  Disabled: ${isDisabled}`);
           console.log(`  Parent display: ${field.closest('.field-drag_drop') ? field.closest('.field-drag_drop').style.display : 'N/A'}`);
+        });
+        
+        // Log order values
+        const orderFields = document.querySelectorAll('[name*="order"]');
+        console.log('\n--- Question Orders ---');
+        orderFields.forEach(field => {
+          console.log(`${field.name}: ${field.value}`);
         });
         console.log('=== END DEBUG ===\n');
       });

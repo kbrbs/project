@@ -38,6 +38,7 @@ class GameQuestionForm(forms.ModelForm):
             'memory_image_17', 'memory_image_18',
         ]
         widgets = {
+            'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
             'question_text': forms.Textarea(attrs={'rows': 2}),
             'sentence_template': forms.Textarea(attrs={'rows': 2, 'placeholder': 'The city of * is famous for *'}),
             'correct_answers': forms.TextInput(attrs={'placeholder': 'Bustos, Minasa'}),
@@ -237,6 +238,11 @@ class GameDeleteView(DeleteView):
     model = Game
     template_name = 'core/admin_panel/confirm_delete.html'
     success_url = reverse_lazy('core:admin_games')
+
+    def delete(self, request, *args, **kwargs):
+        game = self.get_object()
+        messages.success(request, f'Game "{game.title}" has been permanently deleted.')
+        return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
         next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')

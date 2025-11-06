@@ -95,6 +95,7 @@ let score = 0;
 let startTime = Date.now();
 let timerInterval = null;
 let isProcessing = false;
+let allQuestionResults = {}; // Track results for each question
 
 // Initialize game
 document.addEventListener('DOMContentLoaded', function() {
@@ -171,14 +172,22 @@ function loadQuestion() {
   cardGrid.style.maxWidth = `${cols * 140}px`; // Limit max width
   
   // Update stats
-  document.getElementById('total-pairs').textContent = q.total_pairs || Math.floor(totalCards / 2);
+  const totalPairsForQuestion = q.total_pairs || Math.floor(totalCards / 2);
+  document.getElementById('total-pairs').textContent = totalPairsForQuestion;
   document.getElementById('matches').textContent = '0';
   document.getElementById('attempts').textContent = '0';
   
-  // Reset state
+  // Reset state for this question
   flippedCards = [];
   matchedPairs = 0;
   attempts = 0;
+  
+  // Initialize result tracking for this question
+  allQuestionResults[q.id] = {
+    matched_pairs: 0,
+    attempts: 0,
+    total_pairs: totalPairsForQuestion
+  };
   
   // Create all cards
   q.cards.forEach((card, index) => {
@@ -234,6 +243,12 @@ function handleCardClick(cardElement, cardData) {
     attempts++;
     document.getElementById('attempts').textContent = attempts;
     
+    // Update tracking for current question
+    const currentQuestion = gameData.questions[currentQuestionIndex];
+    if (allQuestionResults[currentQuestion.id]) {
+      allQuestionResults[currentQuestion.id].attempts = attempts;
+    }
+    
     setTimeout(() => {
       checkMatch();
     }, 800);
@@ -268,6 +283,13 @@ function checkMatch() {
     
     matchedPairs++;
     score += gameData.points_per_correct;
+    
+    // Update tracking for current question
+    const currentQuestion = gameData.questions[currentQuestionIndex];
+    if (allQuestionResults[currentQuestion.id]) {
+      allQuestionResults[currentQuestion.id].matched_pairs = matchedPairs;
+      allQuestionResults[currentQuestion.id].attempts = attempts;
+    }
     
     document.getElementById('matches').textContent = matchedPairs;
     document.getElementById('score').textContent = score;
@@ -318,13 +340,16 @@ function endGame() {
   
   // Submit to server
   {% if user.is_authenticated %}
-  const userAnswers = {
-    [gameData.questions[0].id]: {
-      matched_pairs: matchedPairs,
-      attempts: attempts,
+  // Build answers object with all question results
+  const userAnswers = {};
+  for (const questionId in allQuestionResults) {
+    userAnswers[questionId] = {
+      matched_pairs: allQuestionResults[questionId].matched_pairs,
+      attempts: allQuestionResults[questionId].attempts,
+      total_pairs: allQuestionResults[questionId].total_pairs,
       time: timeTaken
-    }
-  };
+    };
+  }
   
   fetch('{% url "games:submit_game" game.pk %}', {
     method: 'POST',
@@ -336,6 +361,13 @@ function endGame() {
       answers: userAnswers,
       time_taken: timeTaken
     })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Game submitted successfully:', data);
+  })
+  .catch(error => {
+    console.error('Error submitting game:', error);
   });
   {% endif %}
 }

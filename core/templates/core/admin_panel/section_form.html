@@ -17,12 +17,35 @@
 <!-- Form Card -->
 <div class="max-w-3xl">
   <div class="bg-white rounded-2xl shadow-sm p-8">
-    <form method="post">
+    <form method="post" id="section-form">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.GET.next|default:request.path }}" />
       
       <div class="space-y-6">
-        {{ form.as_p }}
+        {% for field in form %}
+          <div>
+            <label for="{{ field.id_for_label }}">
+              {{ field.label }}
+              {% if field.name == 'order' %}
+                <span class="text-xs text-gray-500 normal-case">(Auto-assigned)</span>
+              {% endif %}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+              <p class="helptext">{{ field.help_text }}</p>
+            {% endif %}
+            {% if field.name == 'order' %}
+              <p class="helptext">Order is automatically assigned. This section will be placed after the last existing section.</p>
+            {% endif %}
+            {% if field.errors %}
+              <ul class="errorlist">
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
       </div>
       
       <!-- Form Actions -->
@@ -96,6 +119,22 @@
     font-size: 0.75rem;
     margin-top: 0.25rem;
   }
+  input[readonly] {
+    background-color: #F3F4F6 !important;
+    cursor: not-allowed !important;
+  }
 </style>
+
+<script>
+  // Ensure order field is readonly on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const orderField = document.querySelector('input[name="order"]');
+    if (orderField) {
+      orderField.setAttribute('readonly', 'readonly');
+      orderField.style.backgroundColor = '#F3F4F6';
+      orderField.style.cursor = 'not-allowed';
+    }
+  });
+</script>
 
 {% endblock %}

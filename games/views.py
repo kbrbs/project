@@ -281,18 +281,18 @@ def submit_game(request, pk):
                     pass
                     
             elif game.game_type == 'memory_match':
-                # For memory match, count correct pairs
-                # user_answer should be a dict of matched pairs
-                pairs = question.get_memory_pairs_dict()
+                # For memory match, check if all pairs were matched
+                # user_answer is a dict: {matched_pairs: X, attempts: Y, total_pairs: Z, time: T}
                 if isinstance(user_answer, dict):
-                    # Check if pairs match correctly
-                    correct_pairs = 0
-                    for key, value in user_answer.items():
-                        if key in pairs and pairs[key] == value:
-                            correct_pairs += 1
-                    # Award partial credit
-                    if len(pairs) > 0:
-                        score += int((correct_pairs / len(pairs)) * game.points_per_correct)
+                    matched_pairs = user_answer.get('matched_pairs', 0)
+                    total_pairs = user_answer.get('total_pairs', 0)
+                    
+                    # Award full points if all pairs matched
+                    if matched_pairs == total_pairs and total_pairs > 0:
+                        score += game.points_per_correct
+                    elif total_pairs > 0:
+                        # Award partial credit based on percentage
+                        score += int((matched_pairs / total_pairs) * game.points_per_correct)
         
         # Save attempt
         attempt = GameAttempt.objects.create(
