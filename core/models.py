@@ -77,12 +77,28 @@ class EducationalSection(models.Model):
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     header_image = models.ImageField(upload_to='section_headers/', blank=True, null=True)
+    content_image = models.ImageField(upload_to='section_content/', blank=True, null=True)
 
     class Meta:
         ordering = ['order', '-created_at']
 
     def __str__(self):
         return self.title
+
+
+class SectionImage(models.Model):
+    """Multiple content images for an EducationalSection."""
+    section = models.ForeignKey(EducationalSection, on_delete=models.CASCADE, related_name='content_images')
+    image = models.ImageField(upload_to='section_content/', blank=False)
+    caption = models.CharField(max_length=255, blank=True)
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'created_at']
+
+    def __str__(self):
+        return f"{self.section.title} - Image {self.id}"
 
 
 class MediaAsset(models.Model):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Article, Progress
-from .models import StudentProfile, EducationalSection, MediaAsset, ContentModeration, Visit, Download
+from .models import StudentProfile, EducationalSection, MediaAsset, ContentModeration, Visit, Download, SectionImage
 
 
 @admin.register(Article)
@@ -30,11 +30,27 @@ class StudentProfileAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'full_name')
 
 
+class SectionImageInline(admin.TabularInline):
+    model = SectionImage
+    extra = 1
+    fields = ('image', 'caption', 'order')
+    ordering = ('order', 'created_at')
+
+
 @admin.register(EducationalSection)
 class EducationalSectionAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'order', 'created_at')
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ('title',)
+    inlines = [SectionImageInline]
+
+
+@admin.register(SectionImage)
+class SectionImageAdmin(admin.ModelAdmin):
+    list_display = ('section', 'order', 'caption', 'created_at')
+    list_filter = ('section',)
+    search_fields = ('section__title', 'caption')
+    ordering = ('section', 'order', 'created_at')
 
 
 @admin.register(MediaAsset)

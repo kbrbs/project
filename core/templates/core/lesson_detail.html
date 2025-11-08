@@ -5,17 +5,27 @@
   <!-- Main Content -->
   <div class="lg:col-span-2">
     <article class="bg-white rounded-2xl shadow-sm overflow-hidden">
-      <!-- Header -->
-      <div class="relative h-48 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center">
-        <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center">
-          <span class="text-5xl">
-            {% if article.category == 'science' %}🔬
-            {% elif article.category == 'history' %}📜
-            {% elif article.category == 'culture' %}🎭
-            {% else %}📚{% endif %}
-          </span>
+      <!-- Header Image (shows cover_image at top, content_image will be shown in content area) -->
+      {% if article.cover_image %}
+        <div class="relative w-full h-64 overflow-hidden">
+          <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover" />
         </div>
-      </div>
+      {% elif section and section.header_image %}
+        <div class="relative w-full h-64 overflow-hidden">
+          <img src="{{ section.header_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover" />
+        </div>
+      {% else %}
+        <div class="relative h-48 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center">
+          <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center">
+            <span class="text-5xl">
+              {% if article.category == 'science' %}🔬
+              {% elif article.category == 'history' %}📜
+              {% elif article.category == 'culture' %}🎭
+              {% else %}📚{% endif %}
+            </span>
+          </div>
+        </div>
+      {% endif %}
 
       <!-- Content -->
       <div class="p-8">
@@ -46,6 +56,27 @@
         <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
           {{ article.content|linebreaks }}
         </div>
+
+        <!-- Content Images (multiple images from section) -->
+        {% if section_images %}
+          <div class="mt-8 space-y-6">
+            {% for section_image in section_images %}
+              <div class="rounded-xl overflow-hidden shadow-md">
+                <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ article.title }} - Image {{ forloop.counter }}{% endif %}" class="w-full h-auto object-cover" />
+                {% if section_image.caption %}
+                  <div class="bg-gray-50 px-4 py-3 border-t border-gray-200">
+                    <p class="text-sm text-gray-600 italic">{{ section_image.caption }}</p>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% elif section and section.content_image %}
+          <!-- Fallback to single content_image if no SectionImage objects exist -->
+          <div class="mt-6 rounded-xl overflow-hidden shadow-md">
+            <img src="{{ section.content_image.url }}" alt="{{ article.title }}" class="w-full h-auto object-cover" />
+          </div>
+        {% endif %}
 
         {% if article.video %}
           <div class="mt-8">

@@ -7,7 +7,7 @@ from django.contrib import messages
 from django import forms
 from django.db.models import Count, Max
 
-from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile
+from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile, SectionImage
 from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseRedirect
 from django.conf import settings
 import os
@@ -96,10 +96,25 @@ def top_pages_json(request):
 class SectionForm(forms.ModelForm):
     class Meta:
         model = EducationalSection
-        fields = ['title', 'slug', 'description', 'content', 'header_image', 'order']
+        fields = ['title', 'slug', 'description', 'content', 'header_image', 'content_image', 'order']
         widgets = {
             'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
         }
+
+
+# Inline formset for SectionImage
+SectionImageFormSet = inlineformset_factory(
+    EducationalSection,
+    SectionImage,
+    fields=('image', 'caption', 'order'),
+    extra=3,
+    can_delete=True,
+    widgets={
+        'image': forms.FileInput(attrs={'class': 'file-input'}),
+        'caption': forms.TextInput(attrs={'placeholder': 'Optional caption'}),
+        'order': forms.NumberInput(attrs={'min': 0, 'placeholder': 'Order'}),
+    }
+)
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -124,52 +139,63 @@ class SectionCreateView(CreateView):
     template_name = 'core/admin_panel/section_form.html'
     success_url = reverse_lazy('core:admin_sections')
 
-    def form_valid(self, form):
-        # Auto-assign order if not set or if creating new section
-        if not form.instance.pk or form.instance.order is None:
-            max_order = EducationalSection.objects.aggregate(Max('order'))['order__max']
-            form.instance.order = (max_order or -1) + 1
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        formset = SectionImageFormSet()
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form = self.get_form()
+        formset = SectionImageFormSet(request.POST, request.FILES)
         
-        response = super().form_valid(form)
-        # Auto-create a corresponding Article so it shows up on the public lesson list
-        try:
-            section = self.object
-            # Prefer using the section slug as the article slug if available
-            base_slug = section.slug or section.title
-            slug_candidate = base_slug
-            # Ensure uniqueness
-            i = 1
-            while Article.objects.filter(slug=slug_candidate).exists():
-                i += 1
-                slug_candidate = f"{base_slug}-{i}"
+        if form.is_valid() and formset.is_valid():
+            # Auto-assign order if not set
+            if form.instance.order is None:
+                max_order = EducationalSection.objects.aggregate(Max('order'))['order__max']
+                form.instance.order = (max_order or -1) + 1
+            
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            
+            # Auto-create a corresponding Article so it shows up on the public lesson list
+            try:
+                section = self.object
+                base_slug = section.slug or section.title
+                slug_candidate = base_slug
+                i = 1
+                while Article.objects.filter(slug=slug_candidate).exists():
+                    i += 1
+                    slug_candidate = f"{base_slug}-{i}"
 
-            # Map section slug to Article.category when valid, fallback to 'creative'
-            valid_cats = {c[0] for c in Article.CATEGORY_CHOICES}
-            category_value = section.slug if section.slug in valid_cats else 'creative'
+                valid_cats = {c[0] for c in Article.CATEGORY_CHOICES}
+                category_value = section.slug if section.slug in valid_cats else 'creative'
 
-            article = Article.objects.create(
-                title=section.title,
-                slug=slug_candidate,
-                category=category_value,
-                excerpt=section.description,
-                content=section.content or section.description or section.title,
-            )
-            # copy header image to article cover if provided
-            if getattr(section, 'header_image', None):
-                try:
-                    article.cover_image = section.header_image
-                    article.save(update_fields=['cover_image'])
-                except Exception:
-                    pass
-            messages.success(self.request, 'Section saved and lesson created for the public list.')
-        except Exception:
-            # If article creation fails, we keep section creation but warn softly
-            messages.warning(self.request, 'Section saved, but creating the public lesson failed.')
-        # If caller provided a safe "next" parameter, redirect there instead of default success_url
-        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
-        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
-            return redirect(next_url)
-        return response
+                article = Article.objects.create(
+                    title=section.title,
+                    slug=slug_candidate,
+                    category=category_value,
+                    excerpt=section.description,
+                    content=section.content or section.description or section.title,
+                )
+                if getattr(section, 'header_image', None):
+                    try:
+                        article.cover_image = section.header_image
+                        article.save(update_fields=['cover_image'])
+                    except Exception:
+                        pass
+                messages.success(self.request, 'Section saved and lesson created for the public list.')
+            except Exception:
+                messages.warning(self.request, 'Section saved, but creating the public lesson failed.')
+            
+            next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
+                return redirect(next_url)
+            return redirect(self.success_url)
+        
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -179,37 +205,48 @@ class SectionUpdateView(UpdateView):
     template_name = 'core/admin_panel/section_form.html'
     success_url = reverse_lazy('core:admin_sections')
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        # Try to keep a related Article in sync based on matching title or excerpt
-        try:
-            section = self.object
-            # Find an article that looks linked (same title or excerpt)
-            article = (
-                Article.objects.filter(title=section.title).first()
-                or Article.objects.filter(excerpt=section.description).first()
-            )
-            if article:
-                # Update fields to reflect section changes
-                valid_cats = {c[0] for c in Article.CATEGORY_CHOICES}
-                category_value = section.slug if section.slug in valid_cats else article.category
-                article.title = section.title
-                article.excerpt = section.description
-                article.content = section.content or section.description or section.title
-                article.category = category_value
-                # update cover image if section has one
-                if getattr(section, 'header_image', None):
-                    article.cover_image = section.header_image
-                article.save()
-                messages.success(self.request, 'Section and corresponding lesson updated.')
-        except Exception:
-            # If syncing fails, continue without blocking
-            pass
-        # Respect a safe "next" parameter if provided
-        next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
-        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
-            return redirect(next_url)
-        return response
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        formset = SectionImageFormSet(instance=self.object)
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        formset = SectionImageFormSet(request.POST, request.FILES, instance=self.object)
+        
+        if form.is_valid() and formset.is_valid():
+            self.object = form.save()
+            formset.save()
+            
+            # Try to keep a related Article in sync based on matching title or excerpt
+            try:
+                section = self.object
+                article = (
+                    Article.objects.filter(title=section.title).first()
+                    or Article.objects.filter(excerpt=section.description).first()
+                )
+                if article:
+                    valid_cats = {c[0] for c in Article.CATEGORY_CHOICES}
+                    category_value = section.slug if section.slug in valid_cats else article.category
+                    article.title = section.title
+                    article.excerpt = section.description
+                    article.content = section.content or section.description or section.title
+                    article.category = category_value
+                    if getattr(section, 'header_image', None):
+                        article.cover_image = section.header_image
+                    article.save()
+                    messages.success(self.request, 'Section and corresponding lesson updated.')
+            except Exception:
+                pass
+            
+            next_url = self.request.POST.get('next') or self.request.GET.get('next') or self.request.META.get('HTTP_REFERER')
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={self.request.get_host()}, require_https=self.request.is_secure()):
+                return redirect(next_url)
+            return redirect(self.success_url)
+        
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
 @method_decorator(staff_member_required, name='dispatch')

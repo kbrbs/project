@@ -46,7 +46,18 @@ def lesson_detail(request, slug):
     article = get_object_or_404(Article, slug=slug)
     # try to find a related quiz
     quiz = Quiz.objects.filter(article=article).first()
-    return render(request, 'core/lesson_detail.html', {'article': article, 'quiz': quiz})
+    # Find related EducationalSection by matching title (as sections create articles with same title)
+    section = EducationalSection.objects.filter(title=article.title).first()
+    # Get all content images for the section
+    section_images = []
+    if section:
+        section_images = section.content_images.all().order_by('order', 'created_at')
+    return render(request, 'core/lesson_detail.html', {
+        'article': article, 
+        'quiz': quiz, 
+        'section': section,
+        'section_images': section_images
+    })
 
 @login_required
 def festival_tour(request):
