@@ -52,14 +52,28 @@
 
         <!-- Content Images Formset -->
         <div class="mt-8 pt-6 border-t border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Content Images</h3>
-          <p class="text-sm text-gray-600 mb-4">Add multiple images that will be displayed in the lesson content.</p>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800">Content Images</h3>
+              <p class="text-sm text-gray-600 mt-1">Add multiple images that will be displayed in the lesson content.</p>
+            </div>
+            <button type="button" id="add-image-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Add Image
+            </button>
+          </div>
           
           {{ formset.management_form }}
           <div id="image-formset" class="space-y-4">
             {% for form in formset %}
-              <div class="border border-gray-200 rounded-lg p-4 formset-form">
+              <div class="border border-gray-200 rounded-lg p-4 formset-form" data-form-index="{{ forloop.counter0 }}">
                 {{ form.id }}
+                <div class="flex items-start justify-between mb-3">
+                  <h4 class="text-sm font-medium text-gray-700">Image #<span class="form-number">{{ forloop.counter }}</span></h4>
+                  <button type="button" class="remove-form-btn text-red-600 hover:text-red-700 text-sm font-medium">Remove</button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div class="md:col-span-1">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Image</label>
@@ -77,11 +91,8 @@
                       </ul>
                     {% endif %}
                     {% if form.DELETE %}
-                      <div class="mt-2">
-                        <label class="flex items-center">
-                          {{ form.DELETE }}
-                          <span class="ml-2 text-sm text-red-600">Delete this image</span>
-                        </label>
+                      <div class="mt-2 hidden">
+                        {{ form.DELETE }}
                       </div>
                     {% endif %}
                   </div>
@@ -113,6 +124,32 @@
               </div>
             {% endfor %}
           </div>
+          <template id="empty-form-template">
+            <div class="border border-gray-200 rounded-lg p-4 formset-form">
+              {{ formset.empty_form.id }}
+              <div class="flex items-start justify-between mb-3">
+                <h4 class="text-sm font-medium text-gray-700">Image #<span class="form-number"></span></h4>
+                <button type="button" class="remove-form-btn text-red-600 hover:text-red-700 text-sm font-medium">Remove</button>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-1">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Image</label>
+                  {{ formset.empty_form.image }}
+                  <div class="hidden delete-checkbox-container"></div>
+                </div>
+                <div class="md:col-span-2 space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Caption (optional)</label>
+                    {{ formset.empty_form.caption }}
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Order</label>
+                    {{ formset.empty_form.order }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
         </div>
         
         <!-- Form Actions -->
@@ -347,6 +384,138 @@
 
     renderPreview();
   });
+
+  // Formset management for content images
+  (function() {
+    const formsetContainer = document.getElementById('image-formset');
+    const addBtn = document.getElementById('add-image-btn');
+    const emptyFormTemplate = document.getElementById('empty-form-template');
+    const managementForm = document.querySelector('input[name$="-TOTAL_FORMS"]');
+    
+    if (!formsetContainer || !addBtn || !emptyFormTemplate || !managementForm) return;
+    
+    // Get the prefix from the management form (e.g., "sectionimage" or "content_images")
+    const prefix = managementForm.name.replace('-TOTAL_FORMS', '');
+    let formCount = parseInt(managementForm.value) || formsetContainer.children.length;
+    
+    function updateFormNumbers() {
+      const visibleForms = Array.from(formsetContainer.querySelectorAll('.formset-form'))
+        .filter(form => form.style.display !== 'none');
+      
+      visibleForms.forEach((form, index) => {
+        const numberSpan = form.querySelector('.form-number');
+        if (numberSpan) {
+          numberSpan.textContent = index + 1;
+        }
+        
+        // Update all field names and IDs to use the new index
+        form.querySelectorAll('input, select, textarea, label').forEach(input => {
+          if (input.name && input.name.includes(prefix)) {
+            // Extract field name (e.g., "image", "caption", "order")
+            const match = input.name.match(new RegExp(`${prefix}-\\d+-(.+)`));
+            if (match) {
+              const fieldName = match[1];
+              input.name = `${prefix}-${index}-${fieldName}`;
+            }
+          }
+          if (input.id && input.id.includes(prefix)) {
+            // Extract field name from ID
+            const match = input.id.match(new RegExp(`id_${prefix}-\\d+_(.+)`));
+            if (match) {
+              const fieldName = match[1];
+              input.id = `id_${prefix}-${index}_${fieldName}`;
+            }
+            // Also update 'for' attribute on labels
+            if (input.tagName === 'LABEL') {
+              const forAttr = input.getAttribute('for');
+              if (forAttr && forAttr.includes(prefix)) {
+                const match = forAttr.match(new RegExp(`id_${prefix}-\\d+_(.+)`));
+                if (match) {
+                  input.setAttribute('for', `id_${prefix}-${index}_${match[1]}`);
+                }
+              }
+            }
+          }
+        });
+      });
+      
+      managementForm.value = visibleForms.length;
+    }
+    
+    function addForm() {
+      const newForm = emptyFormTemplate.content.cloneNode(true);
+      const formDiv = newForm.querySelector('.formset-form');
+      
+      // Update all field names and IDs from __prefix__ to actual index
+      formDiv.querySelectorAll('input, select, textarea, label').forEach(input => {
+        if (input.name) {
+          input.name = input.name.replace(/__prefix__/g, formCount);
+        }
+        if (input.id) {
+          input.id = input.id.replace(/__prefix__/g, formCount);
+        }
+        if (input.tagName === 'LABEL' && input.getAttribute('for')) {
+          input.setAttribute('for', input.getAttribute('for').replace(/__prefix__/g, formCount));
+        }
+      });
+      
+      formDiv.setAttribute('data-form-index', formCount);
+      formsetContainer.appendChild(formDiv);
+      formCount++;
+      updateFormNumbers();
+      
+      // Attach remove handler
+      const removeBtn = formDiv.querySelector('.remove-form-btn');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', function() {
+          removeForm(formDiv);
+        });
+      }
+    }
+    
+    function removeForm(formElement) {
+      const deleteCheckbox = formElement.querySelector('input[name$="-DELETE"]');
+      const idInput = formElement.querySelector('input[name$="-id"]');
+      
+      if (idInput && idInput.value) {
+        // Existing form - mark for deletion
+        if (deleteCheckbox) {
+          deleteCheckbox.checked = true;
+        } else {
+          // Create delete checkbox if it doesn't exist
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.name = formElement.querySelector('input[name*="-image"]').name.replace('-image', '-DELETE');
+          checkbox.style.display = 'none';
+          const container = formElement.querySelector('.delete-checkbox-container');
+          if (container) {
+            container.appendChild(checkbox);
+          }
+          checkbox.checked = true;
+        }
+        formElement.style.display = 'none';
+      } else {
+        // New form - remove completely
+        formElement.remove();
+      }
+      updateFormNumbers();
+    }
+    
+    // Attach event listeners
+    addBtn.addEventListener('click', addForm);
+    
+    // Attach remove handlers to existing forms
+    formsetContainer.querySelectorAll('.remove-form-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const form = this.closest('.formset-form');
+        if (form) {
+          removeForm(form);
+        }
+      });
+    });
+    
+    updateFormNumbers();
+  })();
 </script>
 
 {% endblock %}

@@ -107,7 +107,7 @@ SectionImageFormSet = inlineformset_factory(
     EducationalSection,
     SectionImage,
     fields=('image', 'caption', 'order'),
-    extra=3,
+    extra=0,  # Don't show empty forms by default - user will add them as needed
     can_delete=True,
     widgets={
         'image': forms.FileInput(attrs={'class': 'file-input'}),
