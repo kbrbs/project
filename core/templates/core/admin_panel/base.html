@@ -30,6 +30,7 @@
             <div x-show="sidebarOpen" x-transition>
               <div class="text-lg font-bold text-gray-800">Rooted in Knowledge</div>
               <p class="text-xs text-gray-500">Admin Panel</p>
+              
             </div>
           </div>
         </div>
@@ -137,6 +138,7 @@
                 </svg>
               </a>
               
+             <a href="{% url 'core:profile' %}">
               <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
                 <div class="text-right hidden sm:block">
                   <div class="text-sm font-medium text-gray-700">{{ user.username }}</div>
@@ -146,6 +148,7 @@
                   {{ user.username|slice:":1"|upper }}
                 </div>
               </div>
+             </a>
               <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
                 Logout
               </a>  
