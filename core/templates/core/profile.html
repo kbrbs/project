@@ -7,12 +7,6 @@
     <div class="bg-white rounded-2xl shadow-sm p-8">
       <div class="flex items-start justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Profile</h2>
-        <button class="p-2 hover:bg-gray-50 rounded-lg transition">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          </svg>
-        </button>
       </div>
 
       <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
@@ -34,9 +28,11 @@
         <!-- Info -->
         <div class="flex-1 text-center md:text-left">
           <h3 class="text-2xl font-bold text-gray-800">{{ user.studentprofile.full_name|default:user.username }}</h3>
+          {% if not user.is_staff %}
           <p class="text-sm text-gray-500 mt-1">
             {% if user.studentprofile.grade %}Grade {{ user.studentprofile.grade }}{% else %}Student{% endif %} • Active learner
           </p>
+          {% endif %}
           
           <!-- User Details -->
           <div class="mt-4 space-y-2 text-sm text-gray-600">
@@ -53,7 +49,7 @@
               </svg>
               <span>{{ user.email }}</span>
             </div>
-            {% if user.studentprofile.birthday %}
+            {% if not user.is_staff and user.studentprofile.birthday %}
             <div class="flex items-center gap-2 justify-center md:justify-start">
               <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
@@ -67,6 +63,7 @@
             {% endif %}
           </div>
           
+          {% if not user.is_staff %}
           <div class="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
             <span class="px-3 py-1 bg-purple-50 text-purple-600 rounded-full text-xs font-medium">Rooted Explorer</span>
             <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-medium">Quiz Master</span>
@@ -86,21 +83,85 @@
               <div class="text-xs text-gray-500 mt-1">Downloads</div>
             </div>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>
 
     <!-- Account Information -->
-    <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+    <div class="mt-6 bg-white rounded-2xl shadow-sm p-6" x-data="{ 
+      editMode: false, 
+      fullName: '{{ user.studentprofile.full_name|default:"" }}',
+      saving: false,
+      
+      async saveProfile() {
+        this.saving = true;
+        try {
+          const resp = await fetch('{% url "core:update_profile" %}', {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken'),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              full_name: this.fullName
+            })
+          });
+          const data = await resp.json();
+          if (resp.ok) {
+            this.editMode = false;
+            // Optionally show success message
+          } else {
+            alert('Failed to update profile: ' + (data.error || 'Unknown error'));
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Failed to update profile');
+        } finally {
+          this.saving = false;
+        }
+      }
+    }">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-bold text-gray-800">Account Information</h3>
-        <a href="{% url 'core:change_password' %}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">Change Password</a>
+        <div class="flex items-center gap-2">
+          <template x-if="editMode">
+            <div class="flex gap-2">
+              <button @click="saveProfile()" :disabled="saving" class="text-sm bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700 font-medium disabled:opacity-50">
+                <span x-show="!saving">Save</span>
+                <span x-show="saving">Saving...</span>
+              </button>
+              <button @click="editMode = false; fullName = '{{ user.studentprofile.full_name|default:"" }}'" class="text-sm text-gray-600 hover:text-gray-800 px-3 py-1 rounded hover:bg-gray-100 font-medium">
+                Cancel
+              </button>
+            </div>
+          </template>
+          <template x-if="!editMode">
+            <button @click="editMode = true" class="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              Edit
+            </button>
+          </template>
+          <a href="{% url 'core:change_password' %}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">Change Password</a>
+        </div>
       </div>
       <div class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Full Name</label>
-            <p class="text-sm text-gray-800 font-medium">{{ user.studentprofile.full_name|default:"Not set" }}</p>
+            <template x-if="editMode">
+              <input 
+                type="text" 
+                x-model="fullName" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm text-gray-800 font-medium"
+                placeholder="Enter your full name"
+              />
+            </template>
+            <template x-if="!editMode">
+              <p class="text-sm text-gray-800 font-medium">{{ user.studentprofile.full_name|default:"Not set" }}</p>
+            </template>
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Username</label>
@@ -110,6 +171,7 @@
             <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Email Address</label>
             <p class="text-sm text-gray-800 font-medium">{{ user.email|default:"Not set" }}</p>
           </div>
+          {% if not user.is_staff %}
           <div>
             <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Grade Level</label>
             <p class="text-sm text-gray-800 font-medium">
@@ -128,11 +190,13 @@
               {% if user.studentprofile.age %}{{ user.studentprofile.age }} years old{% else %}Not set{% endif %}
             </p>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>
 
     <!-- Progress Overview -->
+    {% if not user.is_staff %}
     <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
       <h3 class="text-lg font-bold text-gray-800 mb-4">Learning Progress</h3>
       <div class="space-y-4">
@@ -156,6 +220,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
   </div>
 
   <!-- Sidebar -->

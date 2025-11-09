@@ -118,11 +118,15 @@
               <!-- User Dropdown -->
               <div class="hidden md:flex items-center gap-3">
                 <a href="{% url 'core:profile' %}" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
-                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                    </svg>
-                  </div>
+                  {% if user.studentprofile.profile_picture %}
+                    <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-purple-200">
+                  {% else %}
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
+                      <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                  {% endif %}
                   <span>
                     {% if user.first_name %}
                       {{ user.first_name }}
@@ -204,9 +208,13 @@
           {% if user.is_authenticated %}
             <div class="border-t border-gray-100 pt-4 mt-4">
               <a href="{% url 'core:profile' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                </svg>
+                {% if user.studentprofile.profile_picture %}
+                  <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-5 h-5 rounded-full object-cover ring-2 ring-purple-200">
+                {% else %}
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                  </svg>
+                {% endif %}
                 {% if user.first_name %}
                   {{ user.first_name }}
                 {% else %}

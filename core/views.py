@@ -100,6 +100,24 @@ def upload_profile_picture(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
+@login_required
+@require_POST
+def update_profile(request):
+    """Handle AJAX update of profile information (currently only full_name)."""
+    import json
+    try:
+        data = json.loads(request.body)
+        full_name = data.get('full_name', '').strip()
+        
+        profile, _ = StudentProfile.objects.get_or_create(user=request.user)
+        profile.full_name = full_name
+        profile.save()
+        
+        return JsonResponse({'success': True, 'full_name': full_name})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
 class SignupForm(forms.Form):
     username = forms.CharField(max_length=150)
     email = forms.EmailField()
