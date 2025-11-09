@@ -61,11 +61,13 @@
         {% if section_images %}
           <div class="mt-8 space-y-6">
             {% for section_image in section_images %}
-              <div class="rounded-xl overflow-hidden shadow-md">
-                <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ article.title }} - Image {{ forloop.counter }}{% endif %}" class="w-full h-auto object-cover" />
+              <div class="rounded-xl overflow-hidden shadow-md bg-gray-50">
+                <div class="flex justify-center items-center p-4">
+                  <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ article.title }} - Image {{ forloop.counter }}{% endif %}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
+                </div>
                 {% if section_image.caption %}
                   <div class="bg-gray-50 px-4 py-3 border-t border-gray-200">
-                    <p class="text-sm text-gray-600 italic">{{ section_image.caption }}</p>
+                    <p class="text-sm text-gray-600 italic text-center">{{ section_image.caption }}</p>
                   </div>
                 {% endif %}
               </div>
@@ -73,8 +75,10 @@
           </div>
         {% elif section and section.content_image %}
           <!-- Fallback to single content_image if no SectionImage objects exist -->
-          <div class="mt-6 rounded-xl overflow-hidden shadow-md">
-            <img src="{{ section.content_image.url }}" alt="{{ article.title }}" class="w-full h-auto object-cover" />
+          <div class="mt-6 rounded-xl overflow-hidden shadow-md bg-gray-50">
+            <div class="flex justify-center items-center p-4">
+              <img src="{{ section.content_image.url }}" alt="{{ article.title }}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
+            </div>
           </div>
         {% endif %}
 
