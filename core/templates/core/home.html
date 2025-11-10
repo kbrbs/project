@@ -3,7 +3,7 @@
 
 {% block content %}
 <!-- Hero Section with Carousel -->
-<section class="relative overflow-hidden rounded-2xl shadow-lg bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 mb-8">
+<section class="relative overflow-hidden rounded-2xl shadow-lg bg-gradient-to-br from-green-100 to-green-200 mb-8">
   <div x-data="{ idx: 0, length: {{ featured|length }}, autoplay: true }" 
        x-init="setInterval(()=>{ if(autoplay) idx = (idx+1) % (length||1) }, 5000)" 
        class="relative">
@@ -23,24 +23,24 @@
           <div class="p-8 lg:p-12 flex flex-col lg:flex-row items-center gap-8 min-h-[400px]">
             <!-- Content -->
             <div class="flex-1 space-y-4">
-              <div class="inline-block px-4 py-1.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs font-semibold rounded-full shadow-sm">
-                Featured Lesson
+              <div class="inline-block px-5 py-2 bg-green-600 text-white text-sm font-black rounded-full shadow-lg uppercase tracking-wider">
+                ⭐ Featured Lesson
               </div>
               <h2 x-text="document.getElementById('slide-title-'+j)?.textContent" 
-                  class="text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight"></h2>
+                  class="text-5xl lg:text-6xl font-black text-green-700 leading-tight"></h2>
               <p x-text="document.getElementById('slide-excerpt-'+j)?.textContent" 
-                 class="text-lg text-gray-600 leading-relaxed"></p>
-              <div class="flex flex-wrap gap-3 pt-4">
+                 class="text-xl font-bold text-gray-700 leading-relaxed"></p>
+              <div class="flex flex-wrap gap-4 pt-6">
                 <a :href="document.getElementById('slide-url-'+j)?.value" 
-                   class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                   class="inline-flex items-center gap-3 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-black text-lg rounded-2xl hover:scale-105 transition-all duration-200 shadow-xl">
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
                   </svg>
                   Read Lesson
                 </a>
                 <a href="/festival-tour/" 
-                   class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-purple-500 text-purple-600 font-semibold rounded-lg hover:bg-purple-50 transition-all duration-200">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                   class="inline-flex items-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white border-4 border-white font-black text-lg rounded-2xl hover:scale-105 transition-all duration-200 shadow-xl">
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
                   </svg>
                   Festival Tour
@@ -74,7 +74,7 @@
       <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         <template x-for="n in length" :key="n">
           <button @click="idx = $index; autoplay = false" 
-                  :class="idx === $index ? 'bg-gradient-to-r from-purple-500 to-blue-500 w-8' : 'bg-white bg-opacity-50 w-3'" 
+                  :class="idx === $index ? 'bg-green-500 w-8' : 'bg-white bg-opacity-50 w-3'" 
                   class="h-3 rounded-full transition-all duration-300 hover:bg-opacity-75"></button>
         </template>
       </div>
@@ -93,20 +93,20 @@
 
 <!-- Welcome CTA (for non-authenticated users) -->
 {% if not user.is_authenticated %}
-<section class="mb-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl shadow-lg p-8 lg:p-12 text-white relative overflow-hidden">
-  <div class="absolute right-0 top-0 opacity-10 text-9xl">🌱</div>
-  <div class="relative z-10 max-w-3xl">
-    <h2 class="text-3xl lg:text-4xl font-extrabold mb-4">Celebrate the Sweet Heritage of Bustos</h2>
-    <p class="text-lg mb-6 text-purple-50 leading-relaxed">Discover how a humble root grew into a cultural treasure — videos, stories, recipes, and interactive quizzes for Grades 6–10. Browse lessons, take short quizzes, or join the festival tour. You can explore most content without signing up; create an account to save progress and earn badges.</p>
-    <div class="flex flex-wrap gap-4">
-      <a href="/lessons/" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-purple-600 font-semibold rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-md">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+<section class="mb-8 bg-green-600 rounded-3xl shadow-2xl p-10 lg:p-14 text-white relative overflow-hidden border-4 border-white">
+  <div class="absolute right-0 top-0 opacity-20 text-9xl">🌱</div>
+  <div class="relative z-10 max-w-4xl">
+    <h2 class="text-4xl lg:text-5xl font-black mb-6 drop-shadow-lg">🎉 Celebrate the Sweet Heritage of Bustos! 🎉</h2>
+    <p class="text-xl mb-8 font-bold leading-relaxed drop-shadow-md">Discover how a humble root grew into a cultural treasure — videos, stories, recipes, and interactive quizzes for Grades 6–10. Browse lessons, take short quizzes, or join the festival tour. You can explore most content without signing up; create an account to save progress and earn badges!</p>
+    <div class="flex flex-wrap gap-5">
+      <a href="/lessons/" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-green-600 font-black text-lg rounded-2xl hover:scale-105 transition-all duration-200 shadow-xl">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
           <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
         </svg>
-        Start Learning
+        Start Learning Now!
       </a>
-      <a href="/accounts/signup/" class="inline-flex items-center gap-2 px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-opacity-30 border-2 border-white border-opacity-50 transition-all duration-200">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <a href="/accounts/signup/" class="inline-flex items-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black text-lg rounded-2xl hover:scale-105 border-4 border-white transition-all duration-200 shadow-xl">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
         </svg>
         Sign Up Free
@@ -119,13 +119,13 @@
 <!-- INTERACTIVE PLANT GROWTH -->
 <section class="mb-10">
   <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden" data-aos="fade-up">
-    <div class="h-2 bg-gradient-to-r from-purple-400 to-blue-500"></div>
+    <div class="h-2 bg-green-500"></div>
     <div class="p-2 lg:p-3">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-3 items-start">
         <!-- Left: Image Display Area with Range Slider -->
         <div class="space-y-4">
           <div class="relative flex justify-center items-center">
-            <div class="w-full max-w-sm mx-auto aspect-square flex justify-center items-center rounded-xl overflow-hidden relative bg-gradient-to-br from-purple-50 to-blue-50 shadow-md border-2 border-purple-100">
+            <div class="w-full max-w-sm mx-auto aspect-square flex justify-center items-center rounded-xl overflow-hidden relative bg-green-50 shadow-md border-2 border-green-200">
               <!-- All images stacked on top of each other -->
               <img id="growthImage1" src="{% static 'pictures/scene1.png' %}" alt="Arrowroot Growth Stage 1" 
                    class="absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-out opacity-100" />
@@ -145,13 +145,13 @@
           <!-- Range Slider -->
           <div class="bg-white rounded-xl p-5 lg:p-6 border border-gray-200 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
-              <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <span class="text-sm font-semibold text-gray-800">Growth Timeline</span>
             </div>
             <input type="range" id="growthSlider" min="1" max="6" value="1" step="0.01"
-                   class="w-full h-3 bg-gradient-to-r from-purple-200 to-blue-600 rounded-lg appearance-none cursor-pointer slider smooth-slider mb-3">
+                   class="w-full h-3 bg-green-300 rounded-lg appearance-none cursor-pointer slider smooth-slider mb-3">
             <div class="grid grid-cols-6 text-xs font-medium text-gray-600 gap-1">
               <span class="text-center">Day 1</span>
               <span class="text-center">Week 2</span>
@@ -167,26 +167,26 @@
         <div class="space-y-4">
           <!-- Header Section -->
           <div class="space-y-2">
-            <h2 class="text-xl lg:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Arrowroot Growth Journey
+            <h2 class="text-2xl lg:text-3xl font-black text-green-700">
+              🌱 Arrowroot Growth Journey
             </h2>
-            <p class="text-sm text-gray-600 leading-relaxed">
-              Watch how arrowroot develops from rhizome to harvest-ready plant over 8-12 months
+            <p class="text-base font-bold text-gray-700 leading-relaxed">
+              Watch how arrowroot develops from rhizome to harvest-ready plant over 8-12 months! 🌿
             </p>
           </div>
           
           <!-- Stage Info Card -->
-          <div id="stageInfo" class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5 lg:p-6 border-2 border-purple-100 shadow-sm hover:shadow-md transition-shadow duration-300">
-            <h3 id="stageTitle" class="text-base lg:text-lg font-bold bg-gradient-to-r from-purple-700 to-blue-700 bg-clip-text text-transparent mb-3 transition-all duration-500 ease-out">
+          <div id="stageInfo" class="bg-green-50 rounded-xl p-5 lg:p-6 border-2 border-green-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <h3 id="stageTitle" class="text-base lg:text-lg font-bold text-green-700 mb-3 transition-all duration-500 ease-out">
               Seed/Tuber Stage (Day 1 – Week 2)
             </h3>
             <div id="stageDescription" class="text-gray-700 text-sm leading-relaxed transition-all duration-500 ease-out space-y-2">
               <p class="flex items-start gap-2">
-                <span class="text-purple-500 font-bold">•</span>
+                <span class="text-green-600 font-bold">•</span>
                 <span>Planting starts with rhizomes (not true seeds)</span>
               </p>
               <p class="flex items-start gap-2">
-                <span class="text-purple-500 font-bold">•</span>
+                <span class="text-green-600 font-bold">•</span>
                 <span>Sprouts begin to emerge after a few days to 2 weeks</span>
               </p>
             </div>
@@ -195,7 +195,7 @@
           <!-- Footer Description -->
           <div class="bg-white rounded-xl p-5 lg:p-6 border border-gray-200 shadow-sm">
             <div class="flex items-start gap-3 mb-3">
-              <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg flex items-center justify-center">
+              <div class="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 <span class="text-lg">🌱</span>
               </div>
               <h4 class="font-bold text-gray-800 text-sm">Complete Growth Cycle</h4>
@@ -217,31 +217,31 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  background: linear-gradient(135deg, #4CAF50, #FF9800);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
   transition: all 0.3s ease;
 }
 
 #growthSlider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.6);
 }
 
 #growthSlider::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  background: linear-gradient(135deg, #4CAF50, #FF9800);
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
   transition: all 0.3s ease;
 }
 
 #growthSlider::-moz-range-thumb:hover {
   transform: scale(1.2);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.6);
 }
 
 #growthSlider::-webkit-slider-runnable-track {
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stageTitle.textContent = stageData.title;
         stageDescription.innerHTML = stageData.description.map(line => 
           `<p class="flex items-start gap-2">
-            <span class="text-purple-500 font-bold">•</span>
+            <span class="text-green-600 font-bold">•</span>
             <span>${line}</span>
           </p>`
         ).join('');
@@ -484,9 +484,9 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <!-- Card 1: Planting & Science -->
     <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group" data-aos="fade-up">
-      <div class="h-2 bg-gradient-to-r from-green-400 to-emerald-500"></div>
+      <div class="h-2 bg-green-500"></div>
       <div class="p-6">
-        <div class="w-14 h-14 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           <span class="text-3xl">🌱</span>
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Planting & Science</h3>
@@ -502,14 +502,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Card 2: Festival Tour -->
     <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
-      <div class="h-2 bg-gradient-to-r from-purple-400 to-pink-500"></div>
+      <div class="h-2 bg-orange-500"></div>
       <div class="p-6">
-        <div class="w-14 h-14 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           <span class="text-3xl">🎪</span>
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Festival Tour</h3>
         <p class="text-sm text-gray-600 mb-4 leading-relaxed">A scroll-based virtual tour of stalls and stages from Bustos' Minasa Festival.</p>
-        <a href="/festival-tour/" class="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:text-purple-700 group-hover:gap-3 transition-all">
+        <a href="/festival-tour/" class="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 group-hover:gap-3 transition-all">
           Take the tour
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -520,14 +520,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Card 3: Quizzes & Challenges -->
     <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group" data-aos="fade-up" data-aos-delay="200">
-      <div class="h-2 bg-gradient-to-r from-blue-400 to-cyan-500"></div>
+      <div class="h-2 bg-green-500"></div>
       <div class="p-6">
-        <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           <span class="text-3xl">🎯</span>
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Quizzes & Challenges</h3>
         <p class="text-sm text-gray-600 mb-4 leading-relaxed">Short games and quizzes to test your knowledge — badges and progress tracking included.</p>
-        <a href="/quizzes/" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 group-hover:gap-3 transition-all">
+        <a href="/quizzes/" class="inline-flex items-center gap-2 text-sm font-semibold text-green-600 hover:text-green-700 group-hover:gap-3 transition-all">
           Try a quiz
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <h3 class="text-2xl font-bold text-gray-800">Featured Lessons</h3>
       <p class="text-sm text-gray-500 mt-1">Explore our most popular educational content</p>
     </div>
-    <a href="/lessons/" class="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-all">
+    <a href="/lessons/" class="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-all">
       View all
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -557,7 +557,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {% for a in featured %}
       <article class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'0'|stringformat:'d'|slice:':1' }}00">
         <!-- Card Header -->
-        <div class="h-32 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+        <div class="h-32 bg-green-50 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
           <div class="w-16 h-16 bg-white rounded-xl shadow-md flex items-center justify-center">
             <span class="text-4xl">📚</span>
           </div>
@@ -565,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <!-- Card Body -->
         <div class="p-5">
-          <h4 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors">{{ a.title }}</h4>
+          <h4 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors">{{ a.title }}</h4>
           <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ a.description }}</p>
           
           <!-- Footer -->
@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function() {
               </svg>
               <span>15 min read</span>
             </div>
-            <a href="/lessons/{{ a.slug }}/" class="inline-flex items-center gap-1 text-sm font-semibold text-purple-600 hover:text-purple-700 group-hover:gap-2 transition-all">
+            <a href="/lessons/{{ a.slug }}/" class="inline-flex items-center gap-1 text-sm font-semibold text-green-600 hover:text-green-700 group-hover:gap-2 transition-all">
               Read more
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <h3 class="text-lg font-semibold text-gray-800 mb-2">No featured lessons yet</h3>
           <p class="text-gray-500 text-sm mb-6">Check back soon for new learning materials</p>
           {% if user.is_staff %}
-            <a href="/admin-panel/sections/" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all">
+            <a href="/admin-panel/sections/" class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-all">
               Add Content
             </a>
           {% endif %}

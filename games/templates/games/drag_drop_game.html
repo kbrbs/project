@@ -5,8 +5,8 @@
 {% block content %}
 <div class="max-w-5xl mx-auto px-6 py-8">
   <!-- Game Header -->
-  <div class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl p-8 mb-8 shadow-lg">
-    <div class="flex items-center gap-2 text-blue-100 mb-2">
+  <div class="bg-green-600 text-white rounded-2xl p-8 mb-8 shadow-lg">
+    <div class="flex items-center gap-2 text-green-100 mb-2">
       <a href="{% url 'games:game_list' %}" class="hover:text-white">← Back to Games</a>
     </div>
     <h1 class="text-4xl font-bold mb-2">📝 {{ game.title }}</h1>
@@ -110,7 +110,7 @@
     min-height: 48px;
     padding: 8px 16px;
     background: white;
-    border: 3px dashed #93C5FD;
+    border: 3px dashed #86EFAC;
     border-radius: 8px;
     margin: 4px;
     transition: all 0.2s;
@@ -118,20 +118,20 @@
   
   .drop-zone:empty::after {
     content: '______';
-    color: #93C5FD;
+    color: #86EFAC;
     font-weight: bold;
   }
   
   .drop-zone.drag-over {
-    background: #DBEAFE;
-    border-color: #3B82F6;
+    background: #DCFCE7;
+    border-color: #4CAF50;
     transform: scale(1.05);
   }
   
   .choice-item {
     display: inline-block;
     padding: 12px 20px;
-    background: linear-gradient(135deg, #6366F1 0%, #3B82F6 100%);
+    background: #4CAF50;
     color: white;
     font-weight: 600;
     font-size: 16px;
@@ -152,7 +152,7 @@
   }
   
   .choice-item.in-blank {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    background: #FF9800;
   }
   
   .sentence-text {
@@ -228,7 +228,7 @@ function loadQuestion() {
   isAnswerChecked = false;
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.textContent = 'Check Answer';
-  submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl';
+  submitBtn.className = 'px-8 py-4 bg-green-600 text-white text-xl font-bold rounded-lg hover:bg-green-700 transition-all shadow-lg hover:shadow-xl';
   
   // Check if this is new drag-drop format
   if (!q.sentence_parts || !q.choices) {

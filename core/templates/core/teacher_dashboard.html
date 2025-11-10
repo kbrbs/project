@@ -25,7 +25,7 @@
       const lessonData = data.top_lessons.map(x => x.visits);
       new Chart(document.getElementById('lessonsChart'), {
         type: 'bar',
-        data: { labels: lessonLabels, datasets: [{ label: 'Visits', data: lessonData, backgroundColor: '#7CB67E' }] },
+        data: { labels: lessonLabels, datasets: [{ label: 'Visits', data: lessonData, backgroundColor: '#4CAF50' }] },
       });
 
       // Quiz averages
@@ -33,7 +33,7 @@
       const quizData = data.quiz_avg.map(x => x.avg_score);
       new Chart(document.getElementById('quizzesChart'), {
         type: 'bar',
-        data: { labels: quizLabels, datasets: [{ label: 'Avg Score', data: quizData, backgroundColor: '#D8B372' }] },
+        data: { labels: quizLabels, datasets: [{ label: 'Avg Score', data: quizData, backgroundColor: '#FF9800' }] },
       });
     }
     loadAnalytics().catch(console.error);

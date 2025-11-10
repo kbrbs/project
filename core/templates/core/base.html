@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -14,97 +15,128 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      /* Modern color palette and animations */
+      /* Minasa Festival color palette - Green Primary */
       :root {
         --cream: #FFF9F0;
         --leaf: #7CB67E;
         --brown: #8B5E3C;
-        --gold: #D8B372;
-        --purple: #8B7FD8;
-        --blue: #5BA3E0;
+        --gold: #FFD700;
+        --festival-green: #4CAF50;
+        --festival-orange: #FF9800;
+        --festival-yellow: #FDD835;
+        --festival-blue: #42A5F5;
+        --light-green: #8BC34A;
       }
       
+      /* Fun floating animation */
       .floating-cookie {
-        animation: floaty 6s ease-in-out infinite;
+        animation: floaty 4s ease-in-out infinite;
       }
       
       @keyframes floaty {
-        0% { transform: translateY(0); }
-        50% { transform: translateY(-12px); }
-        100% { transform: translateY(0); }
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-15px) rotate(5deg); }
+        75% { transform: translateY(-8px) rotate(-5deg); }
       }
       
-      /* Custom scrollbar */
+      /* Bouncing animation */
+      @keyframes bounce-subtle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
+      
+      .hover-bounce:hover {
+        animation: bounce-subtle 0.5s ease-in-out;
+      }
+      
+      /* Colorful gradient scrollbar with Green Primary */
       ::-webkit-scrollbar {
-        width: 10px;
+        width: 12px;
       }
       
       ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: linear-gradient(180deg, #f0f0f0, #e0e0e0);
+        border-radius: 10px;
       }
       
       ::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #8B7FD8, #5BA3E0);
-        border-radius: 5px;
+        background: linear-gradient(180deg, #4CAF50, #FF9800, #FDD835);
+        border-radius: 10px;
+        border: 2px solid #fff;
       }
       
       ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #7A6EC7, #4A92CF);
+        background: linear-gradient(180deg, #388E3C, #F57C00, #F9A825);
       }
 
-      /* Smooth transitions */
+      /* Fun transitions */
       * {
-        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      /* Playful button effects with Festival colors */
+      .btn-fun {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      }
+      
+      .btn-fun:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+      }
+      
+      .btn-fun:active {
+        transform: scale(0.95);
       }
     </style>
   </head>
-  <body class="bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800 font-sans leading-relaxed antialiased" x-data="{ mobileMenuOpen: false }">
-    <!-- Enhanced Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
+  <body class="bg-green-50 text-gray-800 font-sans leading-relaxed antialiased" x-data="{ mobileMenuOpen: false }">
+    <!-- Enhanced Header with Green Primary -->
+    <header class="bg-green-600 shadow-xl sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
-          <a href="/" class="flex items-center gap-3 group">
-            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold shadow-md group-hover:shadow-lg transition-shadow duration-300">
-              <span class="text-xl">🌱</span>
+          <a href="/" class="flex items-center gap-3 group hover-bounce">
+            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-2xl transition-all duration-300 transform group-hover:rotate-12 overflow-hidden">
+              <img src="{% static 'pictures/main_logo.png' %}" alt="Logo" class="w-full h-full object-contain p-1">
             </div>
             <div class="hidden sm:block">
-              <h1 class="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition-colors">Rooted in Knowledge</h1>
-              <p class="text-xs text-gray-500">The Sweet Root of Minasa</p>
+              <h1 class="text-lg font-bold text-white drop-shadow-md">Rooted in Knowledge</h1>
+              <p class="text-xs text-green-100">The Sweet Root of Minasa ✨</p>
             </div>
           </a>
 
           <!-- Desktop Navigation -->
-          <nav class="hidden md:flex items-center gap-1">
+          <nav class="hidden md:flex items-center gap-2">
            
-            <a href="/lessons/" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+            <a href="/lessons/" class="px-4 py-2 text-sm font-bold {% if request.path == '/lessons/' or '/lesson/' in request.path %}bg-white text-orange-600{% else %}text-white hover:bg-white hover:text-orange-600{% endif %} rounded-xl transition-all duration-200 hover-bounce">
               <span class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
                 </svg>
                 Lessons
               </span>
             </a>
-            <a href="/festival-tour/" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+            <a href="/festival-tour/" class="px-4 py-2 text-sm font-bold {% if '/festival-tour/' in request.path %}bg-white text-orange-600{% else %}text-white hover:bg-white hover:text-orange-600{% endif %} rounded-xl transition-all duration-200 hover-bounce">
               <span class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
                 </svg>
                 Festival Tour
               </span>
             </a>
-            <a href="/quizzes/" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+            <a href="/quizzes/" class="px-4 py-2 text-sm font-bold {% if '/quiz' in request.path %}bg-white text-orange-600{% else %}text-white hover:bg-white hover:text-orange-600{% endif %} rounded-xl transition-all duration-200 hover-bounce">
               <span class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
                   <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
                 </svg>
                 Quizzes
               </span>
             </a>
-            <a href="{% url 'games:game_list' %}" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+            <a href="{% url 'games:game_list' %}" class="px-4 py-2 text-sm font-bold {% if '/games/' in request.path %}bg-white text-orange-600{% else %}text-white hover:bg-white hover:text-orange-600{% endif %} rounded-xl transition-all duration-200 hover-bounce">
               <span class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path>
                 </svg>
                 Games
@@ -117,11 +149,11 @@
             {% if user.is_authenticated %}
               <!-- User Dropdown -->
               <div class="hidden md:flex items-center gap-3">
-                <a href="{% url 'core:profile' %}" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                <a href="{% url 'core:profile' %}" class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white hover:bg-white hover:text-green-600 rounded-xl transition-all duration-200 hover-bounce">
                   {% if user.studentprofile.profile_picture %}
-                    <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-purple-200">
+                    <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-white">
                   {% else %}
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center ring-2 ring-white">
                       <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                       </svg>
@@ -135,11 +167,11 @@
                     {% endif %}
                   </span>
                 </a>
-                <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-bold text-white bg-orange-500 hover:bg-orange-600 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
                   Logout
                 </a>
                 {% if user.is_superuser %}
-                  <a href="/admin-panel/" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                  <a href="/admin-panel/" class="px-4 py-2 text-sm font-bold text-white bg-green-700 hover:bg-green-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
                     Admin Panel
                   </a>
                 {% endif %}
@@ -147,17 +179,17 @@
             {% else %}
               <!-- Auth Buttons -->
               <div class="hidden md:flex items-center gap-2">
-                <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+                <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-bold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
                   Login
                 </a>
-                <a href="{% url 'core:signup' %}" class="px-4 py-2 text-sm font-medium text-purple-600 border-2 border-purple-500 hover:bg-purple-50 rounded-lg transition-all duration-200">
+                <a href="{% url 'core:signup' %}" class="px-4 py-2 text-sm font-bold text-green-600 bg-white hover:bg-green-50 border-2 border-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
                   Sign up
                 </a>
               </div>
             {% endif %}
 
             <!-- Mobile Menu Button -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-xl text-white hover:bg-white hover:text-green-600 transition-colors">
               <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
@@ -177,28 +209,28 @@
            x-transition:leave="transition ease-in duration-150"
            x-transition:leave-start="opacity-100 transform translate-y-0"
            x-transition:leave-end="opacity-0 transform -translate-y-2"
-           class="md:hidden border-t border-gray-100 bg-white shadow-lg">
+           class="md:hidden border-t-4 border-green-400 bg-green-50 shadow-2xl">
         <div class="px-4 py-4 space-y-2">
-          <a href="/lessons/" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+          <a href="/lessons/" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-green-700 hover:bg-green-500 hover:text-white rounded-xl transition-all hover-bounce">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
             </svg>
             Lessons
           </a>
-          <a href="/festival-tour/" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+          <a href="/festival-tour/" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-pink-700 hover:bg-gradient-to-r hover:from-pink-500 hover:to-orange-500 hover:text-white rounded-xl transition-all hover-bounce">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
             </svg>
             Festival Tour
           </a>
-          <a href="/quizzes/" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+          <a href="/quizzes/" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-blue-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-500 hover:text-white rounded-xl transition-all hover-bounce">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
               <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
             </svg>
             Quizzes
           </a>
-          <a href="{% url 'games:game_list' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+          <a href="{% url 'games:game_list' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-blue-700 hover:bg-blue-500 hover:text-white rounded-xl transition-all hover-bounce">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path>
             </svg>
@@ -206,10 +238,10 @@
           </a>
           
           {% if user.is_authenticated %}
-            <div class="border-t border-gray-100 pt-4 mt-4">
-              <a href="{% url 'core:profile' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-all">
+            <div class="border-t-2 border-green-300 pt-4 mt-4">
+              <a href="{% url 'core:profile' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-green-700 hover:bg-gradient-to-r hover:from-green-500 hover:to-yellow-500 hover:text-white rounded-xl transition-all hover-bounce">
                 {% if user.studentprofile.profile_picture %}
-                  <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-5 h-5 rounded-full object-cover ring-2 ring-purple-200">
+                  <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-5 h-5 rounded-full object-cover ring-2 ring-green-400">
                 {% else %}
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
@@ -221,7 +253,7 @@
                   {{ user.username }}
                 {% endif %}
               </a>
-              <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-all">
+              <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 rounded-xl transition-all hover:scale-105">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                 </svg>
@@ -229,11 +261,11 @@
               </a>
             </div>
           {% else %}
-            <div class="border-t border-gray-100 pt-4 mt-4 space-y-2">
-              <a href="{% url 'login' %}" class="block w-full px-4 py-3 text-sm font-medium text-center text-white bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 rounded-lg shadow-sm">
+            <div class="border-t-2 border-green-300 pt-4 mt-4 space-y-2">
+              <a href="{% url 'login' %}" class="block w-full px-4 py-3 text-sm font-bold text-center text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-lg hover:scale-105 transition-all">
                 Login
               </a>
-              <a href="{% url 'core:signup' %}" class="block w-full px-4 py-3 text-sm font-medium text-center text-purple-600 border-2 border-purple-500 hover:bg-purple-50 rounded-lg">
+              <a href="{% url 'core:signup' %}" class="block w-full px-4 py-3 text-sm font-bold text-center text-green-700 bg-white border-2 border-green-500 hover:bg-green-50 rounded-xl transition-all hover:scale-105">
                 Sign up
               </a>
             </div>
@@ -292,8 +324,8 @@
           <!-- Brand -->
           <div class="col-span-1 md:col-span-2">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white shadow-md">
-                <span class="text-lg">🌱</span>
+              <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md overflow-hidden border border-gray-200">
+                <img src="{% static 'pictures/main_logo.png' %}" alt="Logo" class="w-full h-full object-contain p-1">
               </div>
               <div>
                 <h3 class="font-bold text-gray-800">Rooted in Knowledge</h3>

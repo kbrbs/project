@@ -4,10 +4,10 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white py-16 mb-12 rounded-3xl">
+<div class="bg-green-600 text-white py-16 mb-12 rounded-3xl">
   <div class="max-w-4xl mx-auto text-center px-6">
     <h1 class="text-5xl font-bold mb-4">🎮 Educational Games</h1>
-    <p class="text-xl text-purple-100">Learn about Minasa, arrowroot, and local culture through interactive games!</p>
+    <p class="text-xl text-green-100">Learn about Minasa, arrowroot, and local culture through interactive games!</p>
   </div>
 </div>
 
@@ -15,14 +15,14 @@
 <div class="max-w-6xl mx-auto mb-8 px-6">
   <form method="get" class="bg-white rounded-2xl shadow-sm p-6">
     <div class="flex flex-wrap gap-4">
-      <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search games..." class="flex-1 min-w-[200px] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-      <select name="type" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+      <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search games..." class="flex-1 min-w-[200px] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+      <select name="type" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
         <option value="">All Types</option>
         {% for value, label in game_types %}
         <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
-      <button type="submit" class="px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition-colors">
+      <button type="submit" class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-colors">
         Search
       </button>
     </div>
@@ -35,12 +35,12 @@
     {% for game in games %}
     <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden transform hover:-translate-y-1">
       <!-- Game Type Indicator -->
-      <div class="h-3 {% if game.game_type == 'word_scramble' %}bg-gradient-to-r from-pink-500 to-rose-500{% elif game.game_type == 'drag_drop' %}bg-gradient-to-r from-blue-500 to-cyan-500{% elif game.game_type == 'image_identification' %}bg-gradient-to-r from-green-500 to-emerald-500{% elif game.game_type == 'memory_match' %}bg-gradient-to-r from-purple-500 to-violet-500{% else %}bg-gradient-to-r from-orange-500 to-amber-500{% endif %}"></div>
+      <div class="h-3 {% if game.game_type == 'word_scramble' %}bg-green-500{% elif game.game_type == 'drag_drop' %}bg-green-600{% elif game.game_type == 'image_identification' %}bg-green-500{% elif game.game_type == 'memory_match' %}bg-orange-500{% else %}bg-orange-600{% endif %}"></div>
       
       <div class="p-6">
         <!-- Icon and Badge -->
         <div class="flex items-start justify-between mb-4">
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl {% if game.game_type == 'word_scramble' %}bg-pink-100{% elif game.game_type == 'drag_drop' %}bg-blue-100{% elif game.game_type == 'image_identification' %}bg-green-100{% elif game.game_type == 'memory_match' %}bg-purple-100{% else %}bg-orange-100{% endif %}">
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl {% if game.game_type == 'word_scramble' %}bg-green-100{% elif game.game_type == 'drag_drop' %}bg-green-100{% elif game.game_type == 'image_identification' %}bg-green-100{% elif game.game_type == 'memory_match' %}bg-orange-100{% else %}bg-orange-100{% endif %}">
             {% if game.game_type == 'word_scramble' %}🔤
             {% elif game.game_type == 'drag_drop' %}📋
             {% elif game.game_type == 'image_identification' %}🖼️
@@ -54,7 +54,7 @@
         
         <!-- Title -->
         <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ game.title }}</h3>
-        <p class="text-sm font-medium text-purple-600 mb-3">{{ game.get_game_type_display }}</p>
+        <p class="text-sm font-medium text-green-600 mb-3">{{ game.get_game_type_display }}</p>
         
         <!-- Description -->
         <p class="text-gray-600 mb-4 line-clamp-3">{{ game.description|truncatewords:25 }}</p>
@@ -79,7 +79,7 @@
         </div>
         
         <!-- Play Button -->
-        <a href="{% url 'games:game_detail' game.pk %}" class="block w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-center font-bold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg">
+        <a href="{% url 'games:game_detail' game.pk %}" class="block w-full py-3 bg-green-600 text-white text-center font-bold rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
           Play Now →
         </a>
       </div>
@@ -97,7 +97,7 @@
 <!-- My Attempts Link (if logged in) -->
 {% if user.is_authenticated %}
 <div class="max-w-6xl mx-auto px-6 mt-12 text-center">
-  <a href="{% url 'games:my_attempts' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-purple-600 text-purple-600 font-semibold rounded-lg hover:bg-purple-50 transition-colors">
+  <a href="{% url 'games:my_attempts' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-green-600 text-green-600 font-semibold rounded-lg hover:bg-green-50 transition-colors">
     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
       <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
       <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>

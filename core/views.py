@@ -123,7 +123,7 @@ class SignupForm(forms.Form):
     email = forms.EmailField()
     full_name = forms.CharField(max_length=200)
     birthday = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    grade = forms.ChoiceField(choices=[(str(i), f'Grade {i}') for i in range(1, 13)])
+    grade = forms.ChoiceField(choices=[(str(i), f'Grade {i}') for i in range(7, 13)])
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
