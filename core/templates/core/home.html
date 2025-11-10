@@ -502,14 +502,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- Card 2: Festival Tour -->
     <div class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
-      <div class="h-2 bg-orange-500"></div>
+      <div class="h-2 bg-green-500"></div>
       <div class="p-6">
-        <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           <span class="text-3xl">🎪</span>
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Festival Tour</h3>
         <p class="text-sm text-gray-600 mb-4 leading-relaxed">A scroll-based virtual tour of stalls and stages from Bustos' Minasa Festival.</p>
-        <a href="/festival-tour/" class="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 group-hover:gap-3 transition-all">
+        <a href="/festival-tour/" class="inline-flex items-center gap-2 text-sm font-semibold text-green-600 hover:text-green-700 group-hover:gap-3 transition-all">
           Take the tour
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -554,7 +554,7 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for a in featured %}
+    {% for a in featured|slice:":3" %}
       <article class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'0'|stringformat:'d'|slice:':1' }}00">
         <!-- Card Header -->
         <div class="h-32 bg-green-50 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
