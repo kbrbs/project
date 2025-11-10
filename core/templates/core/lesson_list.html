@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="mb-6">
@@ -28,11 +29,13 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   {% for article in articles %}
     <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'0'|stringformat:'d'|slice:':1' }}0">
-      <!-- Card Header with Icon -->
-      <div class="relative h-40 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center">
-        <div class="w-20 h-20 bg-white rounded-2xl shadow-md flex items-center justify-center">
-          <span class="text-4xl"></span>
-        </div>
+      <!-- Card Header with Image -->
+      <div class="relative h-40 bg-green-50 flex items-center justify-center overflow-hidden">
+        {% if article.header_image %}
+          <img src="{{ article.header_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover">
+        {% else %}
+          <img src="{% static 'pictures/arrowroot-mascot.png' %}" alt="Arrowroot Mascot" class="w-32 h-32 object-contain">
+        {% endif %}
         <div class="absolute top-3 right-3">
           <span class="px-3 py-1 bg-white bg-opacity-90 backdrop-blur-sm rounded-full text-xs font-medium text-gray-700">
             Lesson {{ forloop.counter }}
@@ -63,7 +66,7 @@
         </div>
 
         <!-- Action Button -->
-        <a href="/lessons/{{ article.slug }}/" class="block w-full text-center px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-700 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-800 transition-all duration-200 shadow-sm hover:shadow-md">
+        <a href="/lessons/{{ article.slug }}/" class="block w-full text-center px-4 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-all duration-200 shadow-sm hover:shadow-md">
           Open lesson
         </a>
       </div>
