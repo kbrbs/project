@@ -241,10 +241,11 @@ def login_view(request):
                 else:
                     request.session.set_expiry(0)  # browser session
 
-                # check if user needs to change password (applies to all users)
-                profile = getattr(user, 'studentprofile', None)
-                if profile and profile.must_change_password:
-                    return redirect('core:change_password')
+                # Check if user needs to change password (only for regular users, not staff/admin)
+                if not (user.is_staff or user.is_superuser):
+                    profile = getattr(user, 'studentprofile', None)
+                    if profile and profile.must_change_password:
+                        return redirect('core:change_password')
 
                 # If this is a staff/superuser account, send to the admin dashboard.
                 # Regular users go to their profile page.
