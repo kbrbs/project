@@ -9,33 +9,56 @@
     
     <!-- Countdown Timer -->
     <div id="countdown-container" class="hidden">
-      <div class="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl p-6 shadow-md max-w-2xl">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Festival Countdown</h2>
-        <div id="countdown-timer" class="grid grid-cols-4 gap-4">
+      <div class="bg-gradient-to-br from-green-200 to-green-300 backdrop-blur-sm rounded-2xl p-8 shadow-xl border-2 border-green-400">
+        <div class="flex items-center justify-center gap-2 mb-6">
+          <span class="text-2xl">⏰</span>
+          <h2 class="text-2xl font-black text-gray-800">Festival Countdown</h2>
+        </div>
+        <div id="countdown-timer" class="flex items-center justify-center gap-3">
+          <!-- Days -->
           <div class="text-center">
-            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
-              <div id="days" class="text-3xl font-bold">00</div>
+            <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl p-6 shadow-lg min-w-[100px]">
+              <div id="days" class="text-5xl font-black mb-1">00</div>
             </div>
-            <div class="text-sm font-medium text-gray-700">Days</div>
+            <div class="text-sm font-bold text-gray-700 mt-3 uppercase tracking-wider">Days</div>
           </div>
+          
+          <!-- Colon Separator -->
+          <div class="text-5xl font-black text-green-600 pb-8">:</div>
+          
+          <!-- Hours -->
           <div class="text-center">
-            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
-              <div id="hours" class="text-3xl font-bold">00</div>
+            <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl p-6 shadow-lg min-w-[100px]">
+              <div id="hours" class="text-5xl font-black mb-1">00</div>
             </div>
-            <div class="text-sm font-medium text-gray-700">Hours</div>
+            <div class="text-sm font-bold text-gray-700 mt-3 uppercase tracking-wider">Hours</div>
           </div>
+          
+          <!-- Colon Separator -->
+          <div class="text-5xl font-black text-green-600 pb-8">:</div>
+          
+          <!-- Minutes -->
           <div class="text-center">
-            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
-              <div id="minutes" class="text-3xl font-bold">00</div>
+            <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl p-6 shadow-lg min-w-[100px]">
+              <div id="minutes" class="text-5xl font-black mb-1">00</div>
             </div>
-            <div class="text-sm font-medium text-gray-700">Minutes</div>
+            <div class="text-sm font-bold text-gray-700 mt-3 uppercase tracking-wider">Minutes</div>
           </div>
+          
+          <!-- Colon Separator -->
+          <div class="text-5xl font-black text-orange-600 pb-8">:</div>
+          
+          <!-- Seconds -->
           <div class="text-center">
-            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
-              <div id="seconds" class="text-3xl font-bold">00</div>
+            <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-2xl p-6 shadow-lg min-w-[100px]">
+              <div id="seconds" class="text-5xl font-black mb-1">00</div>
             </div>
-            <div class="text-sm font-medium text-gray-700">Seconds</div>
+            <div class="text-sm font-bold text-gray-700 mt-3 uppercase tracking-wider">Seconds</div>
           </div>
+        </div>
+        
+        <div class="text-center mt-6">
+          <p class="text-sm text-gray-600 font-medium">🎉 Get ready for the celebration!</p>
         </div>
       </div>
     </div>

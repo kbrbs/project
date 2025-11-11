@@ -557,10 +557,12 @@ document.addEventListener('DOMContentLoaded', function() {
     {% for a in featured|slice:":3" %}
       <article class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'0'|stringformat:'d'|slice:':1' }}00">
         <!-- Card Header -->
-        <div class="h-32 bg-green-50 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-          <div class="w-16 h-16 bg-white rounded-xl shadow-md flex items-center justify-center">
-            <span class="text-4xl">📚</span>
-          </div>
+        <div class="h-48 bg-gradient-to-br from-green-100 to-green-200 overflow-hidden relative group-hover:scale-105 transition-transform duration-300">
+          {% if a.header_image %}
+            <img src="{{ a.header_image.url }}" alt="{{ a.title }}" class="w-full h-full object-cover">
+          {% else %}
+            <img src="{% static 'pictures/arrowroot-image.png' %}" alt="Arrowroot" class="w-full h-full object-cover">
+          {% endif %}
         </div>
         
         <!-- Card Body -->
