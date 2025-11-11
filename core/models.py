@@ -156,3 +156,86 @@ class Download(models.Model):
 
     def __str__(self):
         return f'Download: {self.media} by {self.user} @ {self.created_at}'
+
+
+class ActivityLog(models.Model):
+    """Comprehensive activity logging system for all user actions."""
+    CATEGORY_CHOICES = [
+        ('security', 'Security'),
+        ('progress', 'Progress'),
+        ('quiz', 'Quiz'),
+        ('game', 'Game'),
+        ('profile', 'Profile'),
+        ('content', 'Content'),
+        ('download', 'Download'),
+        ('system', 'System'),
+    ]
+    
+    ACTION_CHOICES = [
+        # Security actions
+        ('login', 'User Login'),
+        ('logout', 'User Logout'),
+        ('password_change', 'Password Changed'),
+        ('failed_login', 'Failed Login Attempt'),
+        ('profile_update', 'Profile Updated'),
+        ('avatar_upload', 'Avatar Uploaded'),
+        
+        # Progress actions
+        ('lesson_started', 'Lesson Started'),
+        ('lesson_completed', 'Lesson Completed'),
+        ('lesson_viewed', 'Lesson Viewed'),
+        
+        # Quiz actions
+        ('quiz_started', 'Quiz Started'),
+        ('quiz_completed', 'Quiz Completed'),
+        ('quiz_passed', 'Quiz Passed'),
+        ('quiz_failed', 'Quiz Failed'),
+        
+        # Game actions
+        ('game_started', 'Game Started'),
+        ('game_completed', 'Game Completed'),
+        ('game_score', 'Game Score Recorded'),
+        
+        # Content actions
+        ('content_viewed', 'Content Viewed'),
+        ('video_watched', 'Video Watched'),
+        ('festival_tour', 'Festival Tour Visited'),
+        
+        # Download actions
+        ('file_downloaded', 'File Downloaded'),
+        ('pdf_downloaded', 'PDF Downloaded'),
+        
+        # System actions
+        ('account_created', 'Account Created'),
+        ('account_blocked', 'Account Blocked'),
+        ('account_unblocked', 'Account Unblocked'),
+    ]
+    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='activity_logs')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    description = models.TextField(blank=True)
+    
+    # Optional references to related objects
+    article = models.ForeignKey(Article, on_delete=models.SET_NULL, null=True, blank=True)
+    quiz_id = models.IntegerField(null=True, blank=True)
+    game_id = models.IntegerField(null=True, blank=True)
+    media = models.ForeignKey(MediaAsset, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    # Additional metadata
+    ip_address = models.CharField(max_length=45, blank=True)
+    user_agent = models.CharField(max_length=512, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)  # For storing additional data like scores, etc.
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', 'category', '-created_at']),
+            models.Index(fields=['category', '-created_at']),
+            models.Index(fields=['-created_at']),
+        ]
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.get_action_display()} ({self.category}) @ {self.created_at}"

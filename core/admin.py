@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Article, Progress
+from .models import Article, Progress, ActivityLog
 from .models import StudentProfile, EducationalSection, MediaAsset, ContentModeration, Visit, Download, SectionImage
 
 
@@ -78,3 +78,22 @@ class VisitAdmin(admin.ModelAdmin):
 class DownloadAdmin(admin.ModelAdmin):
     list_display = ('media', 'user', 'created_at')
     search_fields = ('media__title', 'user__username')
+
+
+@admin.register(ActivityLog)
+class ActivityLogAdmin(admin.ModelAdmin):
+    list_display = ('user', 'category', 'action', 'created_at', 'ip_address')
+    list_filter = ('category', 'action', 'created_at')
+    search_fields = ('user__username', 'description', 'ip_address')
+    readonly_fields = ('user', 'category', 'action', 'description', 'article', 'quiz_id', 
+                      'game_id', 'media', 'ip_address', 'user_agent', 'metadata', 'created_at')
+    date_hierarchy = 'created_at'
+    
+    def has_add_permission(self, request):
+        # Prevent manual creation of activity logs
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        # Make logs read-only
+        return False
+

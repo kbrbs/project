@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Quiz
+from core.utils import log_activity
 
 
 @login_required
@@ -13,6 +14,17 @@ def quiz_list(request):
 @login_required
 def quiz_detail(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
+    
+    # Log quiz started
+    log_activity(
+        user=request.user,
+        category='quiz',
+        action='quiz_started',
+        description=f'Started quiz: {quiz.title}',
+        request=request,
+        quiz_id=quiz.id
+    )
+    
     return render(request, 'quizzes/quiz_detail.html', {'quiz': quiz})
 
 
@@ -81,6 +93,22 @@ def quiz_submit(request, pk):
         })
     
     score_percentage = (correct_count / total_questions * 100) if total_questions > 0 else 0
+    
+    # Log quiz completion
+    action = 'quiz_passed' if score_percentage >= 60 else 'quiz_failed'
+    log_activity(
+        user=request.user,
+        category='quiz',
+        action=action,
+        description=f'Completed quiz: {quiz.title} - Score: {score_percentage:.1f}%',
+        request=request,
+        quiz_id=quiz.id,
+        metadata={
+            'score_percentage': score_percentage,
+            'correct_count': correct_count,
+            'total_questions': total_questions
+        }
+    )
     
     return JsonResponse({
         'total_questions': total_questions,

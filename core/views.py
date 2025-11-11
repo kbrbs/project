@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Article, Progress, EducationalSection
+from .models import Article, Progress, EducationalSection, ActivityLog
 from quizzes.models import Quiz
 from django.db.models import Count, Avg
 from django.contrib.auth.forms import UserCreationForm
@@ -26,6 +26,7 @@ from django.contrib.auth import logout as auth_logout
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.core.files.storage import default_storage
+from .utils import log_activity
 
 
 def home(request):
@@ -52,6 +53,17 @@ def lesson_detail(request, slug):
     section_images = []
     if section:
         section_images = section.content_images.all().order_by('order', 'created_at')
+    
+    # Log activity
+    log_activity(
+        user=request.user,
+        category='progress',
+        action='lesson_viewed',
+        description=f'Viewed lesson: {article.title}',
+        request=request,
+        article=article
+    )
+    
     return render(request, 'core/lesson_detail.html', {
         'article': article, 
         'quiz': quiz, 
@@ -68,12 +80,23 @@ def festival_tour(request):
         {'id': 'cultural', 'title': 'Cultural Stage', 'summary': 'Folk dances and songs'},
         {'id': 'farmers', 'title': "Farmer's Corner", 'summary': 'Planting & harvesting stories'},
     ]
+    
+    # Log activity
+    log_activity(
+        user=request.user,
+        category='content',
+        action='festival_tour',
+        description='Visited Festival Tour',
+        request=request
+    )
+    
     return render(request, 'core/festival_tour.html', {'booths': booths})
 
 @login_required
 def profile(request):
-    # placeholder profile view
-    return render(request, 'core/profile.html')
+    # Get recent activities for the user
+    recent_activities = ActivityLog.objects.filter(user=request.user)[:10]
+    return render(request, 'core/profile.html', {'recent_activities': recent_activities})
 
 
 @login_required
@@ -95,6 +118,16 @@ def upload_profile_picture(request):
         # Optional: sanitize filename here if needed
         profile.profile_picture.save(upload.name, upload, save=True)
         url = profile.profile_picture.url
+        
+        # Log activity
+        log_activity(
+            user=user,
+            category='profile',
+            action='avatar_upload',
+            description='Uploaded new profile picture',
+            request=request
+        )
+        
         return JsonResponse({'url': url})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
@@ -103,17 +136,62 @@ def upload_profile_picture(request):
 @login_required
 @require_POST
 def update_profile(request):
-    """Handle AJAX update of profile information (currently only full_name)."""
+    """Handle AJAX update of profile information (full_name, grade, birthday)."""
     import json
+    from datetime import datetime
     try:
         data = json.loads(request.body)
         full_name = data.get('full_name', '').strip()
+        grade = data.get('grade', '').strip()
+        birthday_str = data.get('birthday', '').strip()
         
         profile, _ = StudentProfile.objects.get_or_create(user=request.user)
-        profile.full_name = full_name
+        
+        # Track what changed for logging
+        changes = []
+        if full_name and full_name != profile.full_name:
+            changes.append(f'name to "{full_name}"')
+            profile.full_name = full_name
+        
+        # Update grade if provided
+        if grade:
+            try:
+                grade_int = int(grade)
+                if profile.grade != grade_int:
+                    changes.append(f'grade to {grade_int}')
+                    profile.grade = grade_int
+            except (ValueError, TypeError):
+                pass
+        
+        # Update birthday if provided
+        if birthday_str:
+            try:
+                new_birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
+                if profile.birthday != new_birthday:
+                    changes.append(f'birthday to {new_birthday}')
+                    profile.birthday = new_birthday
+            except (ValueError, TypeError):
+                pass
+        
         profile.save()
         
-        return JsonResponse({'success': True, 'full_name': full_name})
+        # Log activity
+        if changes:
+            log_activity(
+                user=request.user,
+                category='profile',
+                action='profile_update',
+                description=f'Updated profile: {", ".join(changes)}',
+                request=request,
+                metadata={'changes': changes}
+            )
+        
+        return JsonResponse({
+            'success': True, 
+            'full_name': full_name,
+            'grade': profile.grade,
+            'birthday': profile.birthday.strftime('%Y-%m-%d') if profile.birthday else None
+        })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
@@ -167,6 +245,16 @@ def signup(request):
                 birthday=birthday,
                 grade=grade,
                 must_change_password=True,
+            )
+
+            # Log account creation
+            log_activity(
+                user=user,
+                category='system',
+                action='account_created',
+                description=f'New account created: {full_name} ({username})',
+                request=request,
+                metadata={'grade': grade, 'email': email}
             )
 
             # send the temporary password via email (console backend in dev)
@@ -241,6 +329,15 @@ def login_view(request):
                 else:
                     request.session.set_expiry(0)  # browser session
 
+                # Log successful login
+                log_activity(
+                    user=user,
+                    category='security',
+                    action='login',
+                    description='User logged in successfully',
+                    request=request
+                )
+
                 # Check if user needs to change password (only for regular users, not staff/admin)
                 if not (user.is_staff or user.is_superuser):
                     profile = getattr(user, 'studentprofile', None)
@@ -256,6 +353,19 @@ def login_view(request):
                 return redirect('core:profile')
             else:
                 error = 'Invalid credentials. Please check your username/email and password.'
+                # Log failed login attempt
+                try:
+                    user_obj = User.objects.filter(username__iexact=username).first()
+                    if user_obj:
+                        log_activity(
+                            user=user_obj,
+                            category='security',
+                            action='failed_login',
+                            description=f'Failed login attempt for user: {username}',
+                            request=request
+                        )
+                except:
+                    pass
     else:
         form = LoginForm()
     return render(request, 'registration/login.html', {'form': form, 'error': error})
@@ -288,6 +398,16 @@ def change_password(request):
                     profile.save()
                 # keep the user logged in after password change
                 update_session_auth_hash(request, request.user)
+                
+                # Log password change
+                log_activity(
+                    user=request.user,
+                    category='security',
+                    action='password_change',
+                    description='User changed their password',
+                    request=request
+                )
+                
                 # Redirect to profile page
                 return redirect('core:profile')
     return render(request, 'registration/change_password.html', {'error': error, 'success': success})
@@ -295,6 +415,16 @@ def change_password(request):
 
 def logout_view(request):
     """Log out the current user and redirect to homepage."""
+    user = request.user
+    if user.is_authenticated:
+        # Log logout activity
+        log_activity(
+            user=user,
+            category='security',
+            action='logout',
+            description='User logged out',
+            request=request
+        )
     auth_logout(request)
     return redirect('core:home')
 

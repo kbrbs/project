@@ -6,6 +6,7 @@ from games.models import Game, GameQuestion, GameOption, GameAttempt
 import json
 import random
 from django.db.models import Q
+from core.utils import log_activity
 
 
 def game_list(request):
@@ -33,6 +34,17 @@ def game_detail(request, pk):
     """Game detail and play interface."""
     game = get_object_or_404(Game.objects.prefetch_related('questions__options'), pk=pk, is_active=True)
     questions = game.questions.all()
+    
+    # Log game started
+    if request.user.is_authenticated:
+        log_activity(
+            user=request.user,
+            category='game',
+            action='game_started',
+            description=f'Started game: {game.title}',
+            request=request,
+            game_id=game.id
+        )
     
     # Prepare game data based on type
     game_data = {
@@ -303,6 +315,22 @@ def submit_game(request, pk):
             time_taken=time_taken,
             answers=json.dumps(answers),
             completed=True
+        )
+        
+        # Log game completion
+        log_activity(
+            user=request.user,
+            category='game',
+            action='game_completed',
+            description=f'Completed game: {game.title} - Score: {score}/{max_score}',
+            request=request,
+            game_id=game.id,
+            metadata={
+                'score': score,
+                'max_score': max_score,
+                'percentage': attempt.get_percentage(),
+                'time_taken': time_taken
+            }
         )
         
         return JsonResponse({
