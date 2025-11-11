@@ -54,4 +54,8 @@ urlpatterns = [
     path('admin-panel/games/<int:pk>/delete/', game_views.GameDeleteView.as_view(), name='admin_game_delete'),
     path('admin-panel/games/question/<int:pk>/options/', game_views.game_question_options, name='admin_game_question_options'),
     path('admin-panel/games/stats/', game_views.game_stats, name='admin_game_stats'),
+    
+    # Festival Date Settings
+    path('admin-panel/festival-date/', admin_views.FestivalDateSettingsView.as_view(), name='admin_festival_date_settings'),
+    path('api/festival-date/', admin_views.festival_date_api, name='festival_date_api'),
 ]
