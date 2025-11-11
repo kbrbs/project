@@ -64,7 +64,7 @@
           <tr class="hover:bg-gray-50 transition-colors">
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center gap-3">
-                {% if u.studentprofile.profile_picture %}
+                {% if u.studentprofile and u.studentprofile.profile_picture %}
                   <img src="{{ u.studentprofile.profile_picture.url }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-green-100" alt="avatar" />
                 {% else %}
                   <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-sm text-white font-semibold ring-2 ring-green-100">
@@ -78,7 +78,7 @@
               </div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm text-gray-900">{{ u.studentprofile.full_name|default:'-' }}</div>
+              <div class="text-sm text-gray-900">{% if u.studentprofile %}{{ u.studentprofile.full_name|default:'-' }}{% else %}-{% endif %}</div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="text-sm text-gray-600">{{ u.email }}</div>
@@ -92,12 +92,12 @@
           </td>
             <td class="px-6 py-4 whitespace-nowrap text-center">
               <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                {{ u.studentprofile.grade|default:'-' }}
+                {% if u.studentprofile %}{{ u.studentprofile.grade|default:'-' }}{% else %}-{% endif %}
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm text-gray-900">{{ u.studentprofile.birthday|date:'Y-m-d'|default:'-' }}</div>
-              <div class="text-xs text-gray-500">Age: {{ u.studentprofile.age|default:'-' }}</div>
+              <div class="text-sm text-gray-900">{% if u.studentprofile and u.studentprofile.birthday %}{{ u.studentprofile.birthday|date:'Y-m-d' }}{% else %}-{% endif %}</div>
+              <div class="text-xs text-gray-500">Age: {% if u.studentprofile %}{{ u.studentprofile.age|default:'-' }}{% else %}-{% endif %}</div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               <div class="flex items-center justify-end gap-2">

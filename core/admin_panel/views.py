@@ -537,6 +537,15 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'is_active', 'is_staff', 'is_superuser']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make username and email readonly when editing existing user
+        if self.instance and self.instance.pk:
+            self.fields['username'].widget.attrs['readonly'] = True
+            self.fields['username'].widget.attrs['style'] = 'background-color: #F3F4F6; cursor: not-allowed;'
+            self.fields['email'].widget.attrs['readonly'] = True
+            self.fields['email'].widget.attrs['style'] = 'background-color: #F3F4F6; cursor: not-allowed;'
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -548,9 +557,7 @@ class UserListView(ListView):
 
     def get_queryset(self):
         # Exclude superusers from the managed list
-        qs = User.objects.filter(is_superuser=False).order_by('username').select_related()
-        # prefetch the related StudentProfile for display
-        qs = qs.prefetch_related('studentprofile')
+        qs = User.objects.filter(is_superuser=False).order_by('username').select_related('studentprofile')
         q = self.request.GET.get('q')
         if q:
             qs = qs.filter(username__icontains=q) | qs.filter(email__icontains=q)
