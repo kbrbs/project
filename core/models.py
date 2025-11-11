@@ -239,3 +239,25 @@ class ActivityLog(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.get_action_display()} ({self.category}) @ {self.created_at}"
+
+
+class FestivalDate(models.Model):
+    """Singleton model to store the festival date."""
+    festival_date = models.DateTimeField(null=True, blank=True, help_text="The date and time when the festival starts")
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Festival Date"
+        verbose_name_plural = "Festival Date"
+
+    def __str__(self):
+        if self.festival_date:
+            return f"Festival Date: {self.festival_date}"
+        return "Festival Date: Not Set"
+
+    @classmethod
+    def get_instance(cls):
+        """Get or create the singleton instance."""
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj

@@ -5,7 +5,53 @@
 <div class="mb-8 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl shadow-sm p-8 relative overflow-hidden">
   <div class="relative z-10">
     <h1 class="text-4xl font-bold text-gray-800 mb-3">Virtual Festival Tour</h1>
-    <p class="text-gray-600 max-w-2xl">Experience the vibrant Minasa Festival from anywhere! Scroll through interactive booths, explore stories, and discover the rich cultural heritage of Bustos.</p>
+    <p class="text-gray-600 max-w-2xl mb-6">Experience the vibrant Minasa Festival from anywhere! Scroll through interactive booths, explore stories, and discover the rich cultural heritage of Bustos.</p>
+    
+    <!-- Countdown Timer -->
+    <div id="countdown-container" class="hidden">
+      <div class="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl p-6 shadow-md max-w-2xl">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Festival Countdown</h2>
+        <div id="countdown-timer" class="grid grid-cols-4 gap-4">
+          <div class="text-center">
+            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
+              <div id="days" class="text-3xl font-bold">00</div>
+            </div>
+            <div class="text-sm font-medium text-gray-700">Days</div>
+          </div>
+          <div class="text-center">
+            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
+              <div id="hours" class="text-3xl font-bold">00</div>
+            </div>
+            <div class="text-sm font-medium text-gray-700">Hours</div>
+          </div>
+          <div class="text-center">
+            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
+              <div id="minutes" class="text-3xl font-bold">00</div>
+            </div>
+            <div class="text-sm font-medium text-gray-700">Minutes</div>
+          </div>
+          <div class="text-center">
+            <div class="bg-green-500 text-white rounded-lg p-4 mb-2">
+              <div id="seconds" class="text-3xl font-bold">00</div>
+            </div>
+            <div class="text-sm font-medium text-gray-700">Seconds</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Festival Live Message -->
+    <div id="festival-live" class="hidden">
+      <div class="bg-gradient-to-r from-green-500 to-green-700 text-white rounded-xl p-6 shadow-md max-w-2xl">
+        <div class="flex items-center gap-3">
+          <span class="text-4xl">🎉</span>
+          <div>
+            <h2 class="text-2xl font-bold mb-1">The Festival is Live!</h2>
+            <p class="text-green-50">Join us in celebrating the vibrant Minasa Festival!</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="absolute right-0 bottom-0 opacity-20 text-9xl">🎪</div>
 </div>
@@ -154,4 +200,64 @@
     </a>
   </div>
 </div>
+
+<script>
+(function() {
+  const countdownContainer = document.getElementById('countdown-container');
+  const festivalLive = document.getElementById('festival-live');
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minutesEl = document.getElementById('minutes');
+  const secondsEl = document.getElementById('seconds');
+
+  // Fetch festival date from API
+  fetch('/api/festival-date/')
+    .then(response => response.json())
+    .then(data => {
+      if (data.exists && data.festival_date) {
+        const festivalDate = new Date(data.festival_date);
+        startCountdown(festivalDate);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching festival date:', error);
+    });
+
+  function startCountdown(targetDate) {
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate.getTime() - now;
+
+      if (distance < 0) {
+        // Festival has started
+        countdownContainer.classList.add('hidden');
+        festivalLive.classList.remove('hidden');
+        return;
+      }
+
+      // Calculate time units
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Update display
+      daysEl.textContent = String(days).padStart(2, '0');
+      hoursEl.textContent = String(hours).padStart(2, '0');
+      minutesEl.textContent = String(minutes).padStart(2, '0');
+      secondsEl.textContent = String(seconds).padStart(2, '0');
+
+      // Show countdown
+      countdownContainer.classList.remove('hidden');
+      festivalLive.classList.add('hidden');
+    }
+
+    // Update immediately
+    updateCountdown();
+
+    // Update every second
+    setInterval(updateCountdown, 1000);
+  }
+})();
+</script>
 {% endblock %}

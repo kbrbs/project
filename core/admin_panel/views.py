@@ -3,11 +3,12 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django import forms
 from django.db.models import Count, Max
 
-from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile, SectionImage
+from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile, SectionImage, FestivalDate
 from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseRedirect
 from django.conf import settings
 import os
@@ -625,3 +626,54 @@ def moderation_update(request, pk):
         messages.success(request, 'Moderation updated.')
         return redirect('core:admin_moderation')
     return render(request, 'core/admin_panel/moderation_update.html', {'item': item})
+
+
+# Festival Date Settings
+class FestivalDateForm(forms.ModelForm):
+    class Meta:
+        model = FestivalDate
+        fields = ['festival_date']
+        widgets = {
+            'festival_date': forms.DateTimeInput(attrs={
+                'type': 'datetime-local',
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent'
+            })
+        }
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class FestivalDateSettingsView(TemplateView):
+    template_name = 'core/admin_panel/festival_date_settings.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        festival_date_instance = FestivalDate.get_instance()
+        context['form'] = FestivalDateForm(instance=festival_date_instance)
+        context['festival_date'] = festival_date_instance.festival_date
+        return context
+
+    def post(self, request, *args, **kwargs):
+        festival_date_instance = FestivalDate.get_instance()
+        form = FestivalDateForm(request.POST, instance=festival_date_instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Festival date has been updated successfully!')
+            return redirect('core:admin_festival_date_settings')
+        context = self.get_context_data()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+
+@login_required
+def festival_date_api(request):
+    """API endpoint to get the festival date for the countdown timer."""
+    festival_date_instance = FestivalDate.get_instance()
+    if festival_date_instance.festival_date:
+        return JsonResponse({
+            'festival_date': festival_date_instance.festival_date.isoformat(),
+            'exists': True
+        })
+    return JsonResponse({
+        'festival_date': None,
+        'exists': False
+    })
