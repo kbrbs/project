@@ -30,7 +30,7 @@
           <p class="text-sm text-gray-600">{{ game.get_game_type_display }}</p>
         </div>
         <div class="text-right">
-          <p class="font-bold text-purple-600">{{ game.attempt_count }}</p>
+          <p class="font-bold text-green-600">{{ game.attempt_count }}</p>
           <p class="text-xs text-gray-500">attempts</p>
         </div>
       </div>
@@ -43,7 +43,7 @@
   <!-- Top Students -->
   <div class="bg-white rounded-2xl shadow-sm p-6">
     <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-      <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+      <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
       </svg>
       Top Students
@@ -56,7 +56,7 @@
           <p class="text-sm text-gray-600">Avg: {{ student.avg_score|floatformat:1 }} pts</p>
         </div>
         <div class="text-right">
-          <p class="font-bold text-blue-600">{{ student.total_attempts }}</p>
+          <p class="font-bold text-green-600">{{ student.total_attempts }}</p>
           <p class="text-xs text-gray-500">attempts</p>
         </div>
       </div>

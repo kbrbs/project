@@ -9,13 +9,13 @@
   </div>
   <div class="flex items-center gap-3 w-full sm:w-auto">
     <form method="get" class="flex items-center gap-2 w-full sm:w-auto">
-      <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Search users..." class="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+      <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Search users..." class="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
       <button type="submit" class="px-4 py-2 text-sm bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Search</button>
       {% if request.GET.q %}
         <a href="{% url 'core:admin_users' %}" class="px-3 py-2 text-sm text-gray-600 hover:text-gray-800">Clear</a>
       {% endif %}
     </form>
-    <a href="{% url 'core:admin_export_users' %}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-md hover:shadow-lg">
+    <a href="{% url 'core:admin_export_users' %}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
       </svg>
@@ -65,9 +65,9 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center gap-3">
                 {% if u.studentprofile.profile_picture %}
-                  <img src="{{ u.studentprofile.profile_picture.url }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-purple-100" alt="avatar" />
+                  <img src="{{ u.studentprofile.profile_picture.url }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-green-100" alt="avatar" />
                 {% else %}
-                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center text-sm text-white font-semibold ring-2 ring-purple-100">
+                  <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-sm text-white font-semibold ring-2 ring-green-100">
                     {{ u.username|slice:":1"|upper }}
                   </div>
                 {% endif %}
@@ -91,7 +91,7 @@
             {% endif %}
           </td>
             <td class="px-6 py-4 whitespace-nowrap text-center">
-              <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+              <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                 {{ u.studentprofile.grade|default:'-' }}
               </span>
             </td>
@@ -101,7 +101,7 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               <div class="flex items-center justify-end gap-2">
-                <a href="{% url 'core:admin_user_edit' u.pk %}" class="inline-flex items-center gap-1 px-3 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                <a href="{% url 'core:admin_user_edit' u.pk %}" class="inline-flex items-center gap-1 px-3 py-2 bg-green-50 text-green-600 hover:bg-green-100 rounded-lg transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                   </svg>
@@ -126,7 +126,7 @@
                 <h3 class="mt-2 text-sm font-medium text-gray-900">No users yet</h3>
                 <p class="mt-1 text-sm text-gray-500">Get started by creating a new user account.</p>
                 <div class="mt-6">
-                  <a href="{% url 'core:admin_user_add' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm font-medium rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all">
+                  <a href="{% url 'core:admin_user_add' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>

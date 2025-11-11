@@ -7,7 +7,7 @@
     <h1 class="text-3xl font-bold text-gray-800">Quizzes</h1>
     <p class="text-gray-500 mt-1">Manage quiz questions and assessments</p>
   </div>
-  <a href="{% url 'core:admin_quiz_add' %}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-800 transition-all shadow-md hover:shadow-lg">
+  <a href="{% url 'core:admin_quiz_add' %}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
     </svg>
@@ -20,7 +20,7 @@
   {% for q in quizzes %}
   <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
     <!-- Type Badge -->
-    <div class="h-2 bg-gradient-to-r from-green-500 to-green-700"></div>
+    <div class="h-2 bg-green-600"></div>
     
     <div class="p-6">
       <!-- Header -->
@@ -44,7 +44,7 @@
       
       <!-- Actions -->
       <div class="flex gap-2">
-        <a href="{% url 'core:admin_quiz_edit' q.pk %}" class="flex-1 px-4 py-2 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-lg hover:bg-indigo-100 transition-colors text-center">
+        <a href="{% url 'core:admin_quiz_edit' q.pk %}" class="flex-1 px-4 py-2 bg-green-50 text-green-700 text-sm font-medium rounded-lg hover:bg-green-100 transition-colors text-center">
           Edit
         </a>
         <a href="{% url 'core:admin_quiz_delete' q.pk %}" class="px-4 py-2 bg-red-50 text-red-700 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors">
@@ -59,7 +59,7 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
     </svg>
     <p class="text-gray-500 text-lg mb-4">No quizzes found</p>
-    <a href="{% url 'core:admin_quiz_add' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg hover:from-purple-600 hover:to-blue-600">
+    <a href="{% url 'core:admin_quiz_add' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
       </svg>

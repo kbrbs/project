@@ -8,11 +8,11 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
       :root {
-        --purple: #8B7FD8;
-        --blue: #5BA3E0;
+        --green: #4CAF50;
+        --orange: #FF9800;
       }
       .active-nav {
-        background: linear-gradient(135deg, #8B7FD8 0%, #5BA3E0 100%);
+        background: #4CAF50;
         color: white;
       }
     </style>
@@ -24,7 +24,7 @@
         <!-- Logo -->
         <div class="p-6 border-b border-gray-100">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center text-white shadow-md flex-shrink-0">
+            <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center text-white shadow-md flex-shrink-0">
               <span class="text-xl">🌱</span>
             </div>
             <div x-show="sidebarOpen" x-transition>
@@ -39,60 +39,60 @@
         <nav class="mt-6 px-3">
           <ul class="space-y-1 text-sm">
             <li>
-              <a href="{% url 'core:admin_dashboard' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all group {% if request.resolver_match.url_name == 'admin_dashboard' %}active-nav{% endif %}">
-                <svg class="w-5 h-5 flex-shrink-0 {% if request.resolver_match.url_name == 'admin_dashboard' %}text-white{% else %}text-gray-600 group-hover:text-purple-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+              <a href="{% url 'core:admin_dashboard' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all group {% if request.resolver_match.url_name == 'admin_dashboard' %}active-nav{% endif %}">
+                <svg class="w-5 h-5 flex-shrink-0 {% if request.resolver_match.url_name == 'admin_dashboard' %}text-white{% else %}text-gray-600 group-hover:text-green-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="font-medium {% if request.resolver_match.url_name == 'admin_dashboard' %}text-white{% else %}text-gray-700 group-hover:text-purple-600{% endif %}">Dashboard</span>
+                <span x-show="sidebarOpen" class="font-medium {% if request.resolver_match.url_name == 'admin_dashboard' %}text-white{% else %}text-gray-700 group-hover:text-green-600{% endif %}">Dashboard</span>
               </a>
             </li>
             <li>
-              <a href="{% url 'core:admin_sections' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all group {% if 'section' in request.resolver_match.url_name %}active-nav{% endif %}">
-                <svg class="w-5 h-5 flex-shrink-0 {% if 'section' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-purple-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+              <a href="{% url 'core:admin_sections' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all group {% if 'section' in request.resolver_match.url_name %}active-nav{% endif %}">
+                <svg class="w-5 h-5 flex-shrink-0 {% if 'section' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-green-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="font-medium {% if 'section' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-purple-600{% endif %}">Sections</span>
+                <span x-show="sidebarOpen" class="font-medium {% if 'section' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-green-600{% endif %}">Sections</span>
               </a>
             </li>
             <li>
-              <a href="{% url 'core:admin_media' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all group {% if 'media' in request.resolver_match.url_name %}active-nav{% endif %}">
-                <svg class="w-5 h-5 flex-shrink-0 {% if 'media' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-purple-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+              <a href="{% url 'core:admin_media' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all group {% if 'media' in request.resolver_match.url_name %}active-nav{% endif %}">
+                <svg class="w-5 h-5 flex-shrink-0 {% if 'media' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-green-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="font-medium {% if 'media' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-purple-600{% endif %}">Media</span>
+                <span x-show="sidebarOpen" class="font-medium {% if 'media' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-green-600{% endif %}">Media</span>
               </a>
             </li>
-            <li>
-              <a href="{% url 'core:admin_moderation' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all group {% if 'moderation' in request.resolver_match.url_name %}active-nav{% endif %}">
-                <svg class="w-5 h-5 flex-shrink-0 {% if 'moderation' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-purple-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+            <!-- <li>
+              <a href="{% url 'core:admin_moderation' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all group {% if 'moderation' in request.resolver_match.url_name %}active-nav{% endif %}">
+                <svg class="w-5 h-5 flex-shrink-0 {% if 'moderation' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-green-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="font-medium {% if 'moderation' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-purple-600{% endif %}">Moderation</span>
+                <span x-show="sidebarOpen" class="font-medium {% if 'moderation' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-green-600{% endif %}">Moderation</span>
               </a>
-            </li>
+            </li> -->
             <li>
-              <a href="{% url 'core:admin_quizzes' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all group {% if 'quiz' in request.resolver_match.url_name %}active-nav{% endif %}">
-                <svg class="w-5 h-5 flex-shrink-0 {% if 'quiz' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-purple-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+              <a href="{% url 'core:admin_quizzes' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all group {% if 'quiz' in request.resolver_match.url_name %}active-nav{% endif %}">
+                <svg class="w-5 h-5 flex-shrink-0 {% if 'quiz' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-green-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
                   <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="font-medium {% if 'quiz' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-purple-600{% endif %}">Quizzes</span>
+                <span x-show="sidebarOpen" class="font-medium {% if 'quiz' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-green-600{% endif %}">Quizzes</span>
               </a>
             </li>
             <li>
-              <a href="{% url 'core:admin_games' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all group {% if 'game' in request.resolver_match.url_name %}active-nav{% endif %}">
-                <svg class="w-5 h-5 flex-shrink-0 {% if 'game' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-purple-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+              <a href="{% url 'core:admin_games' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all group {% if 'game' in request.resolver_match.url_name %}active-nav{% endif %}">
+                <svg class="w-5 h-5 flex-shrink-0 {% if 'game' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-green-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="font-medium {% if 'game' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-purple-600{% endif %}">Games</span>
+                <span x-show="sidebarOpen" class="font-medium {% if 'game' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-green-600{% endif %}">Games</span>
               </a>
             </li>
             <li>
-              <a href="{% url 'core:admin_users' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all group {% if 'user' in request.resolver_match.url_name %}active-nav{% endif %}">
-                <svg class="w-5 h-5 flex-shrink-0 {% if 'user' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-purple-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
+              <a href="{% url 'core:admin_users' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all group {% if 'user' in request.resolver_match.url_name %}active-nav{% endif %}">
+                <svg class="w-5 h-5 flex-shrink-0 {% if 'user' in request.resolver_match.url_name %}text-white{% else %}text-gray-600 group-hover:text-green-600{% endif %}" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
                 </svg>
-                <span x-show="sidebarOpen" class="font-medium {% if 'user' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-purple-600{% endif %}">Users</span>
+                <span x-show="sidebarOpen" class="font-medium {% if 'user' in request.resolver_match.url_name %}text-white{% else %}text-gray-700 group-hover:text-green-600{% endif %}">Users</span>
               </a>
             </li>
           </ul>
@@ -122,7 +122,7 @@
               </button>
               
               <div class="relative max-w-md w-full">
-                <input type="search" placeholder="Search..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm" />
+                <input type="search" placeholder="Search..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm" />
                 <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
@@ -145,15 +145,15 @@
                   <div class="text-xs text-gray-500">Administrator</div>
                 </div>
                 {% if user.studentprofile.profile_picture %}
-                  <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-10 h-10 rounded-full object-cover shadow-md ring-2 ring-purple-200">
+                  <img src="{{ user.studentprofile.profile_picture.url }}" alt="{{ user.username }}" class="w-10 h-10 rounded-full object-cover shadow-md ring-2 ring-green-200">
                 {% else %}
-                  <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold shadow-md">
+                  <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-semibold shadow-md">
                     {{ user.username|slice:":1"|upper }}
                   </div>
                 {% endif %}
               </div>
              </a>
-              <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
+              <a href="{% url 'logout' %}" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
                 Logout
               </a>  
             </div>
@@ -181,7 +181,7 @@
             <!-- Mobile Nav Content (same as sidebar) -->
             <div class="p-6 border-b border-gray-100">
               <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center text-white shadow-md">
+                <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center text-white shadow-md">
                   <span class="text-xl">🌱</span>
                 </div>
                 <div>
@@ -192,27 +192,27 @@
             </div>
             <nav class="mt-6 px-3">
               <ul class="space-y-1 text-sm">
-                <li><a href="{% url 'core:admin_dashboard' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all">
+                <li><a href="{% url 'core:admin_dashboard' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all">
                   <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
                   <span class="font-medium text-gray-700">Dashboard</span>
                 </a></li>
-                <li><a href="{% url 'core:admin_sections' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all">
+                <li><a href="{% url 'core:admin_sections' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all">
                   <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path></svg>
                   <span class="font-medium text-gray-700">Sections</span>
                 </a></li>
-                <li><a href="{% url 'core:admin_media' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all">
+                <li><a href="{% url 'core:admin_media' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all">
                   <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
                   <span class="font-medium text-gray-700">Media</span>
                 </a></li>
-                <li><a href="{% url 'core:admin_moderation' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all">
+                <li><a href="{% url 'core:admin_moderation' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all">
                   <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                   <span class="font-medium text-gray-700">Moderation</span>
                 </a></li>
-                <li><a href="{% url 'core:admin_quizzes' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all">
+                <li><a href="{% url 'core:admin_quizzes' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all">
                   <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
                   <span class="font-medium text-gray-700">Quizzes</span>
                 </a></li>
-                <li><a href="{% url 'core:admin_users' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-purple-50 transition-all">
+                <li><a href="{% url 'core:admin_users' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-all">
                   <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
                   <span class="font-medium text-gray-700">Users</span>
                 </a></li>
