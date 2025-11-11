@@ -318,6 +318,7 @@
     // Inputs
     const titleInput = document.querySelector('input[name="title"]');
     const slugInput = document.querySelector('input[name="slug"]');
+    const categoryInput = document.querySelector('select[name="category"]');
     const descInput = document.querySelector('textarea[name="description"]');
     const contentInput = document.querySelector('textarea[name="content"]');
     const imageInput = document.querySelector('input[name="header_image"]');
@@ -332,16 +333,16 @@
     const previewFallback = document.getElementById('preview-fallback');
 
     const CATEGORY_LABELS = {
-      planting: 'Planting & Science',
-      culture: 'Culture & History',
-      economics: 'Economics & Sustainability',
-      creative: 'Creative Minasa'
+      planting: 'Planting',
+      cultural: 'Cultural',
+      historical: 'Historical',
+      economic: 'Economic Value'
     };
     const CATEGORY_EMOJI = {
-      planting: '🔬',
-      culture: '📜',
-      economics: '📈',
-      creative: '📚'
+      planting: '🌱',
+      cultural: '🎭',
+      historical: '�',
+      economic: '�'
     };
 
     function escapeHtml(str) {
@@ -368,7 +369,7 @@
       const slug = slugInput ? slugInput.value : '';
       const description = descInput ? descInput.value : '';
       const content = contentInput ? contentInput.value : '';
-      const category = deriveCategoryFromSlug(slug);
+      const category = categoryInput ? categoryInput.value : 'planting';
 
       if (previewTitle) previewTitle.textContent = title || 'Your Title';
       if (previewSlug) previewSlug.textContent = slug || 'your-slug';
@@ -379,7 +380,7 @@
       if (previewContent) previewContent.innerHTML = nl2br(body);
     }
 
-    [titleInput, slugInput, descInput, contentInput].forEach(function(el) {
+    [titleInput, slugInput, categoryInput, descInput, contentInput].forEach(function(el) {
       if (!el) return;
       el.addEventListener('input', renderPreview);
     });

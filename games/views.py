@@ -6,11 +6,13 @@ from games.models import Game, GameQuestion, GameOption, GameAttempt
 import json
 import random
 from django.db.models import Q
+from django.contrib import messages
 from core.utils import log_activity
+from core.access_control import limit_public_access, get_public_access_context, PUBLIC_GAMES_LIMIT
 
 
 def game_list(request):
-    """Public listing of available games."""
+    """Public listing of available games. Public users can view all but only play 3."""
     games = Game.objects.filter(is_active=True).prefetch_related('questions')
     
     # Filter by type
@@ -23,19 +25,68 @@ def game_list(request):
     if q:
         games = games.filter(Q(title__icontains=q) | Q(description__icontains=q))
     
+    # Get total count
+    total_games = games.count()
+    
+    # All games are shown in the list, but mark which ones are playable for public users
+    games_list = list(games)
+    playable_count = len(games_list) if request.user.is_authenticated else min(PUBLIC_GAMES_LIMIT, len(games_list))
+    
+    # Mark which games are playable (first 3 for public, all for authenticated)
+    for i, game in enumerate(games_list):
+        if request.user.is_authenticated:
+            game.is_playable = True
+        else:
+            game.is_playable = i < PUBLIC_GAMES_LIMIT
+    
+    # Show message about limited access for public users
+    if not request.user.is_authenticated and total_games > PUBLIC_GAMES_LIMIT:
+        messages.info(
+            request,
+            f'🎮 You can play {PUBLIC_GAMES_LIMIT} of {total_games} games without an account. '
+            f'Register for FREE to unlock all interactive games and track your progress!'
+        )
+    
     context = {
-        'games': games,
+        'games': games_list,
         'game_types': Game.GAME_TYPE_CHOICES,
+        'total_games': total_games,
+        'playable_count': playable_count,
+        'showing_limited': not request.user.is_authenticated and total_games > PUBLIC_GAMES_LIMIT,
     }
+    context.update(get_public_access_context(request.user))
     return render(request, 'games/game_list.html', context)
 
 
 def game_detail(request, pk):
-    """Game detail and play interface."""
+    """Game detail - public can view, but only first 3 games are playable without login."""
     game = get_object_or_404(Game.objects.prefetch_related('questions__options'), pk=pk, is_active=True)
+    
+    # Check if user can play this specific game
+    can_play = request.user.is_authenticated
+    
+    if not can_play:
+        # Check if this game is in the first 3 games (making it playable for public)
+        all_games = list(Game.objects.filter(is_active=True).values_list('id', flat=True))
+        game_position = None
+        try:
+            game_position = all_games.index(game.id)
+        except ValueError:
+            game_position = None
+        
+        # Public users can play the first 3 games
+        if game_position is not None and game_position < PUBLIC_GAMES_LIMIT:
+            can_play = True
+        else:
+            messages.warning(
+                request,
+                '🔒 This game requires registration! Please register or log in to play. '
+                'Registration is FREE for students from Bustos, Bulacan (Grades 7-12)!'
+            )
+    
     questions = game.questions.all()
     
-    # Log game started
+    # Log game started (only for authenticated users)
     if request.user.is_authenticated:
         log_activity(
             user=request.user,
@@ -46,93 +97,109 @@ def game_detail(request, pk):
             game_id=game.id
         )
     
-    # Prepare game data based on type
-    game_data = {
-        'id': game.id,
-        'title': game.title,
-        'type': game.game_type,
-        'description': game.description,
-        'time_limit': game.time_limit,
-        'points_per_correct': game.points_per_correct,
-        'questions': []
-    }
-    
-    for q in questions:
-        question_data = {
-            'id': q.id,
-            'text': q.question_text,
-            'order': q.order,
+    # Prepare game data based on type (only if user can play)
+    game_data = None
+    if can_play:
+        game_data = {
+            'id': game.id,
+            'title': game.title,
+            'type': game.game_type,
+            'description': game.description,
+            'time_limit': game.time_limit,
+            'points_per_correct': game.points_per_correct,
+            'questions': []
         }
         
-        if game.game_type == 'word_scramble':
-            # Scramble the word on server side for consistency
-            word = q.word.upper()
-            scrambled = ''.join(random.sample(word, len(word)))
-            question_data['scrambled'] = scrambled
-            question_data['answer'] = word
+        for q in questions:
+            question_data = {
+                'id': q.id,
+                'text': q.question_text,
+                'order': q.order,
+            }
             
-        elif game.game_type == 'drag_drop':
-            # New fill-in-the-blanks format
-            if q.sentence_template:
-                # Parse sentence template and create blanks
-                sentence = q.sentence_template
-                correct_answers = q.get_correct_answers_list()
-                extra_choices = q.get_extra_choices_list()
+            if game.game_type == 'word_scramble':
+                # Scramble the word on server side for consistency
+                word = q.word.upper()
+                scrambled = ''.join(random.sample(word, len(word)))
+                question_data['scrambled'] = scrambled
+                question_data['answer'] = word
                 
-                # Replace * and _ with numbered placeholders
-                blank_count = 0
-                sentence_parts = []
-                current_part = ""
-                
-                for char in sentence:
-                    if char in ['*', '_']:
-                        if current_part:
-                            sentence_parts.append({'type': 'text', 'content': current_part})
-                            current_part = ""
-                        sentence_parts.append({'type': 'blank', 'index': blank_count})
-                        blank_count += 1
-                    else:
-                        current_part += char
-                
-                if current_part:
-                    sentence_parts.append({'type': 'text', 'content': current_part})
-                
-                # Combine all choices and shuffle
-                all_choices = correct_answers + extra_choices
-                random.shuffle(all_choices)
-                
-                question_data['sentence_parts'] = sentence_parts
-                question_data['choices'] = all_choices
-                question_data['correct_answers'] = correct_answers
-                question_data['blank_count'] = blank_count
-            else:
-                # Legacy sorting format (backward compatibility)
-                sequence = q.get_correct_sequence_list()
-                shuffled = sequence.copy()
-                random.shuffle(shuffled)
-                question_data['items'] = shuffled
-                question_data['correct_order'] = sequence
-            
-        elif game.game_type == 'image_identification':
-            # New format: image as question, text as choices
-            question_data['question_text'] = q.question_text
-            
-            # Get text choices and shuffle
-            text_choices = q.get_text_choices_list()
-            if text_choices:
-                # Using new format with uploaded image and text choices
-                random.shuffle(text_choices)
-                question_data['choices'] = text_choices
-                question_data['correct_answer'] = q.correct_answer
-                
-                # Add image URL if available
-                if q.question_image:
-                    question_data['question_image'] = q.question_image.url
+            elif game.game_type == 'drag_drop':
+                # New fill-in-the-blanks format
+                if q.sentence_template:
+                    # Parse sentence template and create blanks
+                    sentence = q.sentence_template
+                    correct_answers = q.get_correct_answers_list()
+                    extra_choices = q.get_extra_choices_list()
+                    
+                    # Replace * and _ with numbered placeholders
+                    blank_count = 0
+                    sentence_parts = []
+                    current_part = ""
+                    
+                    for char in sentence:
+                        if char in ['*', '_']:
+                            if current_part:
+                                sentence_parts.append({'type': 'text', 'content': current_part})
+                                current_part = ""
+                            sentence_parts.append({'type': 'blank', 'index': blank_count})
+                            blank_count += 1
+                        else:
+                            current_part += char
+                    
+                    if current_part:
+                        sentence_parts.append({'type': 'text', 'content': current_part})
+                    
+                    # Combine all choices and shuffle
+                    all_choices = correct_answers + extra_choices
+                    random.shuffle(all_choices)
+                    
+                    question_data['sentence_parts'] = sentence_parts
+                    question_data['choices'] = all_choices
+                    question_data['correct_answers'] = correct_answers
+                    question_data['blank_count'] = blank_count
                 else:
-                    # No image uploaded yet - set empty string to show warning
-                    question_data['question_image'] = None
-            else:
-                # Legacy format: text question, image choices (using GameOption)
+                    # Legacy sorting format (backward compatibility)
+                    sequence = q.get_correct_sequence_list()
+                    shuffled = sequence.copy()
+                    random.shuffle(shuffled)
+                    question_data['items'] = shuffled
+                    question_data['correct_order'] = sequence
+                
+            elif game.game_type == 'image_identification':
+                # New format: image as question, text as choices
+                question_data['question_text'] = q.question_text
+                
+                # Get text choices and shuffle
+                text_choices = q.get_text_choices_list()
+                if text_choices:
+                    # Using new format with uploaded image and text choices
+                    random.shuffle(text_choices)
+                    question_data['choices'] = text_choices
+                    question_data['correct_answer'] = q.correct_answer
+                    
+                    # Add image URL if available
+                    if q.question_image:
+                        question_data['question_image'] = q.question_image.url
+                    else:
+                        # No image uploaded yet - set empty string to show warning
+                        question_data['question_image'] = None
+                else:
+                    # Legacy format: text question, image choices (using GameOption)
+                    options = list(q.options.all())
+                    random.shuffle(options)
+                    question_data['options'] = [
+                        {
+                            'id': opt.id,
+                            'text': opt.option_text,
+                            'image': opt.option_image.url if opt.option_image else None,
+                            'is_correct': opt.is_correct
+                        }
+                        for opt in options
+                    ]
+                
+            elif game.game_type == 'multiple_choice_image':
+                # Get options
                 options = list(q.options.all())
                 random.shuffle(options)
                 question_data['options'] = [
@@ -144,82 +211,88 @@ def game_detail(request, pk):
                     }
                     for opt in options
                 ]
-            
-        elif game.game_type == 'multiple_choice_image':
-            # Get options
-            options = list(q.options.all())
-            random.shuffle(options)
-            question_data['options'] = [
-                {
-                    'id': opt.id,
-                    'text': opt.option_text,
-                    'image': opt.option_image.url if opt.option_image else None,
-                    'is_correct': opt.is_correct
-                }
-                for opt in options
-            ]
-            
-        elif game.game_type == 'memory_match':
-            # Check if using new image-based format
-            if q.grid_size:
-                # New image-based memory match
-                question_data['grid_size'] = q.grid_size
-                images = []
                 
-                # Collect all uploaded images
-                for i in range(1, 19):  # Check all 18 possible image fields
-                    image_field = getattr(q, f'memory_image_{i}', None)
-                    if image_field:
-                        images.append({
-                            'id': i,
-                            'url': image_field.url,
-                            'pair_id': i  # Each image is its own pair
+            elif game.game_type == 'memory_match':
+                # Check if using new image-based format
+                if q.grid_size:
+                    # New image-based memory match
+                    question_data['grid_size'] = q.grid_size
+                    images = []
+                    
+                    # Collect all uploaded images
+                    for i in range(1, 19):  # Check all 18 possible image fields
+                        image_field = getattr(q, f'memory_image_{i}', None)
+                        if image_field:
+                            images.append({
+                                'id': i,
+                                'url': image_field.url,
+                                'pair_id': i  # Each image is its own pair
+                            })
+                    
+                    # Create pairs by duplicating each image
+                    cards = []
+                    for img in images:
+                        # Add two cards with the same image (matching pair)
+                        cards.append({
+                            'id': f"card_{img['id']}_1",
+                            'image': img['url'],
+                            'pair_id': img['pair_id']
                         })
-                
-                # Create pairs by duplicating each image
-                cards = []
-                for img in images:
-                    # Add two cards with the same image (matching pair)
-                    cards.append({
-                        'id': f"card_{img['id']}_1",
-                        'image': img['url'],
-                        'pair_id': img['pair_id']
-                    })
-                    cards.append({
-                        'id': f"card_{img['id']}_2",
-                        'image': img['url'],
-                        'pair_id': img['pair_id']
-                    })
-                
-                # Shuffle cards
-                random.shuffle(cards)
-                question_data['cards'] = cards
-                question_data['total_pairs'] = len(images)
-            else:
-                # Legacy text-based format
-                pairs = q.get_memory_pairs_dict()
-                cards = []
-                for key, value in pairs.items():
-                    cards.append({'text': key, 'pair_id': key})
-                    cards.append({'text': value, 'pair_id': key})
-                random.shuffle(cards)
-                question_data['cards'] = cards
-        
-        question_data['explanation'] = q.explanation
-        game_data['questions'].append(question_data)
+                        cards.append({
+                            'id': f"card_{img['id']}_2",
+                            'image': img['url'],
+                            'pair_id': img['pair_id']
+                        })
+                    
+                    # Shuffle cards
+                    random.shuffle(cards)
+                    question_data['cards'] = cards
+                    question_data['total_pairs'] = len(images)
+                else:
+                    # Legacy text-based format
+                    pairs = q.get_memory_pairs_dict()
+                    cards = []
+                    for key, value in pairs.items():
+                        cards.append({'text': key, 'pair_id': key})
+                        cards.append({'text': value, 'pair_id': key})
+                    random.shuffle(cards)
+                    question_data['cards'] = cards
+            
+            question_data['explanation'] = q.explanation
+            game_data['questions'].append(question_data)
     
     context = {
         'game': game,
-        'game_data_json': json.dumps(game_data),
+        'game_data_json': json.dumps(game_data) if game_data else None,
+        'can_play': can_play,
     }
+    context.update(get_public_access_context(request.user))
     return render(request, f'games/{game.game_type}_game.html', context)
 
 
-@login_required
 @require_POST
 def submit_game(request, pk):
-    """Submit game answers and calculate score."""
+    """Submit game answers and calculate score. Public users can submit for first 3 games."""
     game = get_object_or_404(Game, pk=pk)
+    
+    # Check if public user can submit this game
+    can_submit = request.user.is_authenticated
+    
+    if not can_submit:
+        # Check if this game is in the first 3 games
+        all_games = list(Game.objects.filter(is_active=True).values_list('id', flat=True))
+        try:
+            game_position = all_games.index(game.id)
+            if game_position < PUBLIC_GAMES_LIMIT:
+                can_submit = True
+        except ValueError:
+            pass
+    
+    if not can_submit:
+        return JsonResponse({
+            'success': False, 
+            'error': 'Please register or log in to play this game.'
+        }, status=403)
     
     try:
         data = json.loads(request.body)
@@ -306,39 +379,44 @@ def submit_game(request, pk):
                         # Award partial credit based on percentage
                         score += int((matched_pairs / total_pairs) * game.points_per_correct)
         
-        # Save attempt
-        attempt = GameAttempt.objects.create(
-            user=request.user,
-            game=game,
-            score=score,
-            max_score=max_score,
-            time_taken=time_taken,
-            answers=json.dumps(answers),
-            completed=True
-        )
+        # Save attempt and log (only for authenticated users)
+        attempt_id = None
+        percentage = (score / max_score * 100) if max_score > 0 else 0
         
-        # Log game completion
-        log_activity(
-            user=request.user,
-            category='game',
-            action='game_completed',
-            description=f'Completed game: {game.title} - Score: {score}/{max_score}',
-            request=request,
-            game_id=game.id,
-            metadata={
-                'score': score,
-                'max_score': max_score,
-                'percentage': attempt.get_percentage(),
-                'time_taken': time_taken
-            }
-        )
+        if request.user.is_authenticated:
+            attempt = GameAttempt.objects.create(
+                user=request.user,
+                game=game,
+                score=score,
+                max_score=max_score,
+                time_taken=time_taken,
+                answers=json.dumps(answers),
+                completed=True
+            )
+            attempt_id = attempt.id
+            
+            # Log game completion
+            log_activity(
+                user=request.user,
+                category='game',
+                action='game_completed',
+                description=f'Completed game: {game.title} - Score: {score}/{max_score}',
+                request=request,
+                game_id=game.id,
+                metadata={
+                    'score': score,
+                    'max_score': max_score,
+                    'percentage': percentage,
+                    'time_taken': time_taken
+                }
+            )
         
         return JsonResponse({
             'success': True,
             'score': score,
             'max_score': max_score,
-            'percentage': attempt.get_percentage(),
-            'attempt_id': attempt.id
+            'percentage': round(percentage, 1),
+            'attempt_id': attempt_id
         })
         
     except Exception as e:

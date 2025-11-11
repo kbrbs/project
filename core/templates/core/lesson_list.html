@@ -2,6 +2,28 @@
 {% load static %}
 
 {% block content %}
+<!-- Info Banner for Public Users -->
+<!-- {% if not user.is_authenticated %}
+<div class="mb-6 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl shadow-lg p-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
+      </svg>
+    </div>
+    <div class="flex-1">
+      <p class="font-bold text-lg">📖 Exploring our lessons? Great!</p>
+      <p class="text-green-100 text-sm">Register FREE to track your progress, take notes, and access downloadable materials!</p>
+    </div>
+  </div>
+  <div class="flex gap-2">
+    <a href="{% url 'core:signup' %}" class="px-6 py-2 bg-white text-green-600 font-bold rounded-lg hover:bg-green-50 transition-all whitespace-nowrap">
+      Register FREE
+    </a>
+  </div>
+</div>
+{% endif %} -->
+
 <div class="mb-6">
   <h2 class="text-3xl font-bold text-gray-800">Lessons</h2>
   <p class="text-gray-500 mt-1">Explore our collection of interactive learning materials</p>

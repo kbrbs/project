@@ -1,0 +1,127 @@
+{% comment %}
+  Reusable registration call-to-action component
+  Shows a prominent banner encouraging registration for full access
+  
+  Usage: {% include 'core/components/registration_cta.html' with cta_type='games' %}
+  
+  Optional parameters:
+    - cta_type: 'games', 'quizzes', 'lessons', 'general' (default: 'general')
+    - show_benefits: boolean to show feature list (default: true)
+{% endcomment %}
+
+{% if not user.is_authenticated %}
+{% load static %}
+<div class="bg-gradient-to-br from-green-50 to-orange-50 border-4 border-green-200 rounded-3xl p-8 my-8 shadow-2xl relative overflow-hidden">
+  <!-- Mascot Image -->
+  <div class="absolute -left-20 -bottom-2 hidden lg:block">
+    <img src="{% static 'pictures/arrowroot-mascot.png' %}" alt="Minasa Mascot" class="w-96 h-96 object-contain">
+  </div>
+  
+  <div class="text-center relative z-10">
+    <!-- Icon -->
+    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-500 to-green-700 mb-4 shadow-lg">
+      <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+      </svg>
+    </div>
+    
+    <!-- Heading -->
+    <h3 class="text-3xl font-black text-green-700 mb-4">
+      🎓 Unlock the Full Experience!
+    </h3>
+    
+    <!-- Context-specific message -->
+    {% if cta_type == 'games' %}
+    <p class="text-lg text-gray-700 font-bold mb-6">
+      You're viewing a limited selection. <span class="text-orange-600">Register FREE</span> to unlock 
+      <span class="text-green-600">ALL interactive games</span> and track your progress!
+    </p>
+    {% elif cta_type == 'quizzes' %}
+    <p class="text-lg text-gray-700 font-bold mb-6">
+      You're viewing a limited selection. <span class="text-orange-600">Register FREE</span> to access 
+      <span class="text-green-600">ALL quizzes</span> and track your learning journey!
+    </p>
+    {% elif cta_type == 'lessons' %}
+    <p class="text-lg text-gray-700 font-bold mb-6">
+      <span class="text-orange-600">Register FREE</span> to access 
+      <span class="text-green-600">full lesson content</span>, quizzes, and downloadable learning materials!
+    </p>
+    {% else %}
+    <p class="text-lg text-gray-700 font-bold mb-6">
+      Create your <span class="text-orange-600">FREE account</span> to unlock the complete 
+      <span class="text-green-600">Minasa Festival learning experience</span>!
+    </p>
+    {% endif %}
+    
+    <!-- Benefits list -->
+    {% if show_benefits|default:True %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-left max-w-2xl mx-auto">
+      <div class="flex items-start gap-3 bg-white rounded-2xl p-4 shadow-md">
+        <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <p class="font-black text-gray-800">All Games & Quizzes</p>
+          <p class="text-sm text-gray-600">Unlimited access to interactive content</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start gap-3 bg-white rounded-2xl p-4 shadow-md">
+        <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <p class="font-black text-gray-800">Progress Tracking</p>
+          <p class="text-sm text-gray-600">Monitor your learning journey</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start gap-3 bg-white rounded-2xl p-4 shadow-md">
+        <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <p class="font-black text-gray-800">Downloadable Resources</p>
+          <p class="text-sm text-gray-600">Access learning materials offline</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start gap-3 bg-white rounded-2xl p-4 shadow-md">
+        <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <p class="font-black text-gray-800">Full Lesson Access</p>
+          <p class="text-sm text-gray-600">Complete educational content</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    
+    <!-- Call to action buttons -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="{% url 'core:signup' %}" 
+         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-green-500 to-green-700 text-white text-lg font-black rounded-2xl shadow-xl hover:from-green-600 hover:to-green-800 hover:scale-105 transition-all">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+        </svg>
+        Register FREE Now
+      </a>
+      
+      <a href="{% url 'login' %}" 
+         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-green-700 text-lg font-black rounded-2xl shadow-lg border-4 border-green-200 hover:bg-green-50 hover:scale-105 transition-all">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+        </svg>
+        Already Have Account? Login
+      </a>
+    </div>
+    
+    <!-- Target audience note -->
+    <p class="text-sm text-gray-600 mt-6 font-semibold">
+      ✨ Perfect for students in <span class="text-green-700 font-black">Grades 7-12</span> from 
+      <span class="text-green-700 font-black">Bustos, Bulacan</span> and beyond!
+    </p>
+  </div>
+</div>
+{% endif %}

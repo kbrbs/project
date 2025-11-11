@@ -1,6 +1,28 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+<!-- Info Banner for Public Users -->
+{% if not user.is_authenticated %}
+<div class="mb-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl shadow-lg p-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+      </svg>
+    </div>
+    <div class="flex-1">
+      <p class="font-bold text-lg">💡 Like this lesson? Register to save your progress!</p>
+      <p class="text-blue-100 text-sm">Create a FREE account to bookmark lessons, track completion, and download study materials!</p>
+    </div>
+  </div>
+  <div class="flex gap-2">
+    <a href="{% url 'core:signup' %}" class="px-6 py-2 bg-white text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition-all whitespace-nowrap">
+      Register FREE
+    </a>
+  </div>
+</div>
+{% endif %}
+
 <!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"> -->
   <!-- Main Content -->
   <div class="lg:col-span-2">

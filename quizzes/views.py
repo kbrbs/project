@@ -1,35 +1,47 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Quiz
 from core.utils import log_activity
+from core.access_control import limit_public_access, get_public_access_context, PUBLIC_QUIZZES_LIMIT
 
 
-@login_required
 def quiz_list(request):
+    """Quiz list - fully public access to all quizzes."""
     qs = Quiz.objects.all()
-    return render(request, 'quizzes/quiz_list.html', {'quizzes': qs})
+    
+    # Get total count
+    total_quizzes = qs.count()
+    
+    context = {
+        'quizzes': qs,
+        'total_quizzes': total_quizzes,
+    }
+    context.update(get_public_access_context(request.user))
+    return render(request, 'quizzes/quiz_list.html', context)
 
 
-@login_required
 def quiz_detail(request, pk):
+    """Quiz detail - public can take quizzes."""
     quiz = get_object_or_404(Quiz, pk=pk)
     
-    # Log quiz started
-    log_activity(
-        user=request.user,
-        category='quiz',
-        action='quiz_started',
-        description=f'Started quiz: {quiz.title}',
-        request=request,
-        quiz_id=quiz.id
-    )
+    # Log quiz started (only for authenticated users)
+    if request.user.is_authenticated:
+        log_activity(
+            user=request.user,
+            category='quiz',
+            action='quiz_started',
+            description=f'Started quiz: {quiz.title}',
+            request=request,
+            quiz_id=quiz.id
+        )
     
     return render(request, 'quizzes/quiz_detail.html', {'quiz': quiz})
 
 
-@login_required
 def quiz_api_detail(request, pk):
+    """API endpoint to get quiz data - public can access."""
     quiz = get_object_or_404(Quiz, pk=pk)
     data = {
         'id': quiz.id,
@@ -42,9 +54,8 @@ def quiz_api_detail(request, pk):
     return JsonResponse(data)
 
 
-@login_required
 def quiz_submit(request, pk):
-    """Submit quiz answers and return results with correct answers"""
+    """Submit quiz answers and return results with correct answers - public can submit."""
     import json
     from django.views.decorators.http import require_POST
     
@@ -94,21 +105,22 @@ def quiz_submit(request, pk):
     
     score_percentage = (correct_count / total_questions * 100) if total_questions > 0 else 0
     
-    # Log quiz completion
-    action = 'quiz_passed' if score_percentage >= 60 else 'quiz_failed'
-    log_activity(
-        user=request.user,
-        category='quiz',
-        action=action,
-        description=f'Completed quiz: {quiz.title} - Score: {score_percentage:.1f}%',
-        request=request,
-        quiz_id=quiz.id,
-        metadata={
-            'score_percentage': score_percentage,
-            'correct_count': correct_count,
-            'total_questions': total_questions
-        }
-    )
+    # Log quiz completion (only for authenticated users)
+    if request.user.is_authenticated:
+        action = 'quiz_passed' if score_percentage >= 60 else 'quiz_failed'
+        log_activity(
+            user=request.user,
+            category='quiz',
+            action=action,
+            description=f'Completed quiz: {quiz.title} - Score: {score_percentage:.1f}%',
+            request=request,
+            quiz_id=quiz.id,
+            metadata={
+                'score_percentage': score_percentage,
+                'correct_count': correct_count,
+                'total_questions': total_questions
+            }
+        )
     
     return JsonResponse({
         'total_questions': total_questions,

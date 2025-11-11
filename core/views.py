@@ -27,23 +27,41 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.core.files.storage import default_storage
 from .utils import log_activity
+from .access_control import get_public_access_context
 
 
 def home(request):
-    # Retrieve featured lessons from EducationalSection
+    """Homepage - fully public with featured lessons and call-to-action."""
+    # Retrieve featured lessons from EducationalSection (show all 6 on homepage)
     featured = EducationalSection.objects.all().order_by('order')[:6]
-    return render(request, 'core/home.html', {'featured': featured})
+    
+    context = {
+        'featured': featured,
+    }
+    context.update(get_public_access_context(request.user))
+    return render(request, 'core/home.html', context)
 
 
-@login_required
 def lesson_list(request, category=None):
+    """Lesson list - fully public access to view all lessons."""
     # Retrieve all educational sections
     qs = EducationalSection.objects.all().order_by('order')
-    # Note: EducationalSection doesn't have category field, so we ignore category filter
-    return render(request, 'core/lesson_list.html', {'articles': qs, 'category': category})
+    
+    total_lessons = qs.count()
+    
+    # Public users can see and access all lessons
+    context = {
+        'articles': qs,
+        'category': category,
+        'total_lessons': total_lessons,
+    }
+    context.update(get_public_access_context(request.user))
+    
+    return render(request, 'core/lesson_list.html', context)
 
-@login_required
+
 def lesson_detail(request, slug):
+    """Lesson detail - fully public access to view lessons."""
     article = get_object_or_404(Article, slug=slug)
     # try to find a related quiz
     quiz = Quiz.objects.filter(article=article).first()
@@ -54,15 +72,16 @@ def lesson_detail(request, slug):
     if section:
         section_images = section.content_images.all().order_by('order', 'created_at')
     
-    # Log activity
-    log_activity(
-        user=request.user,
-        category='progress',
-        action='lesson_viewed',
-        description=f'Viewed lesson: {article.title}',
-        request=request,
-        article=article
-    )
+    # Log activity (only for authenticated users)
+    if request.user.is_authenticated:
+        log_activity(
+            user=request.user,
+            category='progress',
+            action='lesson_viewed',
+            description=f'Viewed lesson: {article.title}',
+            request=request,
+            article=article
+        )
     
     return render(request, 'core/lesson_detail.html', {
         'article': article, 
@@ -71,26 +90,38 @@ def lesson_detail(request, slug):
         'section_images': section_images
     })
 
-@login_required
 def festival_tour(request):
+    """Festival tour - public can view, downloads require login."""
     # static structure for festival booths
     booths = [
-    {'id': 'history', 'title': 'History Booth', 'summary': 'Origins and timeline'},
+        {'id': 'history', 'title': 'History Booth', 'summary': 'Origins and timeline'},
         {'id': 'recipe', 'title': 'Recipe Tent', 'summary': 'Step-by-step baking'},
         {'id': 'cultural', 'title': 'Cultural Stage', 'summary': 'Folk dances and songs'},
         {'id': 'farmers', 'title': "Farmer's Corner", 'summary': 'Planting & harvesting stories'},
     ]
     
-    # Log activity
-    log_activity(
-        user=request.user,
-        category='content',
-        action='festival_tour',
-        description='Visited Festival Tour',
-        request=request
-    )
+    # Log activity (only for authenticated users)
+    if request.user.is_authenticated:
+        log_activity(
+            user=request.user,
+            category='content',
+            action='festival_tour',
+            description='Visited Festival Tour',
+            request=request
+        )
+    else:
+        # Show info for public users
+        messages.info(
+            request,
+            '🎉 Enjoying the virtual festival tour? Register FREE to access interactive features '
+            'and downloadable festival materials!'
+        )
     
-    return render(request, 'core/festival_tour.html', {'booths': booths})
+    context = {
+        'booths': booths,
+    }
+    context.update(get_public_access_context(request.user))
+    return render(request, 'core/festival_tour.html', context)
 
 @login_required
 def profile(request):

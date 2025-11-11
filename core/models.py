@@ -69,9 +69,17 @@ class StudentProfile(models.Model):
 
 class EducationalSection(models.Model):
     """Sections like Planting, Cultural, Historical, Economic Value."""
+    CATEGORY_CHOICES = [
+        ('planting', 'Planting'),
+        ('cultural', 'Cultural'),
+        ('historical', 'Historical'),
+        ('economic', 'Economic Value'),
+    ]
+    
     SLUG_MAX = 100
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=SLUG_MAX, unique=True)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='planting')
     description = models.TextField(blank=True)
     content = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)

@@ -97,9 +97,10 @@ def top_pages_json(request):
 class SectionForm(forms.ModelForm):
     class Meta:
         model = EducationalSection
-        fields = ['header_image', 'title', 'slug', 'description', 'content', 'content_image', 'order']
+        fields = ['header_image', 'title', 'slug', 'category', 'description', 'content', 'content_image', 'order']
         widgets = {
             'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
         }
 
 

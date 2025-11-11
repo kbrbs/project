@@ -1,6 +1,28 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+<!-- Info Banner for Public Users -->
+<!-- {% if not user.is_authenticated %}
+<div class="mb-6 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-2xl shadow-lg p-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+      </svg>
+    </div>
+    <div class="flex-1">
+      <p class="font-bold text-lg">🎯 Taking our quizzes? Awesome!</p>
+      <p class="text-purple-100 text-sm">Register FREE to save your scores, track your learning progress, and unlock achievements!</p>
+    </div>
+  </div>
+  <div class="flex gap-2">
+    <a href="{% url 'core:signup' %}" class="px-6 py-2 bg-white text-purple-600 font-bold rounded-lg hover:bg-purple-50 transition-all whitespace-nowrap">
+      Register FREE
+    </a>
+  </div>
+</div>
+{% endif %} -->
+
 <div class="mb-6">
   <h2 class="text-3xl font-bold text-gray-800">Quizzes</h2>
   <p class="text-gray-500 mt-1">Test your knowledge with our interactive quizzes</p>
