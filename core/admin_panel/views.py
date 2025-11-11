@@ -96,7 +96,7 @@ def top_pages_json(request):
 class SectionForm(forms.ModelForm):
     class Meta:
         model = EducationalSection
-        fields = ['title', 'slug', 'description', 'content', 'header_image', 'content_image', 'order']
+        fields = ['header_image', 'title', 'slug', 'description', 'content', 'content_image', 'order']
         widgets = {
             'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
         }
@@ -139,6 +139,14 @@ class SectionCreateView(CreateView):
     template_name = 'core/admin_panel/section_form.html'
     success_url = reverse_lazy('core:admin_sections')
 
+    def get_initial(self):
+        initial = super().get_initial()
+        # Calculate next order number from the database
+        max_order = EducationalSection.objects.aggregate(Max('order'))['order__max']
+        # If max_order is None (no sections exist), start at 0; otherwise increment
+        initial['order'] = (max_order + 1) if max_order is not None else 0
+        return initial
+
     def get(self, request, *args, **kwargs):
         self.object = None
         form = self.get_form()
@@ -154,7 +162,7 @@ class SectionCreateView(CreateView):
             # Auto-assign order if not set
             if form.instance.order is None:
                 max_order = EducationalSection.objects.aggregate(Max('order'))['order__max']
-                form.instance.order = (max_order or -1) + 1
+                form.instance.order = (max_order + 1) if max_order is not None else 0
             
             self.object = form.save()
             formset.instance = self.object

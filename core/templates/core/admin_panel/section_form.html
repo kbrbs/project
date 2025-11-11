@@ -198,8 +198,8 @@
       <div class="border-t border-gray-100"></div>
       <article>
         <div class="relative">
-          <img id="preview-image" class="w-full h-64 object-cover hidden" alt="Cover preview" />
-          <div id="preview-fallback" class="h-48 bg-green-50 flex items-center justify-center">
+          <img id="preview-image" class="w-full h-64 object-cover {% if form.instance.pk and form.instance.header_image %}{% else %}hidden{% endif %}" alt="Cover preview" {% if form.instance.pk and form.instance.header_image %}src="{{ form.instance.header_image.url }}"{% endif %} />
+          <div id="preview-fallback" class="h-48 bg-green-50 flex items-center justify-center {% if form.instance.pk and form.instance.header_image %}hidden{% endif %}">
             <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center">
               <span id="preview-emoji" class="text-5xl">📚</span>
             </div>
@@ -297,6 +297,11 @@
   input[readonly] {
     background-color: #F3F4F6 !important;
     cursor: not-allowed !important;
+  }
+  /* Hide the "Currently:" text and filename for file inputs */
+  form input[type="file"] + a,
+  form input[type="file"] ~ p.file-upload {
+    display: none !important;
   }
 </style>
 
