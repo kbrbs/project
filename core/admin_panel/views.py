@@ -97,7 +97,7 @@ def top_pages_json(request):
 class SectionForm(forms.ModelForm):
     class Meta:
         model = EducationalSection
-        fields = ['header_image', 'title', 'slug', 'category', 'content', 'content_image', 'order']
+        fields = ['order', 'header_image', 'title', 'slug', 'category', 'content', 'content_image']
         widgets = {
             'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
@@ -108,13 +108,12 @@ class SectionForm(forms.ModelForm):
 SectionImageFormSet = inlineformset_factory(
     EducationalSection,
     SectionImage,
-    fields=('image', 'caption', 'order'),
+    fields=('image', 'caption'),
     extra=0,  # Don't show empty forms by default - user will add them as needed
     can_delete=True,
     widgets={
         'image': forms.FileInput(attrs={'class': 'file-input'}),
         'caption': forms.TextInput(attrs={'placeholder': 'Optional caption'}),
-        'order': forms.NumberInput(attrs={'min': 0, 'placeholder': 'Order'}),
     }
 )
 

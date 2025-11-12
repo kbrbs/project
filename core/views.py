@@ -47,12 +47,24 @@ def lesson_list(request, category=None):
     # Retrieve all educational sections
     qs = EducationalSection.objects.all().order_by('order')
     
+    # Handle category filtering from GET parameter
+    category_filter = request.GET.get('category', '')
+    if category_filter and category_filter in ['planting', 'cultural', 'historical', 'economic']:
+        qs = qs.filter(category=category_filter)
+    
+    # Handle search query from GET parameter
+    search_query = request.GET.get('q', '')
+    if search_query:
+        qs = qs.filter(title__icontains=search_query)
+    
     total_lessons = qs.count()
     
     # Public users can see and access all lessons
     context = {
         'articles': qs,
         'category': category,
+        'category_filter': category_filter,
+        'search_query': search_query,
         'total_lessons': total_lessons,
     }
     context.update(get_public_access_context(request.user))

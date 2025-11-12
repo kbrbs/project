@@ -116,17 +116,6 @@
                         </ul>
                       {% endif %}
                     </div>
-                    <div>
-                      <label class="block text-sm font-medium text-gray-700 mb-2">Order</label>
-                      {{ form.order }}
-                      {% if form.order.errors %}
-                        <ul class="errorlist">
-                          {% for error in form.order.errors %}
-                            <li class="text-red-600 text-xs">{{ error }}</li>
-                          {% endfor %}
-                        </ul>
-                      {% endif %}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -158,10 +147,6 @@
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Caption (optional)</label>
                     {{ formset.empty_form.caption }}
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Order</label>
-                    {{ formset.empty_form.order }}
                   </div>
                 </div>
               </div>
@@ -225,6 +210,14 @@
           </div>
           <div id="preview-content" class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
             Start writing your content to see it here.
+          </div>
+          
+          <!-- Content Images Preview -->
+          <div id="preview-images-container" class="mt-8 space-y-6 hidden">
+            <h4 class="text-lg font-semibold text-gray-800 border-t pt-6">Content Images</h4>
+            <div id="preview-images" class="grid grid-cols-1 gap-6">
+              <!-- Images will be inserted here dynamically -->
+            </div>
           </div>
         </div>
       </article>
@@ -492,6 +485,67 @@
             previewPlaceholder.classList.remove('hidden');
           }
         }
+        
+        // Update live preview
+        updateLivePreviewImages();
+      });
+    }
+    
+    function updateLivePreviewImages() {
+      const previewImagesContainer = document.getElementById('preview-images-container');
+      const previewImagesGrid = document.getElementById('preview-images');
+      if (!previewImagesContainer || !previewImagesGrid) return;
+      
+      // Clear existing preview images
+      previewImagesGrid.innerHTML = '';
+      
+      // Get all visible formset forms
+      const visibleForms = Array.from(formsetContainer.querySelectorAll('.formset-form'))
+        .filter(form => form.style.display !== 'none');
+      
+      if (visibleForms.length === 0) {
+        previewImagesContainer.classList.add('hidden');
+        return;
+      }
+      
+      previewImagesContainer.classList.remove('hidden');
+      
+      visibleForms.forEach((form, index) => {
+        const previewImg = form.querySelector('.preview-image');
+        const captionInput = form.querySelector('input[name*="caption"]');
+        
+        if (previewImg && previewImg.src && !previewImg.classList.contains('hidden')) {
+          const imgWrapper = document.createElement('div');
+          imgWrapper.className = 'bg-gray-50 rounded-lg overflow-hidden border border-gray-200';
+          
+          const img = document.createElement('img');
+          img.src = previewImg.src;
+          img.alt = captionInput ? captionInput.value : 'Content image';
+          img.className = 'w-full h-64 object-cover';
+          
+          imgWrapper.appendChild(img);
+          
+          if (captionInput && captionInput.value) {
+            const caption = document.createElement('p');
+            caption.className = 'text-sm text-gray-600 italic p-3';
+            caption.textContent = captionInput.value;
+            imgWrapper.appendChild(caption);
+          }
+          
+          previewImagesGrid.appendChild(imgWrapper);
+        }
+      });
+      
+      // Hide container if no images have been previewed
+      if (previewImagesGrid.children.length === 0) {
+        previewImagesContainer.classList.add('hidden');
+      }
+    }
+    
+    function attachCaptionListener(captionInput) {
+      if (!captionInput) return;
+      captionInput.addEventListener('input', function() {
+        updateLivePreviewImages();
       });
     }
     
@@ -530,6 +584,12 @@
       if (fileInput) {
         attachImagePreview(fileInput, formDiv);
       }
+      
+      // Attach caption listener to the new caption input
+      const captionInput = formDiv.querySelector('input[name*="caption"]');
+      if (captionInput) {
+        attachCaptionListener(captionInput);
+      }
     }
     
     function removeForm(formElement) {
@@ -558,6 +618,7 @@
         formElement.remove();
       }
       updateFormNumbers();
+      updateLivePreviewImages();
     }
     
     // Attach event listeners
@@ -581,7 +642,13 @@
       }
     });
     
+    // Attach caption listeners to all existing caption inputs
+    formsetContainer.querySelectorAll('input[name*="caption"]').forEach(captionInput => {
+      attachCaptionListener(captionInput);
+    });
+    
     updateFormNumbers();
+    updateLivePreviewImages();
   })();
 </script>
 
