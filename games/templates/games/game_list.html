@@ -26,45 +26,130 @@
 {% endif %} -->
 
 <!-- Hero Section -->
-<div class="bg-green-600 text-white py-16 mb-12 rounded-3xl">
-  <div class="max-w-4xl mx-auto text-center px-6">
-    <h1 class="text-5xl font-bold mb-4">🎮 Educational Games</h1>
-    <p class="text-xl text-green-100">Learn about Minasa, arrowroot, and local culture through interactive games!</p>
+<div class="bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 text-white py-20 mb-12 rounded-3xl shadow-2xl relative overflow-hidden">
+  <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+  <div class="max-w-4xl mx-auto text-center px-6 relative z-10">
+    <div class="text-7xl mb-6 animate-bounce">🎮</div>
+    <h1 class="text-6xl font-bold mb-6 drop-shadow-lg">Educational Games</h1>
+    <p class="text-2xl text-green-100 mb-4">Learn about Minasa, arrowroot, and local culture through interactive games!</p>
+    <div class="flex items-center justify-center gap-6 text-lg mt-8">
+      <div class="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+          <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="font-semibold">Fun & Interactive</span>
+      </div>
+      <div class="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
+        </svg>
+        <span class="font-semibold">Learn & Play</span>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- Search and Filter -->
-<div class="max-w-6xl mx-auto mb-8 px-6">
-  <form method="get" class="bg-white rounded-2xl shadow-sm p-6">
+<div class="max-w-6xl mx-auto mb-12 px-6">
+  <form method="get" id="game-filter-form" class="bg-gradient-to-br from-white to-green-50 rounded-3xl shadow-xl p-8 border-2 border-green-100">
     <div class="flex flex-wrap gap-4">
-      <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search games..." class="flex-1 min-w-[200px] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-      <select name="type" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
-        <option value="">All Types</option>
-        {% for value, label in game_types %}
-        <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>{{ label }}</option>
-        {% endfor %}
-      </select>
-      <button type="submit" class="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-colors">
+      <div class="flex-1 min-w-[200px] relative">
+        <svg class="w-6 h-6 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search games..." class="w-full pl-12 pr-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg transition-all shadow-sm">
+      </div>
+      <div class="relative">
+        <svg class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path>
+        </svg>
+        <select name="type" id="game-type-select" class="pl-11 pr-10 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-medium transition-all shadow-sm appearance-none bg-white cursor-pointer">
+          <option value="">All Types</option>
+          {% for value, label in game_types %}
+          <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <svg class="w-5 h-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <button type="submit" class="px-10 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
         Search
       </button>
     </div>
   </form>
 </div>
 
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .game-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .game-card:nth-child(1) { animation-delay: 0.1s; }
+  .game-card:nth-child(2) { animation-delay: 0.2s; }
+  .game-card:nth-child(3) { animation-delay: 0.3s; }
+  .game-card:nth-child(4) { animation-delay: 0.4s; }
+  .game-card:nth-child(5) { animation-delay: 0.5s; }
+  .game-card:nth-child(6) { animation-delay: 0.6s; }
+  .game-card:nth-child(7) { animation-delay: 0.7s; }
+  .game-card:nth-child(8) { animation-delay: 0.8s; }
+  .game-card:nth-child(9) { animation-delay: 0.9s; }
+  
+  .game-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .game-card:hover .game-icon {
+    animation: float 1s ease-in-out infinite;
+  }
+</style>
+
+<script>
+  // Auto-submit form when game type changes
+  document.getElementById('game-type-select').addEventListener('change', function() {
+    document.getElementById('game-filter-form').submit();
+  });
+</script>
+
 <!-- Games Grid -->
-<div class="max-w-6xl mx-auto px-6">
+<div class="max-w-6xl mx-auto px-6 mb-16">
+  <div class="mb-8 text-center">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Available Games</h2>
+    <p class="text-gray-600">Choose a game and start your learning adventure!</p>
+  </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     {% for game in games %}
-    <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all overflow-hidden transform hover:-translate-y-1 {% if not game.is_playable %}opacity-75{% endif %}">
+    <div class="game-card bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all overflow-hidden transform hover:-translate-y-2 hover:scale-105 border-2 border-gray-100 {% if not game.is_playable %}opacity-75{% endif %}">
       <!-- Game Type Indicator -->
-      <div class="h-3 {% if game.game_type == 'word_scramble' %}bg-green-500{% elif game.game_type == 'drag_drop' %}bg-green-600{% elif game.game_type == 'image_identification' %}bg-green-500{% elif game.game_type == 'memory_match' %}bg-orange-500{% else %}bg-orange-600{% endif %}"></div>
+      <div class="h-2 {% if game.game_type == 'word_scramble' %}bg-gradient-to-r from-green-400 to-green-600{% elif game.game_type == 'drag_drop' %}bg-gradient-to-r from-green-500 to-emerald-600{% elif game.game_type == 'image_identification' %}bg-gradient-to-r from-green-400 to-teal-500{% elif game.game_type == 'memory_match' %}bg-gradient-to-r from-orange-400 to-orange-600{% else %}bg-gradient-to-r from-orange-500 to-red-600{% endif %}"></div>
       
-      <div class="p-6 relative">
+      <div class="p-8 relative">
         <!-- Lock indicator for non-playable games -->
         {% if not game.is_playable %}
-        <div class="absolute top-3 right-3 z-10">
-          <div class="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
-            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+        <div class="absolute top-4 right-4 z-10">
+          <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 shadow-lg">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
             </svg>
             Login Required
@@ -73,62 +158,68 @@
         {% endif %}
         
         <!-- Icon and Badge -->
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl {% if game.game_type == 'word_scramble' %}bg-green-100{% elif game.game_type == 'drag_drop' %}bg-green-100{% elif game.game_type == 'image_identification' %}bg-green-100{% elif game.game_type == 'memory_match' %}bg-orange-100{% else %}bg-orange-100{% endif %}">
+        <div class="flex items-start justify-between mb-6">
+          <div class="game-icon w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-lg {% if game.game_type == 'word_scramble' %}bg-gradient-to-br from-green-100 to-green-200{% elif game.game_type == 'drag_drop' %}bg-gradient-to-br from-green-100 to-emerald-200{% elif game.game_type == 'image_identification' %}bg-gradient-to-br from-green-100 to-teal-200{% elif game.game_type == 'memory_match' %}bg-gradient-to-br from-orange-100 to-orange-200{% else %}bg-gradient-to-br from-orange-100 to-red-200{% endif %}">
             {% if game.game_type == 'word_scramble' %}🔤
             {% elif game.game_type == 'drag_drop' %}📋
             {% elif game.game_type == 'image_identification' %}🖼️
             {% elif game.game_type == 'memory_match' %}🧠
             {% else %}📸{% endif %}
           </div>
-          <span class="px-3 py-1 text-xs font-semibold rounded-full {% if game.difficulty == 'easy' %}bg-green-100 text-green-700{% elif game.difficulty == 'hard' %}bg-red-100 text-red-700{% else %}bg-yellow-100 text-yellow-700{% endif %}">
+          <span class="px-4 py-2 text-sm font-bold rounded-full shadow-md {% if game.difficulty == 'easy' %}bg-gradient-to-r from-green-400 to-green-600 text-white{% elif game.difficulty == 'hard' %}bg-gradient-to-r from-red-400 to-red-600 text-white{% else %}bg-gradient-to-r from-yellow-400 to-yellow-600 text-white{% endif %}">
             {{ game.get_difficulty_display }}
           </span>
         </div>
         
         <!-- Title -->
         <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ game.title }}</h3>
-        <p class="text-sm font-medium text-green-600 mb-3">{{ game.get_game_type_display }}</p>
+        <p class="text-sm font-semibold text-green-600 mb-4 uppercase tracking-wide">{{ game.get_game_type_display }}</p>
         
         <!-- Description -->
-        <p class="text-gray-600 mb-4 line-clamp-3">{{ game.description|truncatewords:25 }}</p>
+        <p class="text-gray-600 mb-6 line-clamp-3 leading-relaxed">{{ game.description|truncatewords:25 }}</p>
         
         <!-- Metadata -->
-        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
-          <div class="flex items-center gap-1">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <div class="flex items-center gap-6 text-sm text-gray-600 mb-6 bg-gray-50 p-4 rounded-xl">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
               <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
             </svg>
-            {{ game.questions.count }} questions
+            <span class="font-semibold">{{ game.questions.count }} questions</span>
           </div>
           {% if game.time_limit %}
-          <div class="flex items-center gap-1">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
             </svg>
-            {{ game.time_limit }}s
+            <span class="font-semibold">{{ game.time_limit }}s</span>
           </div>
           {% endif %}
         </div>
         
         <!-- Play Button -->
         {% if game.is_playable %}
-        <a href="{% url 'games:game_detail' game.pk %}" class="block w-full py-3 bg-green-600 text-white text-center font-bold rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
-          Play Now →
+        <a href="{% url 'games:game_detail' game.pk %}" class="block w-full py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-center font-bold text-lg rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+          </svg>
+          Play Now
         </a>
         {% else %}
-        <a href="{% url 'core:signup' %}" class="block w-full py-3 bg-gray-400 text-white text-center font-bold rounded-lg hover:bg-orange-500 transition-all shadow-md hover:shadow-lg">
-          🔒 Register to Play
+        <a href="{% url 'core:signup' %}" class="block w-full py-4 bg-gradient-to-r from-gray-400 to-gray-500 text-white text-center font-bold text-lg rounded-xl hover:from-orange-500 hover:to-orange-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+          </svg>
+          Register to Play
         </a>
         {% endif %}
       </div>
     </div>
     {% empty %}
-    <div class="col-span-3 text-center py-16">
-      <div class="text-6xl mb-4">🎮</div>
-      <h3 class="text-2xl font-bold text-gray-700 mb-2">No games available yet</h3>
-      <p class="text-gray-500">Check back soon for new educational games!</p>
+    <div class="col-span-3 text-center py-20 bg-gradient-to-br from-gray-50 to-green-50 rounded-3xl border-2 border-dashed border-gray-300">
+      <div class="text-8xl mb-6 opacity-50">🎮</div>
+      <h3 class="text-3xl font-bold text-gray-700 mb-3">No games available yet</h3>
+      <p class="text-gray-500 text-lg">Check back soon for new educational games!</p>
     </div>
     {% endfor %}
   </div>
@@ -136,14 +227,19 @@
 
 <!-- My Attempts Link (if logged in) -->
 {% if user.is_authenticated %}
-<div class="max-w-6xl mx-auto px-6 mt-12 text-center">
-  <a href="{% url 'games:my_attempts' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-green-600 text-green-600 font-semibold rounded-lg hover:bg-green-50 transition-colors">
-    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-      <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-    </svg>
-    View My Game History
-  </a>
+<div class="max-w-6xl mx-auto px-6 mt-16 mb-16 text-center">
+  <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-12 border-2 border-green-200 shadow-xl">
+    <div class="text-5xl mb-4">📊</div>
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Track Your Progress</h3>
+    <p class="text-gray-600 mb-6 max-w-2xl mx-auto">View your game history, scores, and see how much you've learned!</p>
+    <a href="{% url 'games:my_attempts' %}" class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold text-lg rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+      </svg>
+      View My Game History
+    </a>
+  </div>
 </div>
 {% endif %}
 

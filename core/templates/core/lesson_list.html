@@ -31,14 +31,14 @@
 
 <!-- Search and Filter Bar -->
 <div class="mb-6 bg-white rounded-2xl shadow-sm p-4">
-  <form method="get" action="{% url 'core:lesson_list' %}" class="flex flex-col md:flex-row gap-4">
+  <form method="get" action="{% url 'core:lesson_list' %}" id="filter-form" class="flex flex-col md:flex-row gap-4">
     <div class="flex-1 relative">
       <input type="text" name="q" value="{{ search_query }}" placeholder="Search lessons..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
       <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
       </svg>
     </div>
-    <select name="category" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" onchange="this.form.submit()">
+    <select name="category" id="category-select" class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
       <option value="">All Categories</option>
       <option value="planting" {% if category_filter == 'planting' %}selected{% endif %}>🌱 Planting</option>
       <option value="historical" {% if category_filter == 'historical' %}selected{% endif %}>📜 Historical</option>
@@ -50,6 +50,13 @@
     </button>
   </form>
 </div>
+
+<script>
+  // Auto-submit form when category changes
+  document.getElementById('category-select').addEventListener('change', function() {
+    document.getElementById('filter-form').submit();
+  });
+</script>
 
 <!-- Lessons Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
