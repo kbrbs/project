@@ -1152,19 +1152,27 @@
   {% endfor %}
 </div>
 
-<!-- Call to Action -->
-<div class="mt-12 bg-gradient-to-r from-green-500 to-yellow-500 rounded-2xl shadow-lg p-8 text-center text-white">
-  <h3 class="text-2xl font-bold mb-3">Ready to Learn More?</h3>
-  <p class="mb-6 opacity-90">Explore our full collection of lessons and quizzes about Bustos' cultural heritage.</p>
-  <div class="flex flex-wrap gap-4 justify-center">
-    <a href="/lessons/"
-      class="px-6 py-3 bg-white text-green-600 font-medium rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-sm">
-      Browse All Lessons
-    </a>
-    <a href="/quizzes/"
-      class="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-opacity-30 transition-all duration-200 border-2 border-white border-opacity-50">
-      Take a Quiz
-    </a>
+<div class="mt-16 bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl shadow-2xl p-12 text-center text-white relative overflow-hidden border-4 border-green-200">
+  <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+  <div class="relative z-10">
+    <div class="text-6xl mb-6 animate-bounce">🎓</div>
+    <h3 class="text-4xl font-bold mb-4 drop-shadow-lg">Ready to Learn More?</h3>
+    <p class="mb-8 text-xl opacity-95 max-w-3xl mx-auto">Explore our full collection of lessons and quizzes about Bustos' cultural heritage.</p>
+    <div class="flex flex-wrap gap-6 justify-center">
+      <a href="/lessons/" class="px-10 py-5 bg-white text-green-600 font-bold text-lg rounded-2xl hover:bg-gray-100 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center gap-3">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
+        </svg>
+        Browse All Lessons
+      </a>
+      <a href="/quizzes/" class="px-10 py-5 bg-white/20 backdrop-blur-md text-white font-bold text-lg rounded-2xl hover:bg-white/30 transition-all duration-200 border-2 border-white shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center gap-3">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+          <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+        </svg>
+        Take a Quiz
+      </a>
+    </div>
   </div>
 </div>
 {% endblock %}
