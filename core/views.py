@@ -62,15 +62,15 @@ def lesson_list(request, category=None):
 
 def lesson_detail(request, slug):
     """Lesson detail - fully public access to view lessons."""
-    article = get_object_or_404(Article, slug=slug)
-    # try to find a related quiz
-    quiz = Quiz.objects.filter(article=article).first()
-    # Find related EducationalSection by matching title (as sections create articles with same title)
-    section = EducationalSection.objects.filter(title=article.title).first()
+    section = get_object_or_404(EducationalSection, slug=slug)
     # Get all content images for the section
-    section_images = []
-    if section:
-        section_images = section.content_images.all().order_by('order', 'created_at')
+    section_images = section.content_images.all().order_by('order', 'created_at')
+    
+    # Try to find a related quiz (look for quiz linked to article with same title, if any)
+    quiz = None
+    article = Article.objects.filter(title=section.title).first()
+    if article:
+        quiz = Quiz.objects.filter(article=article).first()
     
     # Log activity (only for authenticated users)
     if request.user.is_authenticated:
@@ -78,15 +78,14 @@ def lesson_detail(request, slug):
             user=request.user,
             category='progress',
             action='lesson_viewed',
-            description=f'Viewed lesson: {article.title}',
+            description=f'Viewed lesson: {section.title}',
             request=request,
             article=article
         )
     
     return render(request, 'core/lesson_detail.html', {
-        'article': article, 
-        'quiz': quiz, 
         'section': section,
+        'quiz': quiz,
         'section_images': section_images
     })
 

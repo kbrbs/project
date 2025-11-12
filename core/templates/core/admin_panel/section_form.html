@@ -319,7 +319,6 @@
     const titleInput = document.querySelector('input[name="title"]');
     const slugInput = document.querySelector('input[name="slug"]');
     const categoryInput = document.querySelector('select[name="category"]');
-    const descInput = document.querySelector('textarea[name="description"]');
     const contentInput = document.querySelector('textarea[name="content"]');
     const imageInput = document.querySelector('input[name="header_image"]');
 
@@ -367,7 +366,6 @@
     function renderPreview() {
       const title = titleInput ? titleInput.value : '';
       const slug = slugInput ? slugInput.value : '';
-      const description = descInput ? descInput.value : '';
       const content = contentInput ? contentInput.value : '';
       const category = categoryInput ? categoryInput.value : 'planting';
 
@@ -376,11 +374,11 @@
       if (previewCategory) previewCategory.textContent = CATEGORY_LABELS[category] || 'General';
       if (previewEmoji) previewEmoji.textContent = CATEGORY_EMOJI[category] || '📚';
 
-      const body = content || description || 'Start writing your content to see it here.';
+      const body = content || 'Start writing your content to see it here.';
       if (previewContent) previewContent.innerHTML = nl2br(body);
     }
 
-    [titleInput, slugInput, categoryInput, descInput, contentInput].forEach(function(el) {
+    [titleInput, slugInput, categoryInput, contentInput].forEach(function(el) {
       if (!el) return;
       el.addEventListener('input', renderPreview);
     });

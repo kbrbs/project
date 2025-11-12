@@ -27,22 +27,19 @@
   <!-- Main Content -->
   <div class="lg:col-span-2">
     <article class="bg-white rounded-2xl shadow-sm overflow-hidden">
-      <!-- Header Image (shows cover_image at top, content_image will be shown in content area) -->
-      {% if article.cover_image %}
+      <!-- Header Image -->
+      {% if section.header_image %}
         <div class="relative w-full h-64 overflow-hidden">
-          <img src="{{ article.cover_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover" />
-        </div>
-      {% elif section and section.header_image %}
-        <div class="relative w-full h-64 overflow-hidden">
-          <img src="{{ section.header_image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover" />
+          <img src="{{ section.header_image.url }}" alt="{{ section.title }}" class="w-full h-full object-cover" />
         </div>
       {% else %}
         <div class="relative h-48 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center">
           <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center">
             <span class="text-5xl">
-              {% if article.category == 'science' %}🔬
-              {% elif article.category == 'history' %}📜
-              {% elif article.category == 'culture' %}🎭
+              {% if section.category == 'planting' %}🌱
+              {% elif section.category == 'historical' %}📜
+              {% elif section.category == 'cultural' %}🎭
+              {% elif section.category == 'economic' %}💰
               {% else %}📚{% endif %}
             </span>
           </div>
@@ -53,13 +50,13 @@
       <div class="p-8">
         <div class="flex items-center gap-2 mb-3">
           <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium">
-            {{ article.get_category_display|default:"General" }}
+            {{ section.get_category_display|default:"General" }}
           </span>
           <span class="text-sm text-gray-400">•</span>
           <span class="text-sm text-gray-500">15 min read</span>
         </div>
 
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ article.title }}</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ section.title }}</h1>
         
         <!-- Article Meta -->
         <div class="flex items-center gap-4 pb-6 mb-6 border-b border-gray-100">
@@ -76,7 +73,7 @@
 
         <!-- Content Body -->
         <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-          {{ article.content|linebreaks }}
+          {{ section.content|linebreaks }}
         </div>
 
         <!-- Content Images (multiple images from section) -->
@@ -85,7 +82,7 @@
             {% for section_image in section_images %}
               <div class="rounded-xl overflow-hidden shadow-md bg-gray-50">
                 <div class="flex justify-center items-center p-4">
-                  <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ article.title }} - Image {{ forloop.counter }}{% endif %}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
+                  <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ section.title }} - Image {{ forloop.counter }}{% endif %}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
                 </div>
                 {% if section_image.caption %}
                   <div class="bg-gray-50 px-4 py-3 border-t border-gray-200">
@@ -95,21 +92,21 @@
               </div>
             {% endfor %}
           </div>
-        {% elif section and section.content_image %}
+        {% elif section.content_image %}
           <!-- Fallback to single content_image if no SectionImage objects exist -->
           <div class="mt-6 rounded-xl overflow-hidden shadow-md bg-gray-50">
             <div class="flex justify-center items-center p-4">
-              <img src="{{ section.content_image.url }}" alt="{{ article.title }}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
+              <img src="{{ section.content_image.url }}" alt="{{ section.title }}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
             </div>
           </div>
         {% endif %}
 
-        {% if article.video %}
+        {% if section.video %}
           <div class="mt-8">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Video Lesson</h3>
             <div class="rounded-xl overflow-hidden shadow-md">
               <video controls class="w-full">
-                <source src="{{ article.video.url }}">
+                <source src="{{ section.video.url }}">
               </video>
             </div>
           </div>
@@ -125,8 +122,8 @@
             Test Yourself
           </button>
           
-          {% if article.pdf %}
-            <a href="{{ article.pdf.url }}" class="flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-medium rounded-lg hover:border-purple-500 hover:text-purple-600 transition-all duration-200">
+          {% if section.pdf %}
+            <a href="{{ section.pdf.url }}" class="flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-medium rounded-lg hover:border-purple-500 hover:text-purple-600 transition-all duration-200">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
