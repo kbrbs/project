@@ -2,249 +2,135 @@
 {% load static %}
 
 {% block content %}
-<<<<<<< HEAD
-<style>
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(34, 197, 94, 0.6); }
-  }
-  
-  .booth-card {
-    animation: fadeInUp 0.6s ease-out forwards;
-    opacity: 0;
-  }
-  
-  .booth-card:nth-child(1) { animation-delay: 0.1s; }
-  .booth-card:nth-child(2) { animation-delay: 0.2s; }
-  .booth-card:nth-child(3) { animation-delay: 0.3s; }
-  .booth-card:nth-child(4) { animation-delay: 0.4s; }
-  .booth-card:nth-child(5) { animation-delay: 0.5s; }
-  
-  .booth-icon {
-    transition: transform 0.3s ease;
-  }
-  
-  .booth-card:hover .booth-icon {
-    animation: float 2s ease-in-out infinite;
-  }
-  
-  .festival-emoji {
-    animation: float 3s ease-in-out infinite;
-  }
-</style>
-
-<!-- Hero Section -->
-<div class="mb-12 bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl shadow-2xl p-12 relative overflow-hidden border-4 border-green-200">
-  <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-  <div class="relative z-10">
-    <div class="flex items-center gap-4 mb-6">
-      <div class="festival-emoji text-7xl">🎪</div>
-      <div>
-        <h1 class="text-5xl font-bold text-white mb-3 drop-shadow-lg">Virtual Festival Tour</h1>
-        <p class="text-white text-xl max-w-3xl">Experience the vibrant Minasa Festival from anywhere! Scroll through interactive booths, explore stories, and discover the rich cultural heritage of Bustos.</p>
-      </div>
-    </div>
-    
-    <!-- Countdown Timer -->
-    <div id="countdown-container" class="hidden mt-8">
-      <div class="bg-white/20 backdrop-blur-md rounded-3xl p-8 shadow-2xl border-2 border-white/30">
-        <div class="flex items-center justify-center gap-3 mb-6">
-          <span class="text-3xl">⏰</span>
-          <h2 class="text-2xl font-black text-white drop-shadow-lg">Festival Countdown</h2>
-        </div>
-        <div id="countdown-timer" class="flex items-center justify-center gap-4">
-          <!-- Days -->
-          <div class="text-center">
-            <div class="bg-gradient-to-br from-white to-green-50 text-green-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
-              <div id="days" class="text-5xl font-black mb-1">00</div>
-            </div>
-            <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Days</div>
-          </div>
-          
-          <!-- Colon Separator -->
-          <div class="text-5xl font-black text-white pb-8 drop-shadow-lg">:</div>
-          
-          <!-- Hours -->
-          <div class="text-center">
-            <div class="bg-gradient-to-br from-white to-green-50 text-green-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
-              <div id="hours" class="text-5xl font-black mb-1">00</div>
-            </div>
-            <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Hours</div>
-          </div>
-          
-          <!-- Colon Separator -->
-          <div class="text-5xl font-black text-white pb-8 drop-shadow-lg">:</div>
-          
-          <!-- Minutes -->
-          <div class="text-center">
-            <div class="bg-gradient-to-br from-white to-orange-50 text-orange-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
-              <div id="minutes" class="text-5xl font-black mb-1">00</div>
-            </div>
-            <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Minutes</div>
-          </div>
-          
-          <!-- Colon Separator -->
-          <div class="text-5xl font-black text-white pb-8 drop-shadow-lg">:</div>
-          
-          <!-- Seconds -->
-          <div class="text-center">
-            <div class="bg-gradient-to-br from-white to-orange-50 text-orange-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
-              <div id="seconds" class="text-5xl font-black mb-1">00</div>
-            </div>
-            <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Seconds</div>
-          </div>
-        </div>
-        
-        <div class="text-center mt-6">
-          <p class="text-white font-semibold text-lg drop-shadow">🎉 Get ready for the celebration!</p>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Festival Live Message -->
-    <div id="festival-live" class="hidden mt-8">
-      <div class="bg-white/20 backdrop-blur-md text-white rounded-2xl p-8 shadow-2xl border-2 border-white/30 max-w-3xl">
-        <div class="flex items-center gap-4">
-          <span class="text-6xl animate-bounce">🎉</span>
-          <div>
-            <h2 class="text-3xl font-bold mb-2 drop-shadow-lg">The Festival is Live!</h2>
-            <p class="text-white text-lg drop-shadow">Join us in celebrating the vibrant Minasa Festival!</p>
-          </div>
-        </div>
-=======
 <!-- Confetti Container -->
 <div id="confettiContainer" class="fixed inset-0 pointer-events-none z-50"></div>
 
 <style>
-.confetti {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  top: -10px;
-  animation: fall linear forwards;
-  opacity: 0.8;
-}
-
-@keyframes fall {
-  0% {
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
     top: -10px;
-    transform: translateX(0) rotateZ(0deg);
+    animation: fall linear forwards;
+    opacity: 0.8;
   }
-  100% {
-    top: 100vh;
-    transform: translateX(50px) rotateZ(360deg);
-  }
-}
 
-/* Slide-in animation from bottom to top */
-@keyframes slideUpFade {
-  0% {
+  @keyframes fall {
+    0% {
+      top: -10px;
+      transform: translateX(0) rotateZ(0deg);
+    }
+
+    100% {
+      top: 100vh;
+      transform: translateX(50px) rotateZ(360deg);
+    }
+  }
+
+  /* Slide-in animation from bottom to top */
+  @keyframes slideUpFade {
+    0% {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Initial state for booth cards */
+  .booth-animate {
     opacity: 0;
     transform: translateY(60px);
   }
-  100% {
+
+  .booth-animate.animate-in {
+    animation: slideUpFade 0.8s ease-out forwards;
+  }
+
+  /* Smooth transition for booth expansion */
+  .booth-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.5s ease-out,
+      transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .booth-content.expanded {
+    max-height: 3000px;
     opacity: 1;
     transform: translateY(0);
   }
-}
 
-/* Initial state for booth cards */
-.booth-animate {
-  opacity: 0;
-  transform: translateY(60px);
-}
+  /* Hover animation for booth cards */
+  .booth-card {
+    position: relative;
+    transform-origin: center center;
+    will-change: transform, box-shadow;
+    transition: all 0.3s ease;
+    /* smooth hover transition */
+  }
 
-.booth-animate.animate-in {
-  animation: slideUpFade 0.8s ease-out forwards;
-}
-
-/* Smooth transition for booth expansion */
-.booth-content {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.5s ease-out, 
-              transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.booth-content.expanded {
-  max-height: 3000px;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Hover animation for booth cards */
-.booth-card {
-  position: relative;
-  transform-origin: center center;
-  will-change: transform, box-shadow;
-  transition: all 0.3s ease; /* smooth hover transition */
-}
-
-/* .booth-card:hover {
+  /* .booth-card:hover {
   transform: translateY(-10px) scale(1.05) !important;
   box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15), 0 15px 15px -5px rgba(0, 0, 0, 0.08) !important;
   z-index: 10;
 
 } */
 
-/* Highlight effect for first booth introduction */
-.booth-highlight {
-  animation: pulseHighlight 2s ease-in-out infinite;
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.4), 0 0 30px rgba(34, 197, 94, 0.3) !important;
-  z-index: 20 !important;
-  position: relative;
-  opacity: 1 !important;
-}
-
-@keyframes pulseHighlight {
-  0%, 100% {
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.4), 0 0 30px rgba(34, 197, 94, 0.3);
+  /* Highlight effect for first booth introduction */
+  .booth-highlight {
+    animation: pulseHighlight 2s ease-in-out infinite;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.4), 0 0 30px rgba(34, 197, 94, 0.3) !important;
+    z-index: 20 !important;
+    position: relative;
+    opacity: 1 !important;
   }
-  50% {
-    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.6), 0 0 50px rgba(34, 197, 94, 0.5);
+
+  @keyframes pulseHighlight {
+
+    0%,
+    100% {
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.4), 0 0 30px rgba(34, 197, 94, 0.3);
+    }
+
+    50% {
+      box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.6), 0 0 50px rgba(34, 197, 94, 0.5);
+    }
   }
-}
 
-.booth-card-wrapper {
-  overflow: visible;
-}
+  .booth-card-wrapper {
+    overflow: visible;
+  }
 
-.booth-card > .relative {
-  overflow: hidden;
-  border-radius: 0.75rem 0.75rem 0 0;
-}
+  .booth-card>.relative {
+    overflow: hidden;
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
 </style>
 
 <!-- Mascot Guide - Fixed Position (Bottom Right) -->
 <div class="fixed right-4 z-40" style="bottom: -20px;">
-  <div id="mascotGuide" class="relative" style="opacity: 0; transform: translateX(100%); transition: opacity 1s ease-in-out, transform 1s ease-in-out;">
-    <img id="mascotGif" src="/media/animated_assets/Regular_Minasa.gif" alt="Minasa Festival Mascot Guide" style="width: 850px; height: auto;">
+  <div id="mascotGuide" class="relative"
+    style="opacity: 0; transform: translateX(100%); transition: opacity 1s ease-in-out, transform 1s ease-in-out;">
+    <img id="mascotGif" src="/media/animated_assets/Regular_Minasa.gif" alt="Minasa Festival Mascot Guide"
+      style="width: 850px; height: auto;">
   </div>
 </div>
 
 <!-- Skip Button - Top Left -->
-<div id="skipButton" class="fixed top-6 left-6 z-40 opacity-0" style="transition: opacity 1s ease-in-out; display: none;">
-  <div class="flex items-center gap-2 text-gray-800 cursor-pointer hover:opacity-80 transition-opacity group bg-white px-3 py-2 rounded-lg shadow-sm" onclick="hideMascot()">
-    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div id="skipButton" class="fixed top-6 left-6 z-40 opacity-0"
+  style="transition: opacity 1s ease-in-out; display: none;">
+  <div
+    class="flex items-center gap-2 text-gray-800 cursor-pointer hover:opacity-80 transition-opacity group bg-white px-3 py-2 rounded-lg shadow-sm"
+    onclick="hideMascot()">
+    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+      viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
     </svg>
     <span class="text-sm font-semibold uppercase">Skip</span>
@@ -252,17 +138,23 @@
 </div>
 
 <!-- Next and Skip Buttons - Bottom Center -->
-<div id="nextButton" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 opacity-0" style="transition: opacity 1s ease-in-out; display: none;">
+<div id="nextButton" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 opacity-0"
+  style="transition: opacity 1s ease-in-out; display: none;">
   <div class="flex items-center gap-4">
     <!-- Skip Button -->
-    <div class="flex items-center gap-2 text-gray-800 cursor-pointer hover:opacity-80 transition-opacity group bg-white px-4 py-2 rounded-lg shadow-sm" onclick="skipFromInitialMascot()">
+    <div
+      class="flex items-center gap-2 text-gray-800 cursor-pointer hover:opacity-80 transition-opacity group bg-white px-4 py-2 rounded-lg shadow-sm"
+      onclick="skipFromInitialMascot()">
       <span class="text-sm font-semibold">Skip</span>
     </div>
-    
+
     <!-- Next Button -->
-    <div class="flex items-center gap-2 text-gray-800 cursor-pointer hover:opacity-80 transition-opacity group bg-white px-4 py-2 rounded-lg shadow-sm" onclick="scrollToContent()">
+    <div
+      class="flex items-center gap-2 text-gray-800 cursor-pointer hover:opacity-80 transition-opacity group bg-white px-4 py-2 rounded-lg shadow-sm"
+      onclick="scrollToContent()">
       <span class="text-base font-semibold">Next</span>
-      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+        viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
       </svg>
     </div>
@@ -270,16 +162,22 @@
 </div>
 
 <!-- Permanent Minasa Mascot - Top Right (stays after tour) -->
-<div id="permanentMascot" class="fixed top-20 right-8 z-40 cursor-pointer hover:scale-105 transition-all duration-300" style="display: none; opacity: 0; transform: translateY(-100px); transition: opacity 0.8s ease-out, transform 0.8s ease-out;" onclick="showMascotExplanation()">
+<div id="permanentMascot" class="fixed top-20 right-8 z-40 cursor-pointer hover:scale-105 transition-all duration-300"
+  style="display: none; opacity: 0; transform: translateY(-100px); transition: opacity 0.8s ease-out, transform 0.8s ease-out;"
+  onclick="showMascotExplanation()">
   <img src="/media/media_assets/minasamascot.png" alt="Minasa Mascot" style="width: 250px; height: auto; ">
 </div>
 
 <!-- Mascot Explanation Box -->
-<div id="mascotExplanation" class="fixed top-20 right-72 z-50 bg-white rounded-2xl shadow-2xl p-6" style="display: none; opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; max-width: 400px;">
+<div id="mascotExplanation" class="fixed top-20 right-72 z-50 bg-white rounded-2xl shadow-2xl p-6"
+  style="display: none; opacity: 0; transform: translateX(50px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; max-width: 400px;">
   <div class="absolute -right-3 top-8 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white"></div>
-  <button onclick="hideMascotExplanation()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors">
+  <button onclick="hideMascotExplanation()"
+    class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors">
     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+      <path fill-rule="evenodd"
+        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+        clip-rule="evenodd"></path>
     </svg>
   </button>
   <h4 class="text-lg font-bold text-gray-800 mb-3">About This Virtual Tour</h4>
@@ -292,663 +190,816 @@
       <li>Cultural performances and dances</li>
       <li>Agricultural practices of our farmers</li>
     </ul>
-    <p class="mt-3">Each booth is designed to bring you closer to the heart and soul of Bustos. Click on any booth to <strong>explore</strong>, watch videos, view photos, and take quizzes!</p>
+    <p class="mt-3">Each booth is designed to bring you closer to the heart and soul of Bustos. Click on any booth to
+      <strong>explore</strong>, watch videos, view photos, and take quizzes!</p>
     <p class="mt-3 text-green-600 font-semibold">Enjoy your journey through our festival!</p>
   </div>
 </div>
 
 <!-- Introduction Container with WithHat Mascot -->
-<div id="introContainer" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none; opacity: 0; transition: opacity 1s ease-in-out;">
-  <div id="introOverlay" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-1000" style="opacity: 1;"></div>
-  
+<div id="introContainer" class="fixed inset-0 z-50 flex items-center justify-center"
+  style="display: none; opacity: 0; transition: opacity 1s ease-in-out;">
+  <div id="introOverlay" class="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-1000"
+    style="opacity: 1;"></div>
+
   <!-- Closing Mascot - Top Right (Minasa mascot) - Shows during closing message only -->
-  <div id="closingMascot" class="fixed top-8 right-8 z-50 cursor-pointer hover:scale-105 transition-all duration-300" style="display: none; opacity: 0; transform: translateY(-100px); transition: opacity 0.8s ease-out, transform 0.8s ease-out;" onclick="showMascotExplanation()">
-    <img src="/media/media_assets/minasamascot.png" alt="Minasa Mascot" style="width: 150px; height: auto; filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));">
+  <div id="closingMascot" class="fixed top-8 right-8 z-50 cursor-pointer hover:scale-105 transition-all duration-300"
+    style="display: none; opacity: 0; transform: translateY(-100px); transition: opacity 0.8s ease-out, transform 0.8s ease-out;"
+    onclick="showMascotExplanation()">
+    <img src="/media/media_assets/minasamascot.png" alt="Minasa Mascot"
+      style="width: 150px; height: auto; filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));">
   </div>
-  
+
   <div class="relative w-full h-full flex items-center justify-end px-4">
     <!-- WithHat Mascot - Right Side -->
-    <div id="introMascot" class="fixed right-4 z-40" style="bottom: -20px; transform: translateX(100%); transition: transform 1s ease-out; pointer-events: none;">
+    <div id="introMascot" class="fixed right-4 z-40"
+      style="bottom: -20px; transform: translateX(100%); transition: transform 1s ease-out; pointer-events: none;">
       <img src="/media/animated_assets/WithHat.gif" alt="Festival Mascot with Hat" style="width: 850px; height: auto;">
     </div>
-    
+
     <!-- Text Box for Initial Introduction -->
-    <div id="introTextBox" class="bg-white rounded-2xl shadow-2xl p-8 relative z-50" style="max-width: 800px; min-width: 500px; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); margin-right: 500px; margin-top: 130px;">
-      <div class="absolute -right-4 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white"></div>
-      
-      <p id="introText" class="text-gray-800 leading-relaxed mb-6" style="font-size: 1.125rem; opacity: 0; transition: opacity 0.5s ease-in-out;">
+    <div id="introTextBox" class="bg-white rounded-2xl shadow-2xl p-8 relative z-50"
+      style="max-width: 800px; min-width: 500px; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); margin-right: 500px; margin-top: 130px;">
+      <div
+        class="absolute -right-4 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white">
+      </div>
+
+      <p id="introText" class="text-gray-800 leading-relaxed mb-6"
+        style="font-size: 1.125rem; opacity: 0; transition: opacity 0.5s ease-in-out;">
         <!-- Text will be inserted here -->
       </p>
-      
+
       <div class="flex flex-col items-end gap-2">
-        <button id="introNextBtn" onclick="nextIntroStep()" class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md" style="opacity: 0; transition: opacity 0.5s ease-in-out;">
+        <button id="introNextBtn" onclick="nextIntroStep()"
+          class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md"
+          style="opacity: 0; transition: opacity 0.5s ease-in-out;">
           Next
         </button>
-        <button onclick="skipIntroduction()" class="text-gray-500 hover:text-gray-700 text-sm underline transition-colors duration-200" style="opacity: 0; transition: opacity 0.5s ease-in-out;" id="introSkipBtn">
+        <button onclick="skipIntroduction()"
+          class="text-gray-500 hover:text-gray-700 text-sm underline transition-colors duration-200"
+          style="opacity: 0; transition: opacity 0.5s ease-in-out;" id="introSkipBtn">
           Skip
         </button>
       </div>
     </div>
-    
+
     <!-- Text Box for Booth Introduction (separate from initial intro) -->
-    <div id="boothIntroTextBox" class="bg-white rounded-2xl shadow-2xl p-8 relative z-50" style="max-width: 800px; min-width: 500px; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); margin-right: 500px; margin-bottom: -650px; display: none; opacity: 0;">
-      <div class="absolute -right-4 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white"></div>
-      
-      <p id="boothIntroText" class="text-gray-800 leading-relaxed mb-6" style="font-size: 1.125rem; opacity: 0; transition: opacity 0.5s ease-in-out;">
+    <div id="boothIntroTextBox" class="bg-white rounded-2xl shadow-2xl p-8 relative z-50"
+      style="max-width: 800px; min-width: 500px; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); margin-right: 500px; margin-bottom: -650px; display: none; opacity: 0;">
+      <div
+        class="absolute -right-4 top-1/2 transform -translate-y-1/2 w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white">
+      </div>
+
+      <p id="boothIntroText" class="text-gray-800 leading-relaxed mb-6"
+        style="font-size: 1.125rem; opacity: 0; transition: opacity 0.5s ease-in-out;">
         <!-- Booth intro text will be inserted here -->
       </p>
-      
+
       <div class="flex flex-col items-end gap-2">
-        <button id="boothIntroNextBtn" onclick="nextBoothIntro()" class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md" style="opacity: 0; transition: opacity 0.5s ease-in-out;">
+        <button id="boothIntroNextBtn" onclick="nextBoothIntro()"
+          class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md"
+          style="opacity: 0; transition: opacity 0.5s ease-in-out;">
           Next Booth
         </button>
->>>>>>> origin/branch-ni-ley
       </div>
     </div>
   </div>
 </div>
 
-<<<<<<< HEAD
-<!-- Progress Bar -->
-<div class="mb-12 bg-gradient-to-br from-white to-green-50 rounded-3xl shadow-xl p-8 border-2 border-green-100">
-  <div class="flex items-center justify-between mb-4">
-    <div class="flex items-center gap-3">
-      <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-      </svg>
-      <span class="text-lg font-bold text-gray-800">Tour Progress</span>
-    </div>
-    <span class="text-sm font-semibold text-gray-600 bg-gray-100 px-4 py-2 rounded-full">0 of 5 booths visited</span>
-  </div>
-  <div class="h-4 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-    <div class="h-full bg-gradient-to-r from-green-500 via-green-600 to-emerald-600 rounded-full transition-all duration-500 shadow-lg" style="width: 0%"></div>
-=======
 <script>
-// Scroll to top on page load/reload
-window.addEventListener('beforeunload', function() {
-  window.scrollTo(0, 0);
-});
-
-// Also scroll to top when page loads
-if (history.scrollRestoration) {
-  history.scrollRestoration = 'manual';
-}
-window.scrollTo(0, 0);
-
-// Slide in and fade in mascot when page loads (skip button shows with next button now)
-window.addEventListener('load', function() {
-  const mascot = document.getElementById('mascotGuide');
-  
-  // Slide in from right to left and fade in after a short delay
-  setTimeout(function() {
-    mascot.style.opacity = '1';
-    mascot.style.transform = 'translateX(0)';
-  }, 50);
-});
-
-function hideMascot() {
-  const mascot = document.getElementById('mascotGuide');
-  const nextBtn = document.getElementById('nextButton');
-  
-  // Fade out and slide out to RIGHT
-  mascot.style.opacity = '0';
-  mascot.style.transform = 'translateX(100%)';
-  nextBtn.style.opacity = '0';
-  
-  setTimeout(function() {
-    mascot.style.display = 'none';
-    nextBtn.style.display = 'none';
-  }, 1000); // Wait for fade out transition
-}
-
-function skipFromInitialMascot() {
-  const mascot = document.getElementById('mascotGuide');
-  const nextBtn = document.getElementById('nextButton');
-  const permanentMascot = document.getElementById('permanentMascot');
-  
-  // Fade out and slide out to RIGHT
-  mascot.style.opacity = '0';
-  mascot.style.transform = 'translateX(100%)';
-  nextBtn.style.opacity = '0';
-  
-  // Show permanent mascot
-  permanentMascot.style.display = 'block';
-  setTimeout(function() {
-    permanentMascot.style.opacity = '1';
-    permanentMascot.style.transform = 'translateY(0)';
-  }, 500);
-  
-  setTimeout(function() {
-    mascot.style.display = 'none';
-    nextBtn.style.display = 'none';
-    
-    // Trigger hero animations
-    triggerHeroAnimations();
-    
-    // Then show closing message after animations
-    setTimeout(function() {
-      currentBoothIndex = boothIntroTexts.length; // Set to end
-      showClosingMessage();
-    }, 2000); // Wait for hero animations to display
-  }, 1000); // Wait for fade out transition
-}
-
-function scrollToContent() {
-  hideMascot();
-  
-  // Show WithHat mascot introduction
-  setTimeout(function() {
-    showIntroduction();
-  }, 1000);
-}
-
-// Animate booth cards on page load
-window.addEventListener('DOMContentLoaded', function() {
-  const boothCards = document.querySelectorAll('.booth-animate');
-  boothCards.forEach(function(card) {
-    const delay = parseInt(card.getAttribute('data-delay')) * 300; // 300ms between each card
-    setTimeout(function() {
-      card.classList.add('animate-in');
-    }, delay);
+  // Scroll to top on page load/reload
+  window.addEventListener('beforeunload', function () {
+    window.scrollTo(0, 0);
   });
-});
 
-// Introduction with WithHat mascot
-let currentIntroStep = 0;
-let isFirstBoothIntro = false;
-let currentBoothIndex = 0; // Track which booth we're introducing
-const introTexts = [
-  "Mabuhay! Welcome to the vibrant celebration of the Minasa Festival — where history, culture, and tradition come together in one exciting place!",
-  "I'm your friendly festival mascot, here to guide you through our amazing booths.",
-  "Let's explore the joy and heritage of Bustos!",
-  "Ready? Let's begin our journey through the festival booths!"
-];
+  // Also scroll to top when page loads
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
 
-const boothIntroTexts = [
-  "First stop, the History Booth! Here, you can take a deep dive into the roots of the Minasa Festival. Discover how it all began — from our beloved arrowroot delicacies to the traditions passed down through generations. You can also enjoy our interactive quizzes and videos that bring Bustos' colorful history to life!",
-  "Next up, the Recipe Tent! If you love food, this one's for you! Learn step-by-step how to make our famous minasa — a delicious treat made from arrowroot. Watch cooking demos, follow easy recipes, and get inspired to bake your own fiesta goodies at home!",
-  "Now let's move to the Cultural Stage! Here's where the rhythm of the festival shines! Enjoy lively folk dances, colorful performances, and traditional songs that showcase the spirit and creativity of the people of Bustos. Don't forget to cheer for our talented performers!",
-  "And finally, welcome to the Farmer's Corner! This booth celebrates our hardworking farmers — the heart of Bustos. Learn about planting, harvesting, and how arrowroot and other local crops are grown with care. It's a tribute to the people who make our land flourish."
-];
+  // Slide in and fade in mascot when page loads (skip button shows with next button now)
+  window.addEventListener('load', function () {
+    const mascot = document.getElementById('mascotGuide');
 
-const closingText = "That's the end of our booth tour, but the celebration doesn't stop here! Explore, interact, and have fun as you experience the true essence of the Minasa Festival. Remember — every smile, dance, and bite of minasa tells a story of our beautiful town. Enjoy the fiesta!";
+    // Slide in from right to left and fade in after a short delay
+    setTimeout(function () {
+      mascot.style.opacity = '1';
+      mascot.style.transform = 'translateX(0)';
+    }, 50);
+  });
 
-function showIntroduction() {
-  const introContainer = document.getElementById('introContainer');
-  const introMascot = document.getElementById('introMascot');
-  const introText = document.getElementById('introText');
-  const introNextBtn = document.getElementById('introNextBtn');
-  const introSkipBtn = document.getElementById('introSkipBtn');
-  
-  // Show container and mascot
-  introContainer.style.display = 'flex';
-  setTimeout(function() {
-    introContainer.style.opacity = '1';
-    introMascot.style.transform = 'translateX(0)';
-  }, 50);
-  
-  // Show first text
-  setTimeout(function() {
-    introText.textContent = introTexts[0];
-    introText.style.opacity = '1';
-    introNextBtn.style.opacity = '1';
-    introSkipBtn.style.opacity = '1';
-  }, 800);
-}
+  function hideMascot() {
+    const mascot = document.getElementById('mascotGuide');
+    const nextBtn = document.getElementById('nextButton');
 
-function skipIntroduction() {
-  const introContainer = document.getElementById('introContainer');
-  const introMascot = document.getElementById('introMascot');
-  const introText = document.getElementById('introText');
-  const introNextBtn = document.getElementById('introNextBtn');
-  const permanentMascot = document.getElementById('permanentMascot');
-  
-  // Show permanent mascot
-  permanentMascot.style.display = 'block';
-  setTimeout(function() {
-    permanentMascot.style.opacity = '1';
-    permanentMascot.style.transform = 'translateY(0)';
-  }, 500);
-  
-  // Fade out current intro
-  introText.style.opacity = '0';
-  introNextBtn.style.opacity = '0';
-  
-  setTimeout(function() {
-    // Hide intro container
-    introContainer.style.opacity = '0';
-    
-    setTimeout(function() {
-      introContainer.style.display = 'none';
-      
-      // Remove highlight if skipping
-      const allBooths = document.querySelectorAll('.booth-card');
-      allBooths.forEach(function(booth) {
-        booth.classList.remove('booth-highlight');
-      });
-      
-      // Trigger hero animations first
+    // Fade out and slide out to RIGHT
+    mascot.style.opacity = '0';
+    mascot.style.transform = 'translateX(100%)';
+    nextBtn.style.opacity = '0';
+
+    setTimeout(function () {
+      mascot.style.display = 'none';
+      nextBtn.style.display = 'none';
+    }, 1000); // Wait for fade out transition
+  }
+
+  function skipFromInitialMascot() {
+    const mascot = document.getElementById('mascotGuide');
+    const nextBtn = document.getElementById('nextButton');
+    const permanentMascot = document.getElementById('permanentMascot');
+
+    // Fade out and slide out to RIGHT
+    mascot.style.opacity = '0';
+    mascot.style.transform = 'translateX(100%)';
+    nextBtn.style.opacity = '0';
+
+    // Show permanent mascot
+    permanentMascot.style.display = 'block';
+    setTimeout(function () {
+      permanentMascot.style.opacity = '1';
+      permanentMascot.style.transform = 'translateY(0)';
+    }, 500);
+
+    setTimeout(function () {
+      mascot.style.display = 'none';
+      nextBtn.style.display = 'none';
+
+      // Trigger hero animations
       triggerHeroAnimations();
-      
+
       // Then show closing message after animations
-      setTimeout(function() {
+      setTimeout(function () {
         currentBoothIndex = boothIntroTexts.length; // Set to end
         showClosingMessage();
       }, 2000); // Wait for hero animations to display
-    }, 500);
-  }, 500);
-}
-
-function showFirstBoothIntro() {
-  const introContainer = document.getElementById('introContainer');
-  const introOverlay = document.getElementById('introOverlay');
-  const introMascot = document.getElementById('introMascot');
-  const introTextBox = document.getElementById('introTextBox');
-  const boothIntroTextBox = document.getElementById('boothIntroTextBox');
-  const boothIntroText = document.getElementById('boothIntroText');
-  const boothIntroNextBtn = document.getElementById('boothIntroNextBtn');
-  
-  // Get all booth cards
-  const allBooths = document.querySelectorAll('.booth-card');
-  
-  // Remove highlight from all booths first
-  allBooths.forEach(function(booth) {
-    booth.classList.remove('booth-highlight');
-  });
-  
-  // Highlight the current booth
-  if (allBooths[currentBoothIndex]) {
-    allBooths[currentBoothIndex].classList.add('booth-highlight');
-    
-    // Scroll to current booth
-    setTimeout(function() {
-      allBooths[currentBoothIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    }, 1000); // Wait for fade out transition
   }
-  
-  // Hide initial intro text box
-  introTextBox.style.display = 'none';
-  
-  // Show booth intro text box
-  boothIntroTextBox.style.display = 'block';
-  
-  // Show container and mascot again
-  introContainer.style.display = 'flex';
-  setTimeout(function() {
-    introContainer.style.opacity = '1';
-    introMascot.style.transform = 'translateX(0)';
-    // Remove dark overlay to show booth at full brightness
-    introOverlay.style.opacity = '0';
-  }, 50);
-  
-  // Show booth intro text with current booth index
-  setTimeout(function() {
-    boothIntroTextBox.style.opacity = '1';
-    boothIntroText.textContent = boothIntroTexts[currentBoothIndex] || boothIntroTexts[0];
-    boothIntroText.style.opacity = '1';
-    
-    // Change button text based on whether there are more booths
-    if (currentBoothIndex < boothIntroTexts.length - 1) {
-      boothIntroNextBtn.textContent = 'Next Booth';
-    } else {
-      boothIntroNextBtn.textContent = 'Got it!';
-    }
-    boothIntroNextBtn.style.opacity = '1';
-  }, 800);
-}
 
-function hideFirstBoothIntro() {
-  const introContainer = document.getElementById('introContainer');
-  const introOverlay = document.getElementById('introOverlay');
-  const introMascot = document.getElementById('introMascot');
-  const boothIntroTextBox = document.getElementById('boothIntroTextBox');
-  const boothIntroText = document.getElementById('boothIntroText');
-  const boothIntroNextBtn = document.getElementById('boothIntroNextBtn');
-  const closingMascot = document.getElementById('closingMascot');
-  const permanentMascot = document.getElementById('permanentMascot');
-  
-  // Remove highlight from all booths
-  const allBooths = document.querySelectorAll('.booth-card');
-  allBooths.forEach(function(booth) {
-    booth.classList.remove('booth-highlight');
-  });
-  
-  // Hide closing mascot
-  closingMascot.style.opacity = '0';
-  closingMascot.style.transform = 'translateY(-100px)';
-  
-  // Show permanent mascot
-  permanentMascot.style.display = 'block';
-  setTimeout(function() {
-    permanentMascot.style.opacity = '1';
-    permanentMascot.style.transform = 'translateY(0)';
-  }, 100);
-  
-  // Hide introduction
-  boothIntroText.style.opacity = '0';
-  boothIntroNextBtn.style.opacity = '0';
-  boothIntroTextBox.style.opacity = '0';
-  introMascot.style.transform = 'translateX(100%)';
-  
-  setTimeout(function() {
-    introContainer.style.opacity = '0';
-    
-    setTimeout(function() {
-      introContainer.style.display = 'none';
-      boothIntroTextBox.style.display = 'none';
-      closingMascot.style.display = 'none';
-      // Restore overlay for next time
-      introOverlay.style.opacity = '1';
-      currentIntroStep = 0; // Reset
-      isFirstBoothIntro = false; // Reset
-      currentBoothIndex = 0; // Reset booth index
-      
-      // Scroll back to top smoothly
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  function scrollToContent() {
+    hideMascot();
+
+    // Show WithHat mascot introduction
+    setTimeout(function () {
+      showIntroduction();
     }, 1000);
-  }, 500);
-}
+  }
 
-function nextBoothIntro() {
-  const boothIntroText = document.getElementById('boothIntroText');
-  const boothIntroNextBtn = document.getElementById('boothIntroNextBtn');
-  
-  // Move to next booth
-  currentBoothIndex++;
-  
-  // Check if there are more booths to introduce
-  if (currentBoothIndex < boothIntroTexts.length) {
-    // Fade out current text
+  // Animate booth cards on page load
+  window.addEventListener('DOMContentLoaded', function () {
+    const boothCards = document.querySelectorAll('.booth-animate');
+    boothCards.forEach(function (card) {
+      const delay = parseInt(card.getAttribute('data-delay')) * 300; // 300ms between each card
+      setTimeout(function () {
+        card.classList.add('animate-in');
+      }, delay);
+    });
+  });
+
+  // Introduction with WithHat mascot
+  let currentIntroStep = 0;
+  let isFirstBoothIntro = false;
+  let currentBoothIndex = 0; // Track which booth we're introducing
+  const introTexts = [
+    "Mabuhay! Welcome to the vibrant celebration of the Minasa Festival — where history, culture, and tradition come together in one exciting place!",
+    "I'm your friendly festival mascot, here to guide you through our amazing booths.",
+    "Let's explore the joy and heritage of Bustos!",
+    "Ready? Let's begin our journey through the festival booths!"
+  ];
+
+  const boothIntroTexts = [
+    "First stop, the History Booth! Here, you can take a deep dive into the roots of the Minasa Festival. Discover how it all began — from our beloved arrowroot delicacies to the traditions passed down through generations. You can also enjoy our interactive quizzes and videos that bring Bustos' colorful history to life!",
+    "Next up, the Recipe Tent! If you love food, this one's for you! Learn step-by-step how to make our famous minasa — a delicious treat made from arrowroot. Watch cooking demos, follow easy recipes, and get inspired to bake your own fiesta goodies at home!",
+    "Now let's move to the Cultural Stage! Here's where the rhythm of the festival shines! Enjoy lively folk dances, colorful performances, and traditional songs that showcase the spirit and creativity of the people of Bustos. Don't forget to cheer for our talented performers!",
+    "And finally, welcome to the Farmer's Corner! This booth celebrates our hardworking farmers — the heart of Bustos. Learn about planting, harvesting, and how arrowroot and other local crops are grown with care. It's a tribute to the people who make our land flourish."
+  ];
+
+  const closingText = "That's the end of our booth tour, but the celebration doesn't stop here! Explore, interact, and have fun as you experience the true essence of the Minasa Festival. Remember — every smile, dance, and bite of minasa tells a story of our beautiful town. Enjoy the fiesta!";
+
+  function showIntroduction() {
+    const introContainer = document.getElementById('introContainer');
+    const introMascot = document.getElementById('introMascot');
+    const introText = document.getElementById('introText');
+    const introNextBtn = document.getElementById('introNextBtn');
+    const introSkipBtn = document.getElementById('introSkipBtn');
+
+    // Show container and mascot
+    introContainer.style.display = 'flex';
+    setTimeout(function () {
+      introContainer.style.opacity = '1';
+      introMascot.style.transform = 'translateX(0)';
+    }, 50);
+
+    // Show first text
+    setTimeout(function () {
+      introText.textContent = introTexts[0];
+      introText.style.opacity = '1';
+      introNextBtn.style.opacity = '1';
+      introSkipBtn.style.opacity = '1';
+    }, 800);
+  }
+
+  function skipIntroduction() {
+    const introContainer = document.getElementById('introContainer');
+    const introMascot = document.getElementById('introMascot');
+    const introText = document.getElementById('introText');
+    const introNextBtn = document.getElementById('introNextBtn');
+    const permanentMascot = document.getElementById('permanentMascot');
+
+    // Show permanent mascot
+    permanentMascot.style.display = 'block';
+    setTimeout(function () {
+      permanentMascot.style.opacity = '1';
+      permanentMascot.style.transform = 'translateY(0)';
+    }, 500);
+
+    // Fade out current intro
+    introText.style.opacity = '0';
+    introNextBtn.style.opacity = '0';
+
+    setTimeout(function () {
+      // Hide intro container
+      introContainer.style.opacity = '0';
+
+      setTimeout(function () {
+        introContainer.style.display = 'none';
+
+        // Remove highlight if skipping
+        const allBooths = document.querySelectorAll('.booth-card');
+        allBooths.forEach(function (booth) {
+          booth.classList.remove('booth-highlight');
+        });
+
+        // Trigger hero animations first
+        triggerHeroAnimations();
+
+        // Then show closing message after animations
+        setTimeout(function () {
+          currentBoothIndex = boothIntroTexts.length; // Set to end
+          showClosingMessage();
+        }, 2000); // Wait for hero animations to display
+      }, 500);
+    }, 500);
+  }
+
+  function showFirstBoothIntro() {
+    const introContainer = document.getElementById('introContainer');
+    const introOverlay = document.getElementById('introOverlay');
+    const introMascot = document.getElementById('introMascot');
+    const introTextBox = document.getElementById('introTextBox');
+    const boothIntroTextBox = document.getElementById('boothIntroTextBox');
+    const boothIntroText = document.getElementById('boothIntroText');
+    const boothIntroNextBtn = document.getElementById('boothIntroNextBtn');
+
+    // Get all booth cards
+    const allBooths = document.querySelectorAll('.booth-card');
+
+    // Remove highlight from all booths first
+    allBooths.forEach(function (booth) {
+      booth.classList.remove('booth-highlight');
+    });
+
+    // Highlight the current booth
+    if (allBooths[currentBoothIndex]) {
+      allBooths[currentBoothIndex].classList.add('booth-highlight');
+
+      // Scroll to current booth
+      setTimeout(function () {
+        allBooths[currentBoothIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+
+    // Hide initial intro text box
+    introTextBox.style.display = 'none';
+
+    // Show booth intro text box
+    boothIntroTextBox.style.display = 'block';
+
+    // Show container and mascot again
+    introContainer.style.display = 'flex';
+    setTimeout(function () {
+      introContainer.style.opacity = '1';
+      introMascot.style.transform = 'translateX(0)';
+      // Remove dark overlay to show booth at full brightness
+      introOverlay.style.opacity = '0';
+    }, 50);
+
+    // Show booth intro text with current booth index
+    setTimeout(function () {
+      boothIntroTextBox.style.opacity = '1';
+      boothIntroText.textContent = boothIntroTexts[currentBoothIndex] || boothIntroTexts[0];
+      boothIntroText.style.opacity = '1';
+
+      // Change button text based on whether there are more booths
+      if (currentBoothIndex < boothIntroTexts.length - 1) {
+        boothIntroNextBtn.textContent = 'Next Booth';
+      } else {
+        boothIntroNextBtn.textContent = 'Got it!';
+      }
+      boothIntroNextBtn.style.opacity = '1';
+    }, 800);
+  }
+
+  function hideFirstBoothIntro() {
+    const introContainer = document.getElementById('introContainer');
+    const introOverlay = document.getElementById('introOverlay');
+    const introMascot = document.getElementById('introMascot');
+    const boothIntroTextBox = document.getElementById('boothIntroTextBox');
+    const boothIntroText = document.getElementById('boothIntroText');
+    const boothIntroNextBtn = document.getElementById('boothIntroNextBtn');
+    const closingMascot = document.getElementById('closingMascot');
+    const permanentMascot = document.getElementById('permanentMascot');
+
+    // Remove highlight from all booths
+    const allBooths = document.querySelectorAll('.booth-card');
+    allBooths.forEach(function (booth) {
+      booth.classList.remove('booth-highlight');
+    });
+
+    // Hide closing mascot
+    closingMascot.style.opacity = '0';
+    closingMascot.style.transform = 'translateY(-100px)';
+
+    // Show permanent mascot
+    permanentMascot.style.display = 'block';
+    setTimeout(function () {
+      permanentMascot.style.opacity = '1';
+      permanentMascot.style.transform = 'translateY(0)';
+    }, 100);
+
+    // Hide introduction
     boothIntroText.style.opacity = '0';
     boothIntroNextBtn.style.opacity = '0';
-    
-    setTimeout(function() {
-      // Show next booth intro
-      showFirstBoothIntro();
+    boothIntroTextBox.style.opacity = '0';
+    introMascot.style.transform = 'translateX(100%)';
+
+    setTimeout(function () {
+      introContainer.style.opacity = '0';
+
+      setTimeout(function () {
+        introContainer.style.display = 'none';
+        boothIntroTextBox.style.display = 'none';
+        closingMascot.style.display = 'none';
+        // Restore overlay for next time
+        introOverlay.style.opacity = '1';
+        currentIntroStep = 0; // Reset
+        isFirstBoothIntro = false; // Reset
+        currentBoothIndex = 0; // Reset booth index
+
+        // Scroll back to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 1000);
     }, 500);
-  } else {
-    // All booths introduced, show closing message
-    showClosingMessage();
   }
-}
 
-function showClosingMessage() {
-  const introContainer = document.getElementById('introContainer');
-  const introOverlay = document.getElementById('introOverlay');
-  const introMascot = document.getElementById('introMascot');
-  const boothIntroTextBox = document.getElementById('boothIntroTextBox');
-  const introTextBox = document.getElementById('introTextBox');
-  const introText = document.getElementById('introText');
-  const introNextBtn = document.getElementById('introNextBtn');
-  const introSkipBtn = document.getElementById('introSkipBtn');
-  const closingMascot = document.getElementById('closingMascot');
-  
-  // Remove all booth highlights
-  const allBooths = document.querySelectorAll('.booth-card');
-  allBooths.forEach(function(booth) {
-    booth.classList.remove('booth-highlight');
-  });
-  
-  // Hide booth intro text box
-  boothIntroTextBox.style.opacity = '0';
-  
-  setTimeout(function() {
-    boothIntroTextBox.style.display = 'none';
-    
-    // Show initial intro text box for closing message
-    introTextBox.style.display = 'block';
-    
-    // Restore dark overlay
-    introOverlay.style.opacity = '1';
-    
-    // Show closing mascot
-    closingMascot.style.display = 'block';
-    setTimeout(function() {
-      closingMascot.style.opacity = '1';
-      closingMascot.style.transform = 'translateY(0)';
-    }, 100);
-    
-    setTimeout(function() {
-      introTextBox.style.opacity = '1';
-      introText.textContent = closingText;
-      introText.style.opacity = '1';
-      introNextBtn.textContent = 'Thanks!';
-      introNextBtn.style.opacity = '1';
-      introNextBtn.onclick = function() { hideFirstBoothIntro(); };
-      introSkipBtn.style.opacity = '0'; // Hide skip button
-    }, 500);
-  }, 500);
-}
+  function nextBoothIntro() {
+    const boothIntroText = document.getElementById('boothIntroText');
+    const boothIntroNextBtn = document.getElementById('boothIntroNextBtn');
 
-function nextIntroStep() {
-  const introText = document.getElementById('introText');
-  const introNextBtn = document.getElementById('introNextBtn');
-  const introContainer = document.getElementById('introContainer');
-  const introMascot = document.getElementById('introMascot');
-  
-  currentIntroStep++;
-  
-  if (currentIntroStep < introTexts.length) {
-    // Fade out text
-    introText.style.opacity = '0';
-    
-    // Change text and fade in
-    setTimeout(function() {
-      introText.textContent = introTexts[currentIntroStep];
-      introText.style.opacity = '1';
-      
-      // Change button text on last step
-      if (currentIntroStep === introTexts.length - 1) {
-        introNextBtn.textContent = 'Start Exploring!';
-      }
-    }, 400);
-  } else {
-    // After main intro, show first booth introduction
-    if (!isFirstBoothIntro) {
-      isFirstBoothIntro = true;
-      
-      // Fade out text
-      introText.style.opacity = '0';
-      
-      setTimeout(function() {
-        // Hide intro container temporarily
-        introContainer.style.opacity = '0';
-        
-        setTimeout(function() {
-          introContainer.style.display = 'none';
-          
-          // Trigger hero animations
-          triggerHeroAnimations();
-          
-          // After hero animations, show first booth intro
-          setTimeout(function() {
-            showFirstBoothIntro();
-          }, 3000); // Wait for hero animations to settle
-        }, 1000);
+    // Move to next booth
+    currentBoothIndex++;
+
+    // Check if there are more booths to introduce
+    if (currentBoothIndex < boothIntroTexts.length) {
+      // Fade out current text
+      boothIntroText.style.opacity = '0';
+      boothIntroNextBtn.style.opacity = '0';
+
+      setTimeout(function () {
+        // Show next booth intro
+        showFirstBoothIntro();
       }, 500);
     } else {
-      // After first booth intro, close everything
-      hideFirstBoothIntro();
+      // All booths introduced, show closing message
+      showClosingMessage();
     }
   }
-}
 
-function triggerHeroAnimations() {
-  const bandaImage = document.getElementById('bandaImage');
-  const churchImage = document.getElementById('churchImage');
-  const festivalImage = document.getElementById('festivalImage');
-  const heroText = document.getElementById('heroText');
-  
-  // Banda falls from top
-  bandaImage.style.transform = 'translate(-50%, 0)';
-  bandaImage.style.opacity = '1';
-  
-  // Church rises from bottom
-  churchImage.style.transform = 'translate(-50%, 0)';
-  churchImage.style.opacity = '1';
-  
-  // After a short delay, show festival image and hide text
-  setTimeout(function() {
-    // Hide hero text
-    heroText.style.opacity = '0';
-    
-    // Show festival image with scale animation
-    festivalImage.style.transform = 'scale(1)';
-    festivalImage.style.opacity = '1';
-  }, 1000); // Wait 1 second after other animations start
-  
-  // Trigger confetti animation
-  createConfetti();
-}
+  function showClosingMessage() {
+    const introContainer = document.getElementById('introContainer');
+    const introOverlay = document.getElementById('introOverlay');
+    const introMascot = document.getElementById('introMascot');
+    const boothIntroTextBox = document.getElementById('boothIntroTextBox');
+    const introTextBox = document.getElementById('introTextBox');
+    const introText = document.getElementById('introText');
+    const introNextBtn = document.getElementById('introNextBtn');
+    const introSkipBtn = document.getElementById('introSkipBtn');
+    const closingMascot = document.getElementById('closingMascot');
 
-// Confetti animation function
-function createConfetti() {
-  const confettiContainer = document.getElementById('confettiContainer');
-  const colors = ['#9333ea', '#3b82f6', '#ec4899', '#f59e0b', '#10b981', '#ef4444'];
-  const confettiCount = 50;
-  
-  for (let i = 0; i < confettiCount; i++) {
-    const confetti = document.createElement('div');
-    confetti.className = 'confetti';
-    confetti.style.left = Math.random() * 100 + '%';
-    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    confetti.style.animationDelay = Math.random() * 2 + 's';
-    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-    confettiContainer.appendChild(confetti);
-  }
-  
-  // Remove confetti after animation completes
-  setTimeout(function() {
-    confettiContainer.innerHTML = '';
-  }, 5000);
-}
-
-// Mascot explanation functions
-function showMascotExplanation() {
-  const explanationBox = document.getElementById('mascotExplanation');
-  explanationBox.style.display = 'block';
-  setTimeout(function() {
-    explanationBox.style.opacity = '1';
-    explanationBox.style.transform = 'translateX(0)';
-  }, 50);
-}
-
-function hideMascotExplanation() {
-  const explanationBox = document.getElementById('mascotExplanation');
-  explanationBox.style.opacity = '0';
-  explanationBox.style.transform = 'translateX(50px)';
-  setTimeout(function() {
-    explanationBox.style.display = 'none';
-  }, 500);
-}
-
-// Show Next button (with Skip inside) after 5 seconds
-setTimeout(function() {
-  const nextBtn = document.getElementById('nextButton');
-  
-  nextBtn.style.display = 'block';
-  
-  setTimeout(function() {
-    nextBtn.style.opacity = '1';
-  }, 100);
-}, 2000); // 5 seconds - show Next and Skip buttons together
-
-// Function to toggle booth and scroll to center
-function toggleBooth(boothId, buttonElement, sectionElement) {
-  const boothContent = document.getElementById(boothId);
-  const isExpanding = boothContent.classList.contains('hidden');
-  
-  if (isExpanding) {
-    // Close all other open booths first
-    const allBooths = document.querySelectorAll('.booth-content');
-    allBooths.forEach(function(booth) {
-      if (booth.id !== boothId && !booth.classList.contains('hidden')) {
-        booth.classList.remove('expanded');
-        setTimeout(function() {
-          booth.classList.add('hidden');
-        }, 600);
-        
-        // Reset the button text for closed booths
-        const boothSection = booth.closest('section');
-        const boothButton = boothSection.querySelector('button');
-        if (boothButton) {
-          boothButton.textContent = 'Explore';
-        }
-      }
+    // Remove all booth highlights
+    const allBooths = document.querySelectorAll('.booth-card');
+    allBooths.forEach(function (booth) {
+      booth.classList.remove('booth-highlight');
     });
-    
-    // Expanding: remove hidden first, then add expanded
-    boothContent.classList.remove('hidden');
-    // Force reflow to ensure transition works
-    void boothContent.offsetHeight;
-    boothContent.classList.add('expanded');
-    buttonElement.textContent = 'Close';
-    
-    // Scroll to center after expansion starts
-    setTimeout(function() {
-      const rect = sectionElement.getBoundingClientRect();
-      const absoluteTop = window.pageYOffset + rect.top;
-      const middle = absoluteTop - (window.innerHeight / 2) + (rect.height / 2);
-      
-      // Smooth scroll with custom animation
-      const startPosition = window.pageYOffset;
-      const distance = middle - startPosition;
-      const duration = 800;
-      let start = null;
-      
-      function animation(currentTime) {
-        if (start === null) start = currentTime;
-        const timeElapsed = currentTime - start;
-        const progress = Math.min(timeElapsed / duration, 1);
-        
-        const easeInOutCubic = progress < 0.5
-          ? 4 * progress * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-        
-        window.scrollTo(0, startPosition + distance * easeInOutCubic);
-        
-        if (timeElapsed < duration) {
-          requestAnimationFrame(animation);
+
+    // Hide booth intro text box
+    boothIntroTextBox.style.opacity = '0';
+
+    setTimeout(function () {
+      boothIntroTextBox.style.display = 'none';
+
+      // Show initial intro text box for closing message
+      introTextBox.style.display = 'block';
+
+      // Restore dark overlay
+      introOverlay.style.opacity = '1';
+
+      // Show closing mascot
+      closingMascot.style.display = 'block';
+      setTimeout(function () {
+        closingMascot.style.opacity = '1';
+        closingMascot.style.transform = 'translateY(0)';
+      }, 100);
+
+      setTimeout(function () {
+        introTextBox.style.opacity = '1';
+        introText.textContent = closingText;
+        introText.style.opacity = '1';
+        introNextBtn.textContent = 'Thanks!';
+        introNextBtn.style.opacity = '1';
+        introNextBtn.onclick = function () { hideFirstBoothIntro(); };
+        introSkipBtn.style.opacity = '0'; // Hide skip button
+      }, 500);
+    }, 500);
+  }
+
+  function nextIntroStep() {
+    const introText = document.getElementById('introText');
+    const introNextBtn = document.getElementById('introNextBtn');
+    const introContainer = document.getElementById('introContainer');
+    const introMascot = document.getElementById('introMascot');
+
+    currentIntroStep++;
+
+    if (currentIntroStep < introTexts.length) {
+      // Fade out text
+      introText.style.opacity = '0';
+
+      // Change text and fade in
+      setTimeout(function () {
+        introText.textContent = introTexts[currentIntroStep];
+        introText.style.opacity = '1';
+
+        // Change button text on last step
+        if (currentIntroStep === introTexts.length - 1) {
+          introNextBtn.textContent = 'Start Exploring!';
         }
+      }, 400);
+    } else {
+      // After main intro, show first booth introduction
+      if (!isFirstBoothIntro) {
+        isFirstBoothIntro = true;
+
+        // Fade out text
+        introText.style.opacity = '0';
+
+        setTimeout(function () {
+          // Hide intro container temporarily
+          introContainer.style.opacity = '0';
+
+          setTimeout(function () {
+            introContainer.style.display = 'none';
+
+            // Trigger hero animations
+            triggerHeroAnimations();
+
+            // After hero animations, show first booth intro
+            setTimeout(function () {
+              showFirstBoothIntro();
+            }, 3000); // Wait for hero animations to settle
+          }, 1000);
+        }, 500);
+      } else {
+        // After first booth intro, close everything
+        hideFirstBoothIntro();
+      }
+    }
+  }
+
+  function triggerHeroAnimations() {
+    const bandaImage = document.getElementById('bandaImage');
+    const churchImage = document.getElementById('churchImage');
+    const festivalImage = document.getElementById('festivalImage');
+    const heroText = document.getElementById('heroText');
+
+    // Banda falls from top
+    bandaImage.style.transform = 'translate(-50%, 0)';
+    bandaImage.style.opacity = '1';
+
+    // Church rises from bottom
+    churchImage.style.transform = 'translate(-50%, 0)';
+    churchImage.style.opacity = '1';
+
+    // After a short delay, show festival image and hide text
+    setTimeout(function () {
+      // Hide hero text
+      heroText.style.opacity = '0';
+
+      // Show festival image with scale animation
+      festivalImage.style.transform = 'scale(1)';
+      festivalImage.style.opacity = '1';
+    }, 1000); // Wait 1 second after other animations start
+
+    // Trigger confetti animation
+    createConfetti();
+  }
+
+  // Confetti animation function
+  function createConfetti() {
+    const confettiContainer = document.getElementById('confettiContainer');
+    const colors = ['#9333ea', '#3b82f6', '#ec4899', '#f59e0b', '#10b981', '#ef4444'];
+    const confettiCount = 50;
+
+    for (let i = 0; i < confettiCount; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.animationDelay = Math.random() * 2 + 's';
+      confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      confettiContainer.appendChild(confetti);
+    }
+
+    // Remove confetti after animation completes
+    setTimeout(function () {
+      confettiContainer.innerHTML = '';
+    }, 5000);
+  }
+
+  // Mascot explanation functions
+  function showMascotExplanation() {
+    const explanationBox = document.getElementById('mascotExplanation');
+    explanationBox.style.display = 'block';
+    setTimeout(function () {
+      explanationBox.style.opacity = '1';
+      explanationBox.style.transform = 'translateX(0)';
+    }, 50);
+  }
+
+  function hideMascotExplanation() {
+    const explanationBox = document.getElementById('mascotExplanation');
+    explanationBox.style.opacity = '0';
+    explanationBox.style.transform = 'translateX(50px)';
+    setTimeout(function () {
+      explanationBox.style.display = 'none';
+    }, 500);
+  }
+
+  // Show Next button (with Skip inside) after 5 seconds
+  setTimeout(function () {
+    const nextBtn = document.getElementById('nextButton');
+
+    nextBtn.style.display = 'block';
+
+    setTimeout(function () {
+      nextBtn.style.opacity = '1';
+    }, 100);
+  }, 2000); // 5 seconds - show Next and Skip buttons together
+
+  // Countdown timer functionality
+  function initCountdown() {
+    const countdownContainer = document.getElementById('countdown-container');
+    const festivalLive = document.getElementById('festival-live');
+    
+    // Check if elements exist
+    if (!countdownContainer || !festivalLive) {
+      console.warn('Countdown elements not found');
+      return;
+    }
+    
+    // Set your festival date here (Year, Month-1, Day, Hour, Minute)
+    // Example: December 15, 2025 at 8:00 AM
+    const festivalDate = new Date('2025-12-15T08:00:00').getTime();
+    
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = festivalDate - now;
+      
+      // If the countdown is finished
+      if (distance < 0) {
+        countdownContainer.classList.add('hidden');
+        festivalLive.classList.remove('hidden');
+        clearInterval(countdownInterval);
+        return;
       }
       
-      requestAnimationFrame(animation);
-    }, 500);
-  } else {
-    // Collapsing: remove expanded, then add hidden after transition
-    boothContent.classList.remove('expanded');
-    buttonElement.textContent = 'Explore';
+      // Calculate time units
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      // Get countdown elements
+      const daysEl = document.getElementById('days');
+      const hoursEl = document.getElementById('hours');
+      const minutesEl = document.getElementById('minutes');
+      const secondsEl = document.getElementById('seconds');
+      
+      // Check if elements exist before updating
+      if (daysEl && hoursEl && minutesEl && secondsEl) {
+        // Update the countdown display
+        daysEl.textContent = String(days).padStart(2, '0');
+        hoursEl.textContent = String(hours).padStart(2, '0');
+        minutesEl.textContent = String(minutes).padStart(2, '0');
+        secondsEl.textContent = String(seconds).padStart(2, '0');
+        
+        // Show the countdown container
+        countdownContainer.classList.remove('hidden');
+      }
+    }
     
-    setTimeout(function() {
-      boothContent.classList.add('hidden');
-    }, 600); // Wait for transition to complete
+    // Initial call
+    updateCountdown();
+    
+    // Update every second
+    const countdownInterval = setInterval(updateCountdown, 1000);
   }
-}
+
+  // Initialize countdown on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    initCountdown();
+  });
+
+  // Function to toggle booth and scroll to center
+  function toggleBooth(boothId, buttonElement, sectionElement) {
+    const boothContent = document.getElementById(boothId);
+    const isExpanding = boothContent.classList.contains('hidden');
+
+    if (isExpanding) {
+      // Close all other open booths first
+      const allBooths = document.querySelectorAll('.booth-content');
+      allBooths.forEach(function (booth) {
+        if (booth.id !== boothId && !booth.classList.contains('hidden')) {
+          booth.classList.remove('expanded');
+          setTimeout(function () {
+            booth.classList.add('hidden');
+          }, 600);
+
+          // Reset the button text for closed booths
+          const boothSection = booth.closest('section');
+          const boothButton = boothSection.querySelector('button');
+          if (boothButton) {
+            boothButton.textContent = 'Explore';
+          }
+        }
+      });
+
+      // Expanding: remove hidden first, then add expanded
+      boothContent.classList.remove('hidden');
+      // Force reflow to ensure transition works
+      void boothContent.offsetHeight;
+      boothContent.classList.add('expanded');
+      buttonElement.textContent = 'Close';
+
+      // Scroll to center after expansion starts
+      setTimeout(function () {
+        const rect = sectionElement.getBoundingClientRect();
+        const absoluteTop = window.pageYOffset + rect.top;
+        const middle = absoluteTop - (window.innerHeight / 2) + (rect.height / 2);
+
+        // Smooth scroll with custom animation
+        const startPosition = window.pageYOffset;
+        const distance = middle - startPosition;
+        const duration = 800;
+        let start = null;
+
+        function animation(currentTime) {
+          if (start === null) start = currentTime;
+          const timeElapsed = currentTime - start;
+          const progress = Math.min(timeElapsed / duration, 1);
+
+          const easeInOutCubic = progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+          window.scrollTo(0, startPosition + distance * easeInOutCubic);
+
+          if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+          }
+        }
+
+        requestAnimationFrame(animation);
+      }, 500);
+    } else {
+      // Collapsing: remove expanded, then add hidden after transition
+      boothContent.classList.remove('expanded');
+      buttonElement.textContent = 'Explore';
+
+      setTimeout(function () {
+        boothContent.classList.add('hidden');
+      }, 600); // Wait for transition to complete
+    }
+  }
 </script>
 
 <!-- Hero Section -->
-<div class="mb-8 bg-gradient-to-br from-green-100 via-green-50 to-yellow-50 rounded-2xl shadow-sm p-20 relative" style="overflow: visible;">
+<div class="mb-12 bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl shadow-2xl p-12 lg:p-16 relative overflow-hidden border-4 border-green-200"
+  style="overflow: visible;">
+  <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+  
   <!-- Overflow container for Banda and Church only -->
-  <div class="absolute inset-0 rounded-2xl overflow-hidden">
+  <div class="absolute inset-0 rounded-3xl overflow-hidden">
     <!-- Bustos Church Image - Bottom to Top Animation (Lower z-index) -->
-    <div id="churchImage" class="absolute bottom-0 left-1/2 opacity-0 w-full flex justify-center z-0" style="transform: translate(-50%, 100%); transition: transform 1s ease-out, opacity 1s ease-out;">
+    <div id="churchImage" class="absolute bottom-0 left-1/2 opacity-0 w-full flex justify-center z-0"
+      style="transform: translate(-50%, 100%); transition: transform 1s ease-out, opacity 1s ease-out;">
       <img src="/media/media_assets/BustosChurch.png" alt="Bustos Church" class="w-full h-auto opacity-20">
     </div>
-    
+
     <!-- Banda Image - Top to Bottom Animation (Higher z-index) -->
-    <div id="bandaImage" class="absolute top-0 left-1/2 opacity-0 w-full flex justify-center z-10" style="transform: translate(-50%, -100%); transition: transform 1s ease-out, opacity 1s ease-out;">
+    <div id="bandaImage" class="absolute top-0 left-1/2 opacity-0 w-full flex justify-center z-10"
+      style="transform: translate(-50%, -100%); transition: transform 1s ease-out, opacity 1s ease-out;">
       <img src="/media/media_assets/Banda.png" alt="Banda" class="w-full h-auto opacity-90">
     </div>
   </div>
-  
+
   <!-- Festival Image - Center Scale Animation (Highest z-index) - Overflows container -->
-  <div id="festivalImage" class="absolute inset-0 flex items-center justify-center z-20 opacity-0" style="transform: scale(0); transition: transform 0.8s ease-out, opacity 0.8s ease-out;">
+  <div id="festivalImage" class="absolute inset-0 flex items-center justify-center z-20 opacity-0"
+    style="transform: scale(0); transition: transform 0.8s ease-out, opacity 0.8s ease-out;">
     <img src="/media/media_assets/festival.png" alt="Festival" style="width: 95%; height: auto; max-width: none;">
   </div>
-  
+
   <div id="heroText" class="relative z-10" style="transition: opacity 0.5s ease-out;">
-    <h1 class="text-4xl font-bold text-gray-800 mb-3">Virtual Festival Tour</h1>
-    <p class="text-gray-600 max-w-2xl">Experience the vibrant Minasa Festival from anywhere! Scroll through interactive booths, explore stories, and discover the rich cultural heritage of Bustos.</p>
+    <div class="flex items-center gap-4 mb-6">
+      <div class="text-7xl">🎪</div>
+      <div>
+        <h1 class="text-5xl font-bold text-white mb-3 drop-shadow-lg">Virtual Festival Tour</h1>
+        <p class="text-white text-xl max-w-3xl">Experience the vibrant Minasa Festival from anywhere! Scroll through interactive booths, explore stories, and discover the rich cultural heritage of Bustos.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Countdown Timer (outside hero section) -->
+<div id="countdown-container" class="hidden mb-12">
+  <div class="bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl p-8 shadow-2xl border-4 border-green-200">
+    <div class="flex items-center justify-center gap-3 mb-6">
+      <span class="text-3xl">⏰</span>
+      <h2 class="text-2xl font-black text-white drop-shadow-lg">Festival Countdown</h2>
+    </div>
+    <div id="countdown-timer" class="flex items-center justify-center gap-4">
+      <!-- Days -->
+      <div class="text-center">
+        <div
+          class="bg-gradient-to-br from-white to-green-50 text-green-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
+          <div id="days" class="text-5xl font-black mb-1">00</div>
+        </div>
+        <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Days</div>
+      </div>
+
+      <!-- Colon Separator -->
+      <div class="text-5xl font-black text-white pb-8 drop-shadow-lg">:</div>
+
+      <!-- Hours -->
+      <div class="text-center">
+        <div
+          class="bg-gradient-to-br from-white to-green-50 text-green-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
+          <div id="hours" class="text-5xl font-black mb-1">00</div>
+        </div>
+        <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Hours</div>
+      </div>
+
+      <!-- Colon Separator -->
+      <div class="text-5xl font-black text-white pb-8 drop-shadow-lg">:</div>
+
+      <!-- Minutes -->
+      <div class="text-center">
+        <div
+          class="bg-gradient-to-br from-white to-orange-50 text-orange-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
+          <div id="minutes" class="text-5xl font-black mb-1">00</div>
+        </div>
+        <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Minutes</div>
+      </div>
+
+      <!-- Colon Separator -->
+      <div class="text-5xl font-black text-white pb-8 drop-shadow-lg">:</div>
+
+      <!-- Seconds -->
+      <div class="text-center">
+        <div
+          class="bg-gradient-to-br from-white to-orange-50 text-orange-700 rounded-2xl p-6 shadow-xl min-w-[110px] border-2 border-white/50">
+          <div id="seconds" class="text-5xl font-black mb-1">00</div>
+        </div>
+        <div class="text-sm font-bold text-white mt-3 uppercase tracking-wider drop-shadow">Seconds</div>
+      </div>
+    </div>
+
+    <div class="text-center mt-6">
+      <p class="text-white font-semibold text-lg drop-shadow">🎉 Get ready for the celebration!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Festival Live Message (outside hero section) -->
+<div id="festival-live" class="hidden mb-12">
+  <div class="bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl p-8 shadow-2xl border-4 border-green-200">
+    <div class="flex items-center gap-4">
+      <span class="text-6xl animate-bounce">🎉</span>
+      <div>
+        <h2 class="text-3xl font-bold text-white mb-2 drop-shadow-lg">The Festival is Live!</h2>
+        <p class="text-white text-lg drop-shadow">Join us in celebrating the vibrant Minasa Festival!</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -960,156 +1011,160 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
   </div>
   <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
     <div class="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full transition-all duration-500" style="width: 0%"></div>
->>>>>>> origin/branch-ni-ley
   </div>
 </div> -->
 
 <!-- Booths Grid -->
 <div class="space-y-8 booth-card-wrapper">
   {% for b in booths %}
-    <section id="booth-section-{{ b.id }}" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="{{ forloop.counter0 }}" style="overflow: visible;">
-      <!-- Top - Image -->
-      <div class="relative h-64">
-        <img src="{% if b.image %}/media/{{ b.image }}{% else %}/media/media_assets/pic1.jpg{% endif %}" alt="{{ b.title }}" class="w-full h-full object-cover">
-        <div class="absolute top-4 left-4">
-          <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth {{ forloop.counter }}</span>
-        </div>
+  <section id="booth-section-{{ b.id }}" class="booth-card bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 booth-animate transform hover:-translate-y-2"
+    data-delay="{{ forloop.counter0 }}" style="overflow: visible;">
+    <!-- Top - Image -->
+    <div class="relative h-72 rounded-t-3xl overflow-hidden">
+      <img src="{% if b.image %}/media/{{ b.image }}{% else %}/media/media_assets/pic1.jpg{% endif %}"
+        alt="{{ b.title }}" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+      <div class="absolute top-6 left-6">
+        <span class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl text-base font-black shadow-2xl border-2 border-white/30">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
+          </svg>
+          Booth #{{ forloop.counter }}
+        </span>
       </div>
+    </div>
 
-      <!-- Bottom - Content -->
-      <div class="px-8 pt-8 pb-4">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-3xl font-bold text-gray-900">{{ b.title }}</h3>
-          <button 
-            onclick="toggleBooth('booth-{{ b.id }}', this, document.getElementById('booth-section-{{ b.id }}'))"
-            class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
-            Explore
-          </button>
-        </div>
-        <p class="text-gray-700 text-base leading-relaxed">{{ b.summary }}</p>
+    <!-- Bottom - Content -->
+    <div class="p-8">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-700">{{ b.title }}</h3>
+        <button onclick="toggleBooth('booth-{{ b.id }}', this, document.getElementById('booth-section-{{ b.id }}'))"
+          class="px-10 py-4 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-black text-lg rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center gap-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+          Explore
+        </button>
       </div>
+      <p class="text-gray-700 text-lg leading-relaxed">{{ b.summary }}</p>
+    </div>
 
-      <!-- Expandable Content -->
-      <div id="booth-{{ b.id }}" class="booth-content hidden border-t border-gray-100">
-        <div class="p-6 bg-gradient-to-br from-gray-50 to-white">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Left Column - Content -->
-            <div>
-              <h4 class="text-lg font-bold text-gray-800 mb-3">{{ b.title }} — Interactive Experience</h4>
-              <p class="text-gray-600 text-sm mb-4">Dive deeper into this booth's story! Explore images, watch short videos, or take a quick quiz to test your knowledge about this aspect of the festival.</p>
-              
-              <!-- Features -->
-              <div class="space-y-3">
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
-                    </svg>
-                  </div>
-                  <span class="text-sm text-gray-700">Photo gallery with historical images</span>
+    <!-- Expandable Content -->
+    <div id="booth-{{ b.id }}" class="booth-content hidden border-t border-gray-100">
+      <div class="p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Left Column - Content -->
+          <div>
+            <h4 class="text-lg font-bold text-gray-800 mb-3">{{ b.title }} — Interactive Experience</h4>
+            <p class="text-gray-600 text-sm mb-4">Dive deeper into this booth's story! Explore images, watch short
+              videos, or take a quick quiz to test your knowledge about this aspect of the festival.</p>
+
+            <!-- Features -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                      clip-rule="evenodd"></path>
+                  </svg>
                 </div>
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
-                    </svg>
-                  </div>
-                  <span class="text-sm text-gray-700">Video interviews with locals</span>
+                <span class="text-sm text-gray-700">Photo gallery with historical images</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z">
+                    </path>
+                  </svg>
                 </div>
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                      <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                    </svg>
-                  </div>
-                  <span class="text-sm text-gray-700">Interactive quiz challenges</span>
+                <span class="text-sm text-gray-700">Video interviews with locals</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                    <path fill-rule="evenodd"
+                      d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                      clip-rule="evenodd"></path>
+                  </svg>
                 </div>
+                <span class="text-sm text-gray-700">Interactive quiz challenges</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column - Actions -->
+          <div class="space-y-4">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <h5 class="font-semibold text-gray-800 mb-3">Related Content</h5>
+              <div class="space-y-2">
+                <a href="/lessons/"
+                  class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">View related lessons</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <a href="/quizzes/"
+                  class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">Take the booth quiz</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
               </div>
             </div>
 
-            <!-- Right Column - Actions -->
-            <div class="space-y-4">
-              <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-                <h5 class="font-semibold text-gray-800 mb-3">Related Content</h5>
-                <div class="space-y-2">
-                  <a href="/lessons/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
-                    <span class="text-sm text-gray-700 group-hover:text-purple-600">View related lessons</span>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </a>
-                  <a href="/quizzes/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
-                    <span class="text-sm text-gray-700 group-hover:text-purple-600">Take the booth quiz</span>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </a>
-                </div>
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                <h5 class="font-semibold text-gray-800">Did you know?</h5>
               </div>
-
-              <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5">
-                <div class="flex items-center gap-2 mb-2">
-                  <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                  </svg>
-                  <h5 class="font-semibold text-gray-800">Did you know?</h5>
-                </div>
-                <p class="text-sm text-gray-600">The Minasa Festival celebrates the arrowroot harvest and showcases traditional recipes passed down through generations.</p>
-              </div>
+              <p class="text-sm text-gray-600">The Minasa Festival celebrates the arrowroot harvest and showcases
+                traditional recipes passed down through generations.</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  {% empty %}
-    <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
-      <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-        </svg>
-      </div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-2">No booths available yet</h3>
-      <p class="text-gray-500 text-sm">The festival tour is being prepared. Check back soon!</p>
     </div>
+  </section>
+  {% empty %}
+  <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
+    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+        </path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">No booths available yet</h3>
+    <p class="text-gray-500 text-sm">The festival tour is being prepared. Check back soon!</p>
+  </div>
   {% endfor %}
 </div>
 
 <!-- Call to Action -->
-<<<<<<< HEAD
-<div class="mt-16 bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl shadow-2xl p-12 text-center text-white relative overflow-hidden border-4 border-green-200">
-  <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-  <div class="relative z-10">
-    <div class="text-6xl mb-6 animate-bounce">🎓</div>
-    <h3 class="text-4xl font-bold mb-4 drop-shadow-lg">Ready to Learn More?</h3>
-    <p class="mb-8 text-xl opacity-95 max-w-3xl mx-auto">Explore our full collection of lessons and quizzes about Bustos' cultural heritage.</p>
-    <div class="flex flex-wrap gap-6 justify-center">
-      <a href="/lessons/" class="px-10 py-5 bg-white text-green-600 font-bold text-lg rounded-2xl hover:bg-gray-100 transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center gap-3">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path>
-        </svg>
-        Browse All Lessons
-      </a>
-      <a href="/quizzes/" class="px-10 py-5 bg-white/20 backdrop-blur-md text-white font-bold text-lg rounded-2xl hover:bg-white/30 transition-all duration-200 border-2 border-white shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center gap-3">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-          <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-        </svg>
-        Take a Quiz
-      </a>
-    </div>
-=======
 <div class="mt-12 bg-gradient-to-r from-green-500 to-yellow-500 rounded-2xl shadow-lg p-8 text-center text-white">
   <h3 class="text-2xl font-bold mb-3">Ready to Learn More?</h3>
   <p class="mb-6 opacity-90">Explore our full collection of lessons and quizzes about Bustos' cultural heritage.</p>
   <div class="flex flex-wrap gap-4 justify-center">
-    <a href="/lessons/" class="px-6 py-3 bg-white text-green-600 font-medium rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-sm">
+    <a href="/lessons/"
+      class="px-6 py-3 bg-white text-green-600 font-medium rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-sm">
       Browse All Lessons
     </a>
-    <a href="/quizzes/" class="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-opacity-30 transition-all duration-200 border-2 border-white border-opacity-50">
+    <a href="/quizzes/"
+      class="px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-opacity-30 transition-all duration-200 border-2 border-white border-opacity-50">
       Take a Quiz
     </a>
->>>>>>> origin/branch-ni-ley
   </div>
 </div>
 {% endblock %}
