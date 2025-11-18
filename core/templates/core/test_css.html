@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Test Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .test-box {
+            padding: 20px;
+            margin: 20px;
+            border: 2px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-box">
+        <h1 class="text-4xl font-bold text-green-600 mb-4">CSS Loading Test</h1>
+        <p class="text-xl text-gray-700">If you can see this text styled with colors and sizes, Tailwind CSS is working!</p>
+        
+        <div class="mt-4 p-4 bg-blue-500 text-white rounded-lg">
+            This box should have a blue background, white text, and rounded corners.
+        </div>
+        
+        <div class="mt-4 p-4 bg-green-500 text-white rounded-lg shadow-lg">
+            This box should have a green background, white text, rounded corners, and a shadow.
+        </div>
+        
+        <div class="mt-8">
+            <h2 class="text-2xl font-semibold mb-2">Diagnostic Information:</h2>
+            <div id="diagnostic" class="p-4 bg-gray-100 rounded">
+                <p>Checking Tailwind CSS...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const diagnostic = document.getElementById('diagnostic');
+            const testElement = document.createElement('div');
+            testElement.className = 'hidden';
+            document.body.appendChild(testElement);
+            
+            setTimeout(function() {
+                const isHidden = window.getComputedStyle(testElement).display === 'none';
+                
+                if (isHidden) {
+                    diagnostic.innerHTML = '<p class="text-green-600 font-bold">✅ SUCCESS: Tailwind CSS is loaded and working!</p>';
+                    diagnostic.className = 'p-4 bg-green-100 border-2 border-green-500 rounded';
+                } else {
+                    diagnostic.innerHTML = '<p class="text-red-600 font-bold">❌ ERROR: Tailwind CSS is NOT working!</p><p class="mt-2">Possible causes:</p><ul class="list-disc ml-6 mt-2"><li>No internet connection</li><li>CDN blocked by firewall/antivirus</li><li>Browser extensions blocking scripts</li><li>Corporate network restrictions</li></ul>';
+                    diagnostic.className = 'p-4 bg-red-100 border-2 border-red-500 rounded';
+                }
+                
+                document.body.removeChild(testElement);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

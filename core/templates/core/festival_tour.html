@@ -944,6 +944,437 @@
       }, 600); // Wait for transition to complete
     }
   }
+  		
+// Modal functions
+const modalContent = {
+  history: {
+    title: 'History Booth',
+    content: `
+      <div class="space-y-8">
+        <!-- Hero Image Placeholder -->
+        <div class="w-full h-80 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative">
+          <img src="/media/media_assets/pic1.jpg" alt="History Hero" class="w-full h-full object-cover">
+          <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">History Hero Image</span>
+        </div>
+        
+        <!-- Introduction Section -->
+        <div class="prose prose-lg max-w-none">
+          <h3 class="text-3xl font-bold text-gray-800 mb-4">What is Minasa</h3>
+          <p class="text-gray-700 text-lg leading-relaxed mb-6">
+          Minasa is a traditional Filipino cookie (sometimes called “minasa cookie”) originally made from sago/arrowroot starch (locally called sago or uraro), coconut milk, sugar, and egg yolks. It’s a delicate milky biscuit historically associated with Bustos, Bulacan.
+          </p>
+          <h4 class="text-2xl font-semibold text-gray-800 mb-4">Origins / story</h4>
+          <p class="text-gray-700 leading-relaxed">
+            Accounts trace Minasa back to the Spanish colonial period. It was once a labor-intensive, special-occasion pastry served by wealthier households (preparing the starch and dough could take days). Over time, as sago/arrowroot crops declined locally, cassava/other starches were sometimes substituted.
+          </p>
+        </div>
+        
+        <!-- Two Column Section: Origins -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h4 class="text-2xl font-semibold text-gray-800 mb-4">Origins of the Festival</h4>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              The name "Minasa" itself is derived from the local term for arrowroot, reflecting the deep
+              connection between the people and this versatile plant. For centuries, families in Bustos
+              have cultivated arrowroot, developing unique methods of processing and cooking.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+              The festival began as a simple harvest celebration, where farmers would gather to give thanks
+              for the bounty of their land. Over time, it evolved into a grand cultural event that brings
+              the entire community together.
+            </p>
+          </div>
+          <div class="w-full h-72 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative">
+            <img src="/media/media_assets/Minasapic1.jpg" alt="Origins" class="w-full h-full object-cover">
+            <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Origins Image</span>
+          </div>
+        </div>
+        
+        <!-- Two Column Section: Cultural Significance (Image Left) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="w-full h-72 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative order-2 md:order-1">
+            <img src="/media/media_assets/Minasapic2.jpg" alt="Cultural Significance" class="w-full h-full object-cover">
+            <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Cultural Image</span>
+          </div>
+          <div class="order-1 md:order-2">
+            <h4 class="text-2xl font-semibold text-gray-800 mb-4">Cultural Significance</h4>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              Throughout history, arrowroot has played a vital role in Bustos' identity. The festival not
+              only commemorates the harvest but also preserves traditional methods of cultivation and
+              preparation that have been passed down through countless generations.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+              Each year, the community comes together to honor their ancestors' wisdom and celebrate the
+              bounty of their land, ensuring that these traditions continue to thrive.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Full Width Section: Evolution -->
+        <div class="bg-gradient-to-br from-green-50 to-yellow-50 rounded-xl p-8">
+          <h4 class="text-2xl font-semibold text-gray-800 mb-4">Evolution Through the Years</h4>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            From humble beginnings as a simple harvest celebration, the Minasa Festival has evolved into a
+            grand cultural event that showcases not only agricultural heritage but also traditional dances,
+            music, and cuisine.
+          </p>
+          <p class="text-gray-700 leading-relaxed">
+            The festival has become a platform for preserving Filipino traditions while adapting to modern
+            times, ensuring that younger generations remain connected to their roots.
+          </p>
+        </div>
+        
+        <!-- Image Gallery Section -->
+        <div>
+          <h4 class="text-2xl font-semibold text-gray-800 mb-6">Historical Landmarks</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden relative">
+              <img src="/media/media_assets/Minasapic3.jpg" alt="Landmark 1" class="w-full h-full object-cover">
+              <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Landmark 1</span>
+            </div>
+            <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden relative">
+              <img src="/media/media_assets/Minasapic4.jpg" alt="Landmark 2" class="w-full h-full object-cover">
+              <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Landmark 2</span>
+            </div>
+            <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden relative">
+              <img src="/media/media_assets/Minasapic5.jpg" alt="Landmark 3" class="w-full h-full object-cover">
+              <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Landmark 3</span>
+            </div>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            The festival takes place against the backdrop of Bustos' historic landmarks, including the
+            centuries-old Bustos Church, which has witnessed the town's transformation over time. These
+            landmarks serve as reminders of the community's resilience and the enduring spirit of the people.
+          </p>
+        </div>
+        
+        <!-- Video Section -->
+        <div>
+          <h4 class="text-2xl font-semibold text-gray-800 mb-4">Documentary Video</h4>
+          <p class="text-gray-700 leading-relaxed mb-6">
+          This documentary explores the rich history of Minasa—Bustos, Bulacan’s iconic arrowroot cookie—highlighting its traditional preparation, cultural importance, and the community stories that keep this beloved local heritage alive.
+          </p>
+          <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube-nocookie.com/embed/JBRC4pr5bjo?rel=0"
+              title="Minasa Festival Video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              class="w-full h-full">
+            </iframe>
+          </div>
+          <p class="text-gray-500 text-sm mt-2">Video Credit: GMA Public Affairs</p>
+            <p>Arrowroot (sago/uraro) provided the fine white starch that gives the cookie its soft, melt-in-the-mouth texture. Local cultivation and processing of that starch were central to the cookie's original production in Bustos and nearby areas. </p>
+            
+            <div class="mt-6">
+            <a href="/quizzes/" class="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+              Take Quiz
+            </a>
+            </div>
+        </div>
+      </div>
+    `
+  },
+  recipe: {
+    title: 'Recipe Tent - Traditional Arrowroot Delicacies',
+    content: `
+      <h3 class="text-2xl font-bold text-gray-800 mb-4">Traditional Arrowroot Recipes</h3>
+      
+      <div class="prose prose-lg max-w-none">
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">The Art of Minasa Making</h4>
+        <p class="text-gray-700 mb-4">
+          Minasa, the signature delicacy of Bustos, is more than just a dessert—it's a culinary tradition
+          that embodies the town's heritage. Made from finely processed arrowroot starch, minasa has a
+          delicate texture and subtle sweetness that has delighted generations of families. The traditional
+          recipe requires patience, skill, and an understanding of the unique properties of arrowroot flour.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Traditional Ingredients</h4>
+        <p class="text-gray-700 mb-4">
+          The authentic minasa recipe uses locally sourced arrowroot starch, coconut milk, sugar, and
+          pandan leaves for aromatic flavoring. Each ingredient is carefully selected to ensure the perfect
+          balance of flavors. Traditional cooks emphasize the importance of using fresh, high-quality
+          arrowroot starch, which gives minasa its characteristic smooth and glossy appearance.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Cooking Techniques Passed Down</h4>
+        <p class="text-gray-700 mb-4">
+          The preparation of minasa involves specific techniques that have been refined over centuries.
+          From the gentle heating of the mixture to the continuous stirring required to achieve the right
+          consistency, every step is crucial. Master cooks in Bustos have developed an intuitive understanding
+          of when the mixture has reached perfection—a skill that can only be learned through years of practice
+          and dedication.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Modern Variations</h4>
+        <p class="text-gray-700 mb-4">
+          While traditional recipes remain cherished, modern cooks have begun experimenting with new flavors
+          and presentations. From ube-flavored minasa to bite-sized portions perfect for contemporary
+          celebrations, these innovations honor the past while embracing the future. The Recipe Tent showcases
+          both traditional methods and creative adaptations, ensuring that the art of minasa making continues
+          to thrive.
+        </p>
+      </div>
+    `
+  },
+  cultural: {
+    title: 'Cultural Stage - Performances and Traditions',
+    content: `
+      <h3 class="text-2xl font-bold text-gray-800 mb-4">Cultural Performances and Traditions</h3>
+      
+      <div class="prose prose-lg max-w-none">
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Traditional Folk Dances</h4>
+        <p class="text-gray-700 mb-4">
+          The Cultural Stage comes alive with traditional Filipino folk dances that tell stories of harvest,
+          celebration, and community life. These performances feature colorful costumes, rhythmic movements,
+          and music that has been part of Bustos culture for generations. Dancers train year-round to perfect
+          their craft, ensuring that each performance captures the authentic spirit of Filipino heritage.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Musical Heritage</h4>
+        <p class="text-gray-700 mb-4">
+          The sounds of traditional instruments fill the air during the festival—from the rhythmic beating
+          of drums to the melodic notes of bamboo instruments. Local musicians preserve ancient musical
+          traditions while also composing new pieces that celebrate contemporary Bustos life. The festival
+          serves as a platform for both seasoned performers and young talents to showcase their skills.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Costume and Artistry</h4>
+        <p class="text-gray-700 mb-4">
+          The elaborate costumes worn during performances are works of art in themselves. Each outfit is
+          carefully crafted to represent different aspects of Bustos heritage, featuring intricate embroidery,
+          vibrant colors, and traditional patterns. Local artisans spend months creating these costumes,
+          ensuring that every detail reflects the pride and creativity of the community.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Community Participation</h4>
+        <p class="text-gray-700 mb-4">
+          The Cultural Stage is not just for professional performers—it's a community celebration where
+          people of all ages participate. Schools prepare special presentations, community groups showcase
+          traditional dances, and families come together to celebrate their shared heritage. This inclusive
+          spirit ensures that cultural traditions are passed on to future generations and that everyone feels
+          connected to the festival's meaning.
+        </p>
+      </div>
+    `
+  },
+  farmer: {
+    title: "Farmer's Corner - Agricultural Heritage",
+    content: `
+      <h3 class="text-2xl font-bold text-gray-800 mb-4">Agricultural Heritage and Farming Practices</h3>
+      
+      <div class="prose prose-lg max-w-none">
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">The Life of Arrowroot Farmers</h4>
+        <p class="text-gray-700 mb-4">
+          The farmers of Bustos are the heart and soul of the Minasa Festival. Their dedication to cultivating
+          arrowroot has sustained the community for generations. From preparing the soil to harvesting the
+          mature roots, these farmers employ techniques that have been refined over centuries, working in
+          harmony with nature's rhythms and the changing seasons.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Sustainable Farming Practices</h4>
+        <p class="text-gray-700 mb-4">
+          Bustos farmers have long practiced sustainable agriculture, understanding that the health of their
+          land ensures future harvests. Crop rotation, natural pest control, and organic fertilization methods
+          are integral to their farming philosophy. These eco-friendly practices not only protect the
+          environment but also produce higher-quality arrowroot that is prized for its purity and nutritional
+          value.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">From Field to Table</h4>
+        <p class="text-gray-700 mb-4">
+          The journey of arrowroot from field to table is a fascinating process that the Farmer's Corner
+          explores in detail. Visitors can learn about the careful harvesting of the roots, the extraction
+          of starch, and the processing methods that transform raw arrowroot into the fine flour used in
+          traditional recipes. Each step requires skill, patience, and respect for the plant that has
+          nurtured the community.
+        </p>
+        
+        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Future of Farming in Bustos</h4>
+        <p class="text-gray-700 mb-4">
+          While honoring traditional methods, Bustos farmers are also embracing innovations that improve
+          efficiency and sustainability. Modern irrigation systems, improved crop varieties, and cooperative
+          farming initiatives are helping to secure the future of arrowroot cultivation. The Farmer's Corner
+          showcases how tradition and innovation can work together to support the next generation of farmers
+          and ensure that the Minasa Festival continues for years to come.
+        </p>
+      </div>
+    `
+  }
+};
+// Intersection Observer for scroll animations
+let modalScrollObserver = null;
+function initModalScrollAnimations() {
+  const modalScrollContainer = document.querySelector('#articleModal .overflow-y-auto');
+  
+  if (modalScrollObserver) {
+    modalScrollObserver.disconnect();
+  }
+  
+  modalScrollObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        entry.target.classList.remove('hidden');
+      } else {
+        entry.target.classList.remove('visible');
+        entry.target.classList.add('hidden');
+      }
+    });
+  }, {
+    root: modalScrollContainer,
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
+  
+  // Observe all content items
+  const contentItems = document.querySelectorAll('.modal-content-item');
+  contentItems.forEach(function(item) {
+    modalScrollObserver.observe(item);
+  });
+}
+function openModal(type) {
+  const modal = document.getElementById('articleModal');
+  const modalBox = modal.querySelector('.bg-white');
+  const content = document.getElementById('modalContent');
+  
+  // Set content based on type
+  const article = modalContent[type];
+  content.innerHTML = `
+    <h2 class="text-3xl font-bold text-green-600 mb-6">${article.title}</h2>
+    ${article.content}
+  `;
+  
+  // Show modal with animation
+  modal.classList.remove('hidden');
+  setTimeout(function() {
+    modal.style.opacity = '1';
+    modalBox.classList.add('modal-animate');
+    
+    // Initialize scroll animations after content is loaded
+    setTimeout(function() {
+      initModalScrollAnimations();
+    }, 100);
+  }, 10);
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  const modal = document.getElementById('articleModal');
+  const modalBox = modal.querySelector('.bg-white');
+  
+  // Disconnect observer
+  if (modalScrollObserver) {
+    modalScrollObserver.disconnect();
+  }
+  
+  // Remove animation class for next opening
+  modalBox.classList.remove('modal-animate');
+  
+  modal.style.opacity = '0';
+  setTimeout(function() {
+    modal.classList.add('hidden');
+  }, 300);
+  
+  // Restore body scroll
+  document.body.style.overflow = 'auto';
+}
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const modal = document.getElementById('articleModal');
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+// Show Next button (with Skip inside) after 2 seconds - only if user hasn't seen intro
+setTimeout(function() {
+  // Only show buttons if user hasn't seen the intro
+  if (!hasSeenIntro()) {
+    const nextBtn = document.getElementById('nextButton');
+    
+    nextBtn.style.display = 'block';
+    
+    setTimeout(function() {
+      nextBtn.style.opacity = '1';
+    }, 100);
+  }
+}, 2000);
+// Function to toggle booth and scroll to center
+function toggleBooth(boothId, buttonElement, sectionElement) {
+  const boothContent = document.getElementById(boothId);
+  const isExpanding = boothContent.classList.contains('hidden');
+  
+  if (isExpanding) {
+    // Close all other open booths first
+    const allBooths = document.querySelectorAll('.booth-content');
+    allBooths.forEach(function(booth) {
+      if (booth.id !== boothId && !booth.classList.contains('hidden')) {
+        booth.classList.remove('expanded');
+        setTimeout(function() {
+          booth.classList.add('hidden');
+        }, 600);
+        
+        // Reset the button text for closed booths
+        const boothSection = booth.closest('section');
+        const boothButton = boothSection.querySelector('button');
+        if (boothButton) {
+          boothButton.textContent = 'Explore';
+        }
+      }
+    });
+    
+    // Expanding: remove hidden first, then add expanded
+    boothContent.classList.remove('hidden');
+    // Force reflow to ensure transition works
+    void boothContent.offsetHeight;
+    boothContent.classList.add('expanded');
+    buttonElement.textContent = 'Close';
+    
+    // Scroll to center after expansion starts
+    setTimeout(function() {
+      const rect = sectionElement.getBoundingClientRect();
+      const absoluteTop = window.pageYOffset + rect.top;
+      const middle = absoluteTop - (window.innerHeight / 2) + (rect.height / 2);
+      
+      // Smooth scroll with custom animation
+      const startPosition = window.pageYOffset;
+      const distance = middle - startPosition;
+      const duration = 800;
+      let start = null;
+      
+      function animation(currentTime) {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+        
+        const easeInOutCubic = progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        
+        window.scrollTo(0, startPosition + distance * easeInOutCubic);
+        
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      }
+      
+      requestAnimationFrame(animation);
+    }, 500);
+  } else {
+    // Collapsing: remove expanded, then add hidden after transition
+    boothContent.classList.remove('expanded');
+    buttonElement.textContent = 'Explore';
+    
+    setTimeout(function() {
+      boothContent.classList.add('hidden');
+    }, 600); // Wait for transition to complete
+  }
+}
 </script>
 
 <!-- Hero Section -->
@@ -1118,94 +1549,70 @@
 
 <!-- Booths Grid -->
 <div class="space-y-8 booth-card-wrapper">
-  {% for b in booths %}
-  <section id="booth-section-{{ b.id }}"
-    class="booth-card bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 booth-animate transform hover:-translate-y-2"
-    data-delay="{{ forloop.counter0 }}" style="overflow: visible;">
+  <!-- Booth 1: History Booth -->
+  <section id="booth-section-1" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="0" style="overflow: visible;">
     <!-- Top - Image -->
-    <div class="relative h-72 rounded-t-3xl overflow-hidden">
-      <img src="{% if b.image %}/media/{{ b.image }}{% else %}/media/media_assets/pic1.jpg{% endif %}"
-        alt="{{ b.title }}"
-        class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
-      <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-      <div class="absolute top-6 left-6">
-        <span
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl text-base font-black shadow-2xl border-2 border-white/30">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z">
-            </path>
-          </svg>
-          Booth #{{ forloop.counter }}
-        </span>
+    <div class="relative h-64">
+      <img src="/media/media_assets/pic1.jpg" alt="History Booth" class="w-full h-full object-cover">
+      <div class="absolute top-4 left-4">
+        <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 1</span>
       </div>
     </div>
 
     <!-- Bottom - Content -->
-    <div class="p-8">
-      <div class="flex items-center justify-between mb-5">
-        <h3
-          class="text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-gray-700">
-          {{ b.title }}</h3>
-        <button onclick="toggleBooth('booth-{{ b.id }}', this, document.getElementById('booth-section-{{ b.id }}'))"
-          class="px-10 py-4 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-black text-lg rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center gap-2">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-            </path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-            </path>
-          </svg>
+    <div class="px-8 pt-8 pb-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-3xl font-bold text-gray-900">History Booth</h3>
+        <button 
+          onclick="toggleBooth('booth-1', this, document.getElementById('booth-section-1'))"
+          class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
           Explore
         </button>
       </div>
-      <p class="text-gray-700 text-lg leading-relaxed">{{ b.summary }}</p>
+      <p class="text-gray-700 text-base leading-relaxed">Discover the rich history and origins of the Minasa Festival and Bustos heritage.</p>
     </div>
 
     <!-- Expandable Content -->
-    <div id="booth-{{ b.id }}" class="booth-content hidden border-t border-gray-100">
+    <div id="booth-1" class="booth-content hidden border-t border-gray-100">
       <div class="p-6 bg-gradient-to-br from-gray-50 to-white">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Left Column - Content -->
           <div>
-            <h4 class="text-lg font-bold text-gray-800 mb-3">{{ b.title }} — Interactive Experience</h4>
-            <p class="text-gray-600 text-sm mb-4">Dive deeper into this booth's story! Explore images, watch short
-              videos, or take a quick quiz to test your knowledge about this aspect of the festival.</p>
-
+            <h4 class="text-lg font-bold text-gray-800 mb-3">History Booth — Interactive Experience</h4>
+            <p class="text-gray-600 text-sm mb-4">Take a deep dive into the roots of the Minasa Festival. Discover how it all began — from our beloved arrowroot delicacies to the traditions passed down through generations.</p>
+            
             <!-- Features -->
             <div class="space-y-3">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
                   <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                      clip-rule="evenodd"></path>
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
                   </svg>
                 </div>
-                <span class="text-sm text-gray-700">Photo gallery with historical images</span>
+                <span class="text-sm text-gray-700">Historical photo gallery</span>
               </div>
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
                   <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z">
-                    </path>
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
                   </svg>
                 </div>
-                <span class="text-sm text-gray-700">Video interviews with locals</span>
+                <span class="text-sm text-gray-700">Documentary video</span>
               </div>
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
                   <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                    <path fill-rule="evenodd"
-                      d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                      clip-rule="evenodd"></path>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
                   </svg>
                 </div>
-                <span class="text-sm text-gray-700">Interactive quiz challenges</span>
+                <span class="text-sm text-gray-700">Interactive quizzes</span>
               </div>
             </div>
+            
+            <button onclick="openModal('history')" class="mt-4 block w-full px-6 py-3 bg-green-600 text-white text-center font-semibold rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+              Explore More
+            </button>
           </div>
 
           <!-- Right Column - Actions -->
@@ -1213,19 +1620,15 @@
             <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
               <h5 class="font-semibold text-gray-800 mb-3">Related Content</h5>
               <div class="space-y-2">
-                <a href="/lessons/"
-                  class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
-                  <span class="text-sm text-gray-700 group-hover:text-purple-600">View related lessons</span>
-                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                <a href="/lessons/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">View history lessons</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
                 </a>
-                <a href="/quizzes/"
-                  class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
-                  <span class="text-sm text-gray-700 group-hover:text-purple-600">Take the booth quiz</span>
-                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                <a href="/quizzes/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">Take the history quiz</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
                 </a>
@@ -1235,34 +1638,334 @@
             <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-5">
               <div class="flex items-center gap-2 mb-2">
                 <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clip-rule="evenodd"></path>
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                 </svg>
                 <h5 class="font-semibold text-gray-800">Did you know?</h5>
               </div>
-              <p class="text-sm text-gray-600">The Minasa Festival celebrates the arrowroot harvest and showcases
-                traditional recipes passed down through generations.</p>
+              <p class="text-sm text-gray-600">The Minasa Festival has been celebrated for generations, honoring the arrowroot harvest and Bustos' agricultural heritage.</p>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-  {% empty %}
-  <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
-    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-      <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-        </path>
-      </svg>
+  {# Commented out empty state and endfor #}
+  {# {% empty %} #}
+  {# <div class="bg-white rounded-2xl shadow-sm p-12 text-center"> #}
+  {#   <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"> #}
+  {#     <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"> #}
+  {#       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" #}
+  {#         d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"> #}
+  {#       </path> #}
+  {#     </svg> #}
+  {#   </div> #}
+  {#   <h3 class="text-lg font-semibold text-gray-800 mb-2">No booths available yet</h3> #}
+  {#   <p class="text-gray-500 text-sm">The festival tour is being prepared. Check back soon!</p> #}
+  {# </div> #}
+  {# {% endfor %} #}
+  {# </div> #}
+  <!-- Booth 2: Recipe Tent -->
+  <section id="booth-section-2" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="1" style="overflow: visible;">
+    <!-- Top - Image -->
+    <div class="relative h-64">
+      <img src="/media/media_assets/MinasaCookies.jpg" alt="Recipe Tent" class="w-full h-full object-cover">
+      <div class="absolute top-4 left-4">
+        <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 2</span>
+      </div>
     </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-2">No booths available yet</h3>
-    <p class="text-gray-500 text-sm">The festival tour is being prepared. Check back soon!</p>
-  </div>
-  {% endfor %}
+
+    <!-- Bottom - Content -->
+    <div class="px-8 pt-8 pb-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-3xl font-bold text-gray-900">Recipe Tent</h3>
+        <button 
+          onclick="toggleBooth('booth-2', this, document.getElementById('booth-section-2'))"
+          class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+          Explore
+        </button>
+      </div>
+      <p class="text-gray-700 text-base leading-relaxed">Learn traditional arrowroot recipes and cooking methods passed down through generations.</p>
+    </div>
+
+    <!-- Expandable Content -->
+    <div id="booth-2" class="booth-content hidden border-t border-gray-100">
+      <div class="p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Left Column - Content -->
+          <div>
+            <h4 class="text-lg font-bold text-gray-800 mb-3">Recipe Tent — Cooking Experience</h4>
+            <p class="text-gray-600 text-sm mb-4">Learn step-by-step how to make our famous minasa — a delicious treat made from arrowroot. Watch cooking demos and get inspired!</p>
+            
+            <!-- Features -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                </svg>
+                </div>
+                <span class="text-sm text-gray-700">Step-by-step recipes</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Cooking demonstrations</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-yellow-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Traditional ingredients guide</span>
+              </div>
+            </div>
+            
+            <button onclick="openModal('recipe')" class="mt-4 block w-full px-6 py-3 bg-green-600 text-white text-center font-semibold rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+              Explore More
+            </button>
+          </div>
+
+          <!-- Right Column - Actions -->
+          <div class="space-y-4">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <h5 class="font-semibold text-gray-800 mb-3">Related Content</h5>
+              <div class="space-y-2">
+                <a href="/lessons/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">View recipe lessons</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <a href="/quizzes/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">Test your cooking knowledge</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-yellow-50 rounded-xl p-5">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                <h5 class="font-semibold text-gray-800">Did you know?</h5>
+              </div>
+              <p class="text-sm text-gray-600">Arrowroot is a versatile ingredient used in many traditional Filipino desserts and delicacies!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booth 3: Cultural Stage -->
+  <section id="booth-section-3" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="2" style="overflow: visible;">
+    <!-- Top - Image -->
+    <div class="relative h-64">
+      <img src="/media/media_assets/pic1.jpg" alt="Cultural Stage" class="w-full h-full object-cover">
+      <div class="absolute top-4 left-4">
+        <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 3</span>
+      </div>
+    </div>
+
+    <!-- Bottom - Content -->
+    <div class="px-8 pt-8 pb-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-3xl font-bold text-gray-900">Cultural Stage</h3>
+        <button 
+          onclick="toggleBooth('booth-3', this, document.getElementById('booth-section-3'))"
+          class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+          Explore
+        </button>
+      </div>
+      <p class="text-gray-700 text-base leading-relaxed">Experience traditional dances, music, and performances celebrating Bustos culture.</p>
+    </div>
+
+    <!-- Expandable Content -->
+    <div id="booth-3" class="booth-content hidden border-t border-gray-100">
+      <div class="p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Left Column - Content -->
+          <div>
+            <h4 class="text-lg font-bold text-gray-800 mb-3">Cultural Stage — Performances</h4>
+            <p class="text-gray-600 text-sm mb-4">Enjoy lively folk dances, colorful performances, and traditional songs that showcase the spirit and creativity of the people of Bustos.</p>
+            
+            <!-- Features -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-pink-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Traditional folk dances</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Live performances</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Cultural photo gallery</span>
+              </div>
+            </div>
+            
+            <button onclick="openModal('cultural')" class="mt-4 block w-full px-6 py-3 bg-green-600 text-white text-center font-semibold rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+              Explore More
+            </button>
+          </div>
+
+          <!-- Right Column - Actions -->
+          <div class="space-y-4">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <h5 class="font-semibold text-gray-800 mb-3">Related Content</h5>
+              <div class="space-y-2">
+                <a href="/lessons/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">View cultural lessons</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <a href="/quizzes/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">Take the culture quiz</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-pink-50 to-purple-50 rounded-xl p-5">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                <h5 class="font-semibold text-gray-800">Did you know?</h5>
+              </div>
+              <p class="text-sm text-gray-600">Bustos' cultural performances blend Spanish colonial influences with indigenous Filipino traditions!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booth 4: Farmer's Corner -->
+  <section id="booth-section-4" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="3" style="overflow: visible;">
+    <!-- Top - Image -->
+    <div class="relative h-64">
+      <img src="/media/media_assets/pic1.jpg" alt="Farmer's Corner" class="w-full h-full object-cover">
+      <div class="absolute top-4 left-4">
+        <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 4</span>
+      </div>
+    </div>
+
+    <!-- Bottom - Content -->
+    <div class="px-8 pt-8 pb-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-3xl font-bold text-gray-900">Farmer's Corner</h3>
+        <button 
+          onclick="toggleBooth('booth-4', this, document.getElementById('booth-section-4'))"
+          class="px-8 py-3 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+          Explore
+        </button>
+      </div>
+      <p class="text-gray-700 text-base leading-relaxed">Learn about arrowroot farming and the agricultural practices that sustain Bustos.</p>
+    </div>
+
+    <!-- Expandable Content -->
+    <div id="booth-4" class="booth-content hidden border-t border-gray-100">
+      <div class="p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Left Column - Content -->
+          <div>
+            <h4 class="text-lg font-bold text-gray-800 mb-3">Farmer's Corner — Agricultural Heritage</h4>
+            <p class="text-gray-600 text-sm mb-4">Learn about planting, harvesting, and how arrowroot and other local crops are grown with care. A tribute to the farmers who make our land flourish.</p>
+            
+            <!-- Features -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Farming techniques</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Video tutorials</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-lime-100 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-lime-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <span class="text-sm text-gray-700">Crop cultivation guides</span>
+              </div>
+            </div>
+            
+            <button onclick="openModal('farmer')" class="mt-4 block w-full px-6 py-3 bg-green-600 text-white text-center font-semibold rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md">
+              Explore More
+            </button>
+          </div>
+
+          <!-- Right Column - Actions -->
+          <div class="space-y-4">
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <h5 class="font-semibold text-gray-800 mb-3">Related Content</h5>
+              <div class="space-y-2">
+                <a href="/lessons/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">View farming lessons</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <a href="/quizzes/" class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition group">
+                  <span class="text-sm text-gray-700 group-hover:text-purple-600">Test your agriculture knowledge</span>
+                  <svg class="w-4 h-4 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-5">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                <h5 class="font-semibold text-gray-800">Did you know?</h5>
+              </div>
+              <p class="text-sm text-gray-600">Arrowroot farming is an eco-friendly practice that enriches the soil and supports sustainable agriculture!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
+
 
 <div
   class="mt-16 bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 rounded-3xl shadow-2xl p-12 text-center text-white relative overflow-hidden border-4 border-green-200">
@@ -1295,4 +1998,26 @@
     </div>
   </div>
 </div>
+
+<!-- Article Modal -->
+<div id="articleModal" class="fixed inset-0 z-50 hidden" style="background-color: rgba(0, 0, 0, 0.75);">
+  <div class="flex items-center justify-center min-h-screen px-4 py-8">
+    <div class="bg-white shadow-2xl max-w-6xl w-full overflow-hidden relative" style="border-radius: 10px; max-height: 90vh;">
+      <!-- Close Button -->
+      <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <!-- Scrollable Content -->
+      <div class="overflow-y-auto p-8" style="max-height: calc(90vh - 0px);">
+        <div id="modalContent">
+          <!-- Content will be inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

@@ -1,0 +1,25 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "description": "This repository contains a minimal Django project skeleton for \"Rooted in Knowledge — The Sweet Root of Bustos\" — an interactive learning portal prototype focused on lessons, a festival tour, quizzes, and teacher analytics placeholders.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css",
+    "watch:css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kbrbs/project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kbrbs/project/issues"
+  },
+  "homepage": "https://github.com/kbrbs/project#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.1.17"
+  }
+}
