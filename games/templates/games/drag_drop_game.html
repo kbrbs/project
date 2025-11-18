@@ -1,79 +1,188 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ game.title }} - Fill in the Blanks{% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-6 py-8">
+<style>
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .feedback-correct {
+    animation: fadeInScale 0.5s ease-out;
+  }
+  
+  .feedback-incorrect {
+    animation: shake 0.5s ease-out;
+  }
+  
+  .question-container {
+    animation: slideInUp 0.5s ease-out;
+  }
+  
+  .progress-bar-animated {
+    transition: width 0.5s ease-out;
+  }
+</style>
+
+<div class="max-w-6xl mx-auto px-6 py-8">
   <!-- Game Header -->
-  <div class="bg-green-600 text-white rounded-2xl p-8 mb-8 shadow-lg">
+  <div class="bg-gradient-to-br from-green-600 via-green-500 to-emerald-600 text-white rounded-3xl p-8 mb-8 shadow-2xl transform hover:scale-[1.02] transition-all">
     <div class="flex items-center gap-2 text-green-100 mb-2">
-      <a href="{% url 'games:game_list' %}" class="hover:text-white">← Back to Games</a>
+      <a href="{% url 'games:game_list' %}" class="hover:text-white transition-colors flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Games
+      </a>
     </div>
-    <h1 class="text-4xl font-bold mb-2">📝 {{ game.title }}</h1>
-    <p class="text-blue-100">{{ game.description }}</p>
-    <div class="mt-4 flex flex-wrap items-center gap-4 text-sm">
-      <span class="bg-white/20 px-3 py-1 rounded-full">Fill in the Blanks</span>
-      {% if game.time_limit %}<span>⏱️ {{ game.time_limit }}s limit</span>{% endif %}
-      <span>🎯 {{ game.points_per_correct }} pts per question</span>
+    <div class="flex items-center gap-4">
+      <div class="text-6xl">📝</div>
+      <div>
+        <h1 class="text-4xl font-bold mb-2">{{ game.title }}</h1>
+        <p class="text-green-100 text-lg">{{ game.description }}</p>
+      </div>
+    </div>
+    <div class="mt-6 flex flex-wrap items-center gap-4 text-sm">
+      <span class="bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full font-semibold flex items-center gap-2">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+          <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+        </svg>
+        Fill in the Blanks
+      </span>
+      {% if game.time_limit %}
+      <span class="bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full font-semibold flex items-center gap-2">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+        </svg>
+        {{ game.time_limit }}s limit
+      </span>
+      {% endif %}
+      <span class="bg-white/30 backdrop-blur-sm px-4 py-2 rounded-full font-semibold flex items-center gap-2">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+        </svg>
+        {{ game.points_per_correct }} pts per question
+      </span>
     </div>
   </div>
 
   <!-- Game Area -->
-  <div id="game-container" class="bg-white rounded-2xl shadow-lg p-8">
+  <div id="game-container" class="bg-white rounded-3xl shadow-2xl p-8 border-4 border-green-100">
     {% if game.time_limit %}
     <div class="mb-6 text-center">
-      <div class="inline-block bg-blue-100 px-6 py-3 rounded-lg">
-        <span class="text-blue-800 font-bold text-2xl">⏱️ <span id="timer">{{ game.time_limit }}</span>s</span>
+      <div class="inline-block bg-gradient-to-r from-green-400 to-emerald-500 px-8 py-4 rounded-2xl shadow-lg">
+        <span class="text-white font-bold text-3xl flex items-center gap-2">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+          </svg>
+          <span id="timer">{{ game.time_limit }}</span>s
+        </span>
       </div>
     </div>
     {% endif %}
 
     <!-- Progress -->
-    <div class="mb-6">
-      <div class="flex justify-between text-sm text-gray-600 mb-2">
-        <span>Question <span id="current-question">1</span> of <span id="total-questions">0</span></span>
-        <span>Score: <span id="score">0</span> / <span id="max-score">0</span></span>
+    <div class="mb-8">
+      <div class="flex justify-between text-sm font-semibold text-gray-700 mb-3">
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+          </svg>
+          Question <span id="current-question" class="text-green-600">1</span> of <span id="total-questions">0</span>
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+          </svg>
+          Score: <span id="score" class="text-yellow-600 font-bold">0</span> / <span id="max-score">0</span>
+        </span>
       </div>
-      <div class="w-full bg-gray-200 rounded-full h-2">
-        <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+      <div class="w-full bg-gray-200 rounded-full h-4 shadow-inner">
+        <div id="progress-bar" class="progress-bar-animated bg-gradient-to-r from-green-500 to-emerald-500 h-4 rounded-full transition-all shadow-lg" style="width: 0%"></div>
       </div>
     </div>
 
     <!-- Question Display -->
-    <div id="question-area">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center" id="question-text">Loading...</h2>
+    <div id="question-area" class="text-center question-container">
+      <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 mb-6 border-2 border-green-200">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2" id="question-text">Loading...</h2>
+        <p class="text-green-600 font-medium">Drag and drop the correct words!</p>
+      </div>
       
       <!-- Instructions -->
-      <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-6 max-w-3xl mx-auto">
-        <p class="text-blue-900 text-center">
-          <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl p-6 mb-8 max-w-3xl mx-auto shadow-lg">
+        <p class="text-blue-900 text-center font-semibold text-lg flex items-center justify-center gap-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
-          <strong>Drag and drop</strong> the words from the choices below into the blanks
+          Drag and drop the words from the choices below into the blanks
         </p>
       </div>
 
       <!-- Sentence with Drop Zones -->
       <div id="sentence-container" class="max-w-4xl mx-auto mb-8 text-center">
-        <div id="sentence-display" class="text-2xl leading-relaxed p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-100 min-h-[120px] flex flex-wrap items-center justify-center gap-2">
+        <div id="sentence-display" class="text-2xl leading-relaxed p-8 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-4 border-green-200 min-h-[120px] flex flex-wrap items-center justify-center gap-2 shadow-lg">
           <!-- Sentence parts will be inserted here -->
         </div>
       </div>
 
       <!-- Draggable Choices -->
-      <div class="max-w-3xl mx-auto mb-6">
-        <h3 class="text-lg font-semibold text-gray-700 mb-3 text-center">Available Choices:</h3>
-        <div id="choices-container" class="flex flex-wrap gap-3 justify-center p-6 bg-gray-50 rounded-xl border-2 border-gray-200 min-h-[100px]">
+      <div class="max-w-3xl mx-auto mb-8">
+        <h3 class="text-lg font-bold text-gray-700 mb-4 text-center flex items-center justify-center gap-2">
+          <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+          </svg>
+          Available Choices:
+        </h3>
+        <div id="choices-container" class="flex flex-wrap gap-4 justify-center p-8 bg-white rounded-2xl border-4 border-gray-200 min-h-[120px] shadow-lg">
           <!-- Choices will be inserted here by JS -->
         </div>
       </div>
 
       <!-- Feedback -->
-      <div id="feedback" class="hidden mb-6 p-4 rounded-lg max-w-3xl mx-auto"></div>
+      <div id="feedback" class="hidden mb-8 p-6 rounded-2xl shadow-lg max-w-3xl mx-auto"></div>
 
       <!-- Submit/Next Button -->
       <div class="text-center">
-        <button id="submit-btn" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl">
+        <button id="submit-btn" class="px-10 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-2xl font-bold rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform">
           Check Answer
         </button>
       </div>
@@ -81,20 +190,30 @@
 
     <!-- Results -->
     <div id="results" class="hidden text-center">
-      <div class="mb-6">
-        <div class="text-6xl mb-4">🎉</div>
-        <h2 class="text-3xl font-bold text-gray-800 mb-2">Game Complete!</h2>
-        <p class="text-xl text-gray-600 mb-6">Your final score:</p>
-        <div class="text-6xl font-bold text-blue-600 mb-2">
+      <div class="mb-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
+        <div class="text-7xl mb-6 animate-bounce">🎉</div>
+        <h2 class="text-4xl font-bold text-gray-800 mb-4">Game Complete!</h2>
+        <p class="text-xl text-gray-600 mb-8">Your final score:</p>
+        <div class="text-7xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">
           <span id="final-score">0</span> / <span id="final-max-score">0</span>
         </div>
-        <div class="text-2xl font-semibold text-gray-700 mb-6">
+        <div class="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 py-4 rounded-2xl text-3xl font-bold shadow-lg">
           <span id="final-percentage">0</span>%
         </div>
       </div>
       <div class="flex gap-4 justify-center flex-wrap">
-        <a href="{% url 'games:game_detail' game.pk %}" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Play Again</a>
-        <a href="{% url 'games:game_list' %}" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold">Back to Games</a>
+        <a href="{% url 'games:game_detail' game.pk %}" class="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-lg rounded-2xl hover:from-green-700 hover:to-emerald-700 font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+          </svg>
+          Play Again
+        </a>
+        <a href="{% url 'games:game_list' %}" class="px-8 py-4 bg-gray-200 text-gray-700 text-lg rounded-2xl hover:bg-gray-300 font-bold transition-all shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+          </svg>
+          Back to Games
+        </a>
       </div>
     </div>
   </div>
@@ -106,61 +225,66 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 120px;
-    min-height: 48px;
-    padding: 8px 16px;
+    min-width: 140px;
+    min-height: 56px;
+    padding: 10px 20px;
     background: white;
-    border: 3px dashed #86EFAC;
-    border-radius: 8px;
-    margin: 4px;
-    transition: all 0.2s;
+    border: 4px dashed #86EFAC;
+    border-radius: 12px;
+    margin: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
   }
   
   .drop-zone:empty::after {
     content: '______';
     color: #86EFAC;
     font-weight: bold;
+    font-size: 20px;
   }
   
   .drop-zone.drag-over {
     background: #DCFCE7;
-    border-color: #4CAF50;
-    transform: scale(1.05);
+    border-color: #10B981;
+    border-style: solid;
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
   }
   
   .choice-item {
     display: inline-block;
-    padding: 12px 20px;
-    background: #4CAF50;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
     color: white;
-    font-weight: 600;
-    font-size: 16px;
-    border-radius: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    border-radius: 12px;
     cursor: move;
     user-select: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    transition: all 0.3s ease;
   }
   
   .choice-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
   }
   
   .choice-item.sortable-ghost {
-    opacity: 0.4;
+    opacity: 0.5;
   }
   
   .choice-item.in-blank {
-    background: #FF9800;
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
   }
   
   .sentence-text {
     display: inline-block;
-    font-size: 24px;
-    font-weight: 500;
+    font-size: 26px;
+    font-weight: 600;
     color: #1F2937;
-    margin: 4px;
+    margin: 6px;
   }
 </style>
 
@@ -346,18 +470,38 @@ function submitAnswer() {
   
   if (isCorrect) {
     score += gameData.points_per_correct;
-    feedback.classList.add('bg-green-100', 'text-green-800');
+    feedback.classList.add('bg-green-100', 'text-green-800', 'feedback-correct', 'border-2', 'border-green-300');
     feedback.innerHTML = `
-      <div class="font-bold text-xl mb-2">✅ Perfect! All Correct!</div>
-      <p>${q.explanation || 'Well done!'}</p>
+      <div class="flex items-center gap-4 justify-center">
+        <img src="{% static 'pictures/arrowroot-mascot.png' %}" alt="Arrowroot Mascot" class="w-24 h-24 object-contain animate-bounce">
+        <div class="text-left">
+          <div class="font-bold text-2xl mb-2 flex items-center gap-2">
+            <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Perfect! All Correct!
+          </div>
+          <p class="text-lg">${q.explanation || 'Well done! Keep it up!'}</p>
+        </div>
+      </div>
     `;
   } else {
-    feedback.classList.add('bg-red-100', 'text-red-800');
+    feedback.classList.add('bg-red-100', 'text-red-800', 'feedback-incorrect', 'border-2', 'border-red-300');
     const correctSentence = buildCorrectSentence(q.sentence_parts, correctAnswers);
     feedback.innerHTML = `
-      <div class="font-bold text-xl mb-2">❌ Not Quite Right</div>
-      <p class="mb-2">Correct answer: <strong>${correctSentence}</strong></p>
-      <p>${q.explanation || ''}</p>
+      <div class="flex items-center gap-4 justify-center">
+        <img src="{% static 'pictures/arrowroot-mascot.png' %}" alt="Arrowroot Mascot" class="w-24 h-24 object-contain grayscale opacity-50">
+        <div class="text-left">
+          <div class="font-bold text-2xl mb-2 flex items-center gap-2">
+            <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            Not Quite Right
+          </div>
+          <p class="text-lg mb-2">Correct answer: ${correctSentence}</p>
+          <p class="text-base">${q.explanation || 'Try again next time!'}</p>
+        </div>
+      </div>
     `;
   }
   
@@ -380,14 +524,14 @@ function updateButtonState() {
   if (isAnswerChecked) {
     if (isLastQuestion) {
       submitBtn.textContent = 'Finish';
-      submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xl font-bold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl';
+      submitBtn.className = 'px-10 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-2xl font-bold rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform';
     } else {
       submitBtn.textContent = 'Next Question →';
-      submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xl font-bold rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl';
+      submitBtn.className = 'px-10 py-5 bg-gradient-to-r from-orange-500 to-amber-600 text-white text-2xl font-bold rounded-2xl hover:from-orange-600 hover:to-amber-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform';
     }
   } else {
     submitBtn.textContent = 'Check Answer';
-    submitBtn.className = 'px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl';
+    submitBtn.className = 'px-10 py-5 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-2xl font-bold rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105 transform';
   }
 }
 

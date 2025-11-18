@@ -15,10 +15,9 @@ import json
 class GameForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ['title', 'game_type', 'description', 'article', 'difficulty', 'time_limit', 'points_per_correct', 'order', 'is_active']
+        fields = ['title', 'game_type', 'description', 'article', 'difficulty', 'time_limit', 'points_per_correct', 'is_active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
-            'order': forms.NumberInput(attrs={'readonly': 'readonly', 'style': 'background-color: #F3F4F6; cursor: not-allowed;'}),
         }
 
 

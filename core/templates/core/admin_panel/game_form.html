@@ -82,12 +82,6 @@
             </div>
             
             <div>
-              <label for="id_order">Order <span class="text-xs text-gray-500">(Auto-assigned)</span></label>
-              {{ form.order }}
-              <p class="helptext">Display order in game list (automatically assigned)</p>
-            </div>
-            
-            <div>
               <label for="id_is_active">Active</label>
               {{ form.is_active }}
               <span class="text-sm text-gray-600 ml-2">Published and visible to users</span>
@@ -136,7 +130,7 @@
               <div class="question-fields space-y-4">
                 <!-- Common field: question text (always shown) -->
                 <div class="col-span-2">
-                  <label>Question Text / Prompt</label>
+                  <label>Question Text / Instuction</label>
                   {{ f.question_text }}
                 </div>
                 <div class="col-span-2">
