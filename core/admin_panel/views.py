@@ -439,7 +439,7 @@ def export_users_csv(request):
 
 
 # Quiz CRUD with question formset
-QuizFormSet = inlineformset_factory(Quiz, Question, fields=('text', 'choices'), extra=1, can_delete=True)
+QuizFormSet = inlineformset_factory(Quiz, Question, fields=('text', 'choices', 'correct_answer'), extra=1, can_delete=True)
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -453,7 +453,7 @@ class QuizListView(ListView):
 @method_decorator(staff_member_required, name='dispatch')
 class QuizCreateView(CreateView):
     model = Quiz
-    fields = ['title', 'article']
+    fields = ['title', 'description', 'article']
     template_name = 'core/admin_panel/quiz_form.html'
     success_url = reverse_lazy('core:admin_quizzes')
 
@@ -486,7 +486,7 @@ class QuizCreateView(CreateView):
 @method_decorator(staff_member_required, name='dispatch')
 class QuizUpdateView(UpdateView):
     model = Quiz
-    fields = ['title', 'article']
+    fields = ['title', 'description', 'article']
     template_name = 'core/admin_panel/quiz_form.html'
     success_url = reverse_lazy('core:admin_quizzes')
 

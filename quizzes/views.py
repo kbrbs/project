@@ -47,7 +47,7 @@ def quiz_api_detail(request, pk):
         'id': quiz.id,
         'title': quiz.title,
         'questions': [
-            {'id': q.id, 'text': q.text, 'choices': q.choices}
+            {'id': q.id, 'text': q.text, 'choices': q.get_choices_json()}
             for q in quiz.questions.all()
         ]
     }
@@ -77,11 +77,14 @@ def quiz_submit(request, pk):
         total_questions += 1
         user_answer = answers.get(str(question.id))
         
-        # Find correct choice
+        # Get choices in JSON format
+        choices = question.get_choices_json()
+        
+        # Find correct choice and user's choice
         correct_choice = None
         user_choice_text = None
         
-        for choice in question.choices:
+        for choice in choices:
             if choice.get('correct'):
                 correct_choice = choice
             if user_answer and str(choice.get('id')) == str(user_answer):
