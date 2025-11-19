@@ -112,6 +112,18 @@
     overflow: hidden;
     border-radius: 0.75rem 0.75rem 0 0;
   }
+
+  /* Modal scroll animation */
+  .modal-content-item {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .modal-content-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 </style>
 
 <!-- Mascot Guide - Fixed Position (Bottom Right) -->
@@ -749,7 +761,7 @@
       festivalImage.style.opacity = '1';
 
       // Adjust hero section height after animation completes
-      setTimeout(function () {
+setTimeout(function () {
         const festivalImageHeight = festivalImage.offsetHeight;
         // Add some padding (40px top + 40px bottom)
         const newHeight = festivalImageHeight + 250;
@@ -945,6 +957,226 @@
     }
   }
   		
+// Recipe pages data
+const recipePages = {
+  1: {
+    title: 'Traditional Uraro Arrowroot Cookies',
+    description: 'Delicate and crumbly cookies, traditionally made with sago or arrowroot starch, <br>giving them a unique melt-in-your-mouth texture. These cookies are a traditional specialty, known for their delicate and crumbly consistency.',
+    image: '/media/media_assets/MinasaBackground.jpg',
+    videoUrl: 'https://www.youtube.com/embed/w2ogADYOJVo',
+    ingredients: {
+      col1: [
+        '¼ cup butter, softened',
+        '¼ cup sugar',
+        '2 eggs',
+        '½ tsp vanilla extract'
+      ],
+      col2: [
+        '½ cup all-purpose flour',
+        '1½ tsp baking powder',
+        '2 cups arrowroot starch/flour',
+        '½ tsp salt'
+      ]
+    },
+    instructions: [
+      { icon: '/media/icons/heat.png', text: 'Preheat your oven to 350 °F (about 175 °C)' },
+      { icon: '/media/icons/drink.png', text: 'In a bowl, sift together arrowroot flour, all-purpose flour, baking powder, and salt.' },
+      { icon: '/media/icons/butter.png', text: 'In a separate mixing bowl, cream butter and sugar with an electric mixer until light and fluffy.' },
+      { icon: '/media/icons/mixing.png', text: 'Beat in the eggs one at a time, then add vanilla extract.' },
+      { icon: '/media/icons/flour.png', text: 'Gradually add the dry flour mixture to the wet mixture. Start on low speed to combine, then increase the speed until smooth.' },
+      { icon: '/media/icons/cookie.png', text: 'Transfer the dough into a cookie press and press onto an ungreased baking sheet, leaving about 1½ inches between cookies.' },
+      { icon: '/media/icons/microwave-oven.png', text: 'Bake for 12-15 minutes, or until the undersides of the cookies start to turn just lightly golden.' },
+      { icon: '/media/icons/cookies.png', text: 'Let the cookies cool completely in the pan. They are fragile, so gently slide them off (don\'t use a spatula).' },
+      { icon: '/media/icons/cling-film.png', text: 'Storage: Traditionally wrapped in "papel de hapon" (thin Japanese paper) for sale. For home storage, use an airtight container — they keep for up to ~5 days.' }
+    ]
+  },
+  2: {
+    title: 'Arrowroot “Sinalab” (Marinduque Flat Bread)',
+    description: 'An academic article describes sinalab, a traditional flat bread made in Marinduque using 100% arrowroot (Maranta arundinacea) starch.',
+    image: '/media/media_assets/sinalab.jpg',
+    videoUrl: 'https://www.youtube.com/embed/APlHI0RU7hg',
+    videoDescription: 'Arrowroot, famous rootscrops in Marinduque Province. Sinalab/Bibingka one of the famous delicacies or favorite merienda of my Kababayan. Will show you the traditional way of cooking.',
+    ingredients: {
+      col1: [
+        'Arrowroot (Maranta arundinacea) starch',
+        'Water',
+        'Coconut milk',
+        'Evaporated milk'
+      ],
+      col2: [
+        '',
+        '',
+        '',
+        ''
+      ]
+    },
+    instructions: [
+      { icon: '/media/icons/drink.png', text: 'Step 1: The arrowroot starch is mixed with equal parts water, coconut milk, and evaporated milk.' },
+      { icon: '/media/icons/bread.png', text: 'Step 2: The mixture is then formed into flat bread shapes.' },
+      { icon: '/media/icons/bread (1).png', text: 'Step 3: These are baked until cooked and have a firm but slightly chewy texture typical of traditional flat breads.' }
+    ]
+  }
+};
+
+let currentRecipePage = 1;
+
+function generateRecipeContent(pageNumber) {
+  const recipe = recipePages[pageNumber];
+  if (!recipe) return '';
+  
+  const ingredientsHtml = `
+    <div class="text-xl font-semibold mb-2">
+      ${recipe.ingredients.col1.map(ing => `<p>${ing}</p>`).join('')}
+    </div>
+    <div class="text-xl font-semibold mb-2">
+      ${recipe.ingredients.col2.map(ing => `<p>${ing}</p>`).join('')}
+    </div>
+  `;
+  
+  const instructionsHtml = recipe.instructions.map((step, index) => {
+    const bgClass = index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200';
+    return `
+      <div class="${bgClass} rounded-lg p-4 text-center">
+        <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+          <span class="text-2xl"><img src="${step.icon}" alt="Step Icon" class="w-6 h-6"></span>
+        </div>
+        <p class="text-sm font-medium text-gray-800">${step.text}</p>
+      </div>
+    `;
+  }).join('');
+  
+  const videoSection = recipe.videoUrl ? `
+    <!-- Video Section -->
+    <div>
+      <h4 class="text-2xl font-bold text-gray-800 mb-4">Video Tutorial</h4>
+      <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg mb-3">
+        <iframe
+          width="100%"
+          height="100%"
+          src="${recipe.videoUrl}"
+          title="${recipe.title} Video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          class="w-full h-full">
+        </iframe>
+      </div>
+      ${recipe.videoDescription ? `<p class="text-gray-600 text-sm leading-relaxed">${recipe.videoDescription}</p>` : ''}
+    </div>
+  ` : '';
+  
+  return `
+    <div class="space-y-6">
+      <!-- Hero Image -->
+      <div class="w-full h-80 bg-gray-200 rounded-xl overflow-hidden relative">
+        <img src="${recipe.image}" alt="${recipe.title}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+          <div class="p-8 text-white">
+            <h3 class="text-5xl font-bold mb-2">${recipe.title}</h3>
+            <p class="text-sm opacity-90">${recipe.description}</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Ingredients Section -->
+      <div class="bg-green-600 rounded-lg p-6">
+        <h4 class="text-2xl font-bold text-white mb-4">Ingredients</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-white">
+          ${ingredientsHtml}
+        </div>
+      </div>
+      
+      <!-- Instructions Section -->
+      <div>
+        <h4 class="text-2xl font-bold text-gray-800 mb-4">Instructions</h4>
+        
+        <div class="mb-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${instructionsHtml}
+          </div>
+        </div>
+      </div>
+      
+      ${videoSection}
+      
+      <!-- Pagination -->
+      <div class="flex items-center justify-center gap-4 mt-8">
+        <button onclick="changeRecipePage('prev')" id="recipePrevBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold">
+          Previous
+        </button>
+        <div class="flex gap-2">
+          <button onclick="goToRecipePage(1)" class="recipe-page-btn w-10 h-10 rounded-lg font-semibold transition-colors ${pageNumber === 1 ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" data-page="1">1</button>
+          <button onclick="goToRecipePage(2)" class="recipe-page-btn w-10 h-10 rounded-lg font-semibold transition-colors ${pageNumber === 2 ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" data-page="2">2</button>
+        </div>
+        <button onclick="changeRecipePage('next')" id="recipeNextBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold">
+          Next
+        </button>
+      </div>
+      <p></em>&nbsp;</em></p>
+    </div>
+  `;
+}
+
+function changeRecipePage(direction) {
+  const totalPages = Object.keys(recipePages).length;
+  
+  if (direction === 'next' && currentRecipePage < totalPages) {
+    currentRecipePage++;
+  } else if (direction === 'prev' && currentRecipePage > 1) {
+    currentRecipePage--;
+  }
+  
+  updateRecipeContent();
+}
+
+function goToRecipePage(pageNumber) {
+  currentRecipePage = pageNumber;
+  updateRecipeContent();
+}
+
+function updateRecipeContent() {
+  const content = document.getElementById('modalContent');
+  const recipeContent = generateRecipeContent(currentRecipePage);
+  
+  content.innerHTML = `
+    <h2 class="text-3xl font-bold text-green-600 mb-6 modal-content-item">Recipe Tent</h2>
+    ${recipeContent}
+  `;
+  
+  // Scroll to top of modal content
+  const modalScrollContainer = document.querySelector('#articleModal .overflow-y-auto');
+  if (modalScrollContainer) {
+    modalScrollContainer.scrollTop = 0;
+  }
+  
+  // Re-wrap content sections with animation class
+  setTimeout(function() {
+    const contentSections = content.querySelectorAll('div.space-y-6 > div');
+    contentSections.forEach(function(section) {
+      // Exclude pagination from animation
+      if (!section.classList.contains('modal-content-item') && !section.classList.contains('flex')) {
+        section.classList.add('modal-content-item');
+        section.classList.add('visible');
+      }
+    });
+    
+    // Make pagination buttons visible immediately
+    const paginationDiv = content.querySelector('.flex.items-center.justify-center.gap-4');
+    if (paginationDiv) {
+      paginationDiv.classList.add('modal-content-item', 'visible');
+    }
+  }, 0);
+  
+  // Update pagination button states
+  const totalPages = Object.keys(recipePages).length;
+  const prevBtn = document.getElementById('recipePrevBtn');
+  const nextBtn = document.getElementById('recipeNextBtn');
+  
+  if (prevBtn) prevBtn.disabled = currentRecipePage === 1;
+  if (nextBtn) nextBtn.disabled = currentRecipePage === totalPages;
+}
+
 // Modal functions
 const modalContent = {
   history: {
@@ -953,7 +1185,7 @@ const modalContent = {
       <div class="space-y-8">
         <!-- Hero Image Placeholder -->
         <div class="w-full h-80 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative">
-          <img src="/media/media_assets/pic1.jpg" alt="History Hero" class="w-full h-full object-cover">
+          <img src="/media/media_assets/minasaFest2.jpg" alt="History Hero" class="w-full h-full object-cover">
           <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">History Hero Image</span>
         </div>
         
@@ -985,7 +1217,7 @@ const modalContent = {
             </p>
           </div>
           <div class="w-full h-72 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative">
-            <img src="/media/media_assets/Minasapic1.jpg" alt="Origins" class="w-full h-full object-cover">
+            <img src="/media/media_assets/minasaFest2.jpg" alt="Origins" class="w-full h-full object-cover">
             <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Origins Image</span>
           </div>
         </div>
@@ -1080,128 +1312,356 @@ const modalContent = {
     `
   },
   recipe: {
-    title: 'Recipe Tent - Traditional Arrowroot Delicacies',
+    title: 'Recipe Tent',
     content: `
-      <h3 class="text-2xl font-bold text-gray-800 mb-4">Traditional Arrowroot Recipes</h3>
-      
-      <div class="prose prose-lg max-w-none">
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">The Art of Minasa Making</h4>
-        <p class="text-gray-700 mb-4">
-          Minasa, the signature delicacy of Bustos, is more than just a dessert—it's a culinary tradition
-          that embodies the town's heritage. Made from finely processed arrowroot starch, minasa has a
-          delicate texture and subtle sweetness that has delighted generations of families. The traditional
-          recipe requires patience, skill, and an understanding of the unique properties of arrowroot flour.
-        </p>
+      <div class="space-y-6">
+        <!-- Hero Image -->
+        <div class="w-full h-80 bg-gray-200 rounded-xl overflow-hidden relative">
+          <img src="/media/media_assets/MinasaBackground.jpg" alt="Traditional Uraro Arrowroot Cookies" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+            <div class="p-8 text-white">
+              <h3 class="text-5xl font-bold mb-2">Traditional Uraro Arrowroot Cookies</h3>
+              <p class="text-sm opacity-90">Delicate and crumbly cookies, traditionally made with sago or arrowroot starch, <br>giving them a unique melt-in-your-mouth texture. These cookies are a traditional specialty, known for their delicate and crumbly consistency.</p>
+            </div>
+          </div>
+        </div>
         
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Traditional Ingredients</h4>
-        <p class="text-gray-700 mb-4">
-          The authentic minasa recipe uses locally sourced arrowroot starch, coconut milk, sugar, and
-          pandan leaves for aromatic flavoring. Each ingredient is carefully selected to ensure the perfect
-          balance of flavors. Traditional cooks emphasize the importance of using fresh, high-quality
-          arrowroot starch, which gives minasa its characteristic smooth and glossy appearance.
-        </p>
+        <!-- Ingredients Section -->
+        <div class="bg-green-600 rounded-lg p-6">
+          <h4 class="text-2xl font-bold text-white mb-4">Ingredients</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-white">
+            <div class="text-xl font-semibold mb-2">
+              <p>¼ cup butter, softened</p>
+              <p>¼ cup sugar</p>
+              <p>2 eggs</p>
+              <p>½ tsp vanilla extract</p>
+            </div>
+            <div class="text-xl font-semibold mb-2">
+              <p>½ cup all-purpose flour</p>
+              <p>1½ tsp baking powder</p>
+              <p>2 cups arrowroot starch/flour</p>
+              <p>½ tsp salt</p>
+            </div>
+          </div>
+        </div>
         
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Cooking Techniques Passed Down</h4>
-        <p class="text-gray-700 mb-4">
-          The preparation of minasa involves specific techniques that have been refined over centuries.
-          From the gentle heating of the mixture to the continuous stirring required to achieve the right
-          consistency, every step is crucial. Master cooks in Bustos have developed an intuitive understanding
-          of when the mixture has reached perfection—a skill that can only be learned through years of practice
-          and dedication.
-        </p>
+        <!-- Instructions Section -->
+        <div>
+          <h4 class="text-2xl font-bold text-gray-800 mb-4">Instructions</h4>
+          
+          <div class="mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-gray-100 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/heat.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">Preheat your oven to 350 °F (about 175 °C)</p>
+              </div>
+              <div class="bg-gray-200 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/drink.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">In a bowl, sift together arrowroot flour, all-purpose flour, baking powder, and salt.</p>
+              </div>
+              <div class="bg-gray-100 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/butter.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">In a separate mixing bowl, cream butter and sugar with an electric mixer until light and fluffy.</p>
+              </div>
+              <div class="bg-gray-200 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/mixing.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">Beat in the eggs one at a time, then add vanilla extract.</p>
+              </div>
+              <div class="bg-gray-100 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/flour.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">Gradually add the dry flour mixture to the wet mixture. Start on low speed to combine, then increase the speed until smooth.</p>
+              </div>
+              <div class="bg-gray-200 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/cookie.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">Transfer the dough into a cookie press and press onto an ungreased baking sheet, leaving about 1½ inches between cookies.</p>
+              </div>
+              <div class="bg-gray-100 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/microwave-oven.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">Bake for 12-15 minutes, or until the undersides of the cookies start to turn just lightly golden.</p>
+              </div>
+              <div class="bg-gray-200 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/cookies.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">Let the cookies cool completely in the pan. They are fragile, so gently slide them off (don’t use a spatula).</p>
+              </div>
+              <div class="bg-gray-100 rounded-lg p-4 text-center">
+                <div class="w-12 h-12 mx-auto mb-3 bg-white rounded-full flex items-center justify-center">
+                  <span class="text-2xl"><img src="/media/icons/cling-film.png" alt="Oven Icon" class="w-6 h-6"></span>
+                </div>
+                <p class="text-sm font-medium text-gray-800">Storage: Traditionally wrapped in “papel de hapon” (thin Japanese paper) for sale. For home storage, use an airtight container — they keep for up to ~5 days.</p>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Modern Variations</h4>
-        <p class="text-gray-700 mb-4">
-          While traditional recipes remain cherished, modern cooks have begun experimenting with new flavors
-          and presentations. From ube-flavored minasa to bite-sized portions perfect for contemporary
-          celebrations, these innovations honor the past while embracing the future. The Recipe Tent showcases
-          both traditional methods and creative adaptations, ensuring that the art of minasa making continues
-          to thrive.
-        </p>
+        <!-- Pagination -->
+        <div class="flex items-center justify-center gap-4 mt-8">
+          <button onclick="changeRecipePage('prev')" id="recipePrevBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold">
+            Previous
+          </button>
+          <div class="flex gap-2">
+            <button onclick="goToRecipePage(1)" class="recipe-page-btn w-10 h-10 rounded-lg font-semibold transition-colors bg-green-600 text-white" data-page="1">1</button>
+            <button onclick="goToRecipePage(2)" class="recipe-page-btn w-10 h-10 rounded-lg font-semibold transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300" data-page="2">2</button>
+          </div>
+          <button onclick="changeRecipePage('next')" id="recipeNextBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold">
+            Next
+          </button>
+        </div>
       </div>
     `
   },
   cultural: {
-    title: 'Cultural Stage - Performances and Traditions',
+    title: 'Cultural Stage ',
     content: `
-      <h3 class="text-2xl font-bold text-gray-800 mb-4">Cultural Performances and Traditions</h3>
+      <div class="space-y-8">
+        <!-- Hero Section -->
+        <div class="w-full h-80 bg-gray-200 rounded-xl overflow-hidden relative">
+          <img src="/media/media_assets/MinasaFest6.jpg" alt="Cultural Stage" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+            <div class="p-8 text-white">
+              <h3 class="text-5xl font-bold mb-2">Celebrate the Heart of Bustos Culture</h3>
+              <p class="text-sm opacity-90">The Cultural Stage of the Minasa Festival showcases the vibrant identity of Bustos, Bulacan — from its historical connection to arrowroot (uraro) to the town’s rich traditions, dance, and artistry. This is the centerpiece where stories of heritage are performed, preserved, and passed on to the next generation.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Performances Section -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+            <h4 class="text-2xl font-bold text-gray-800">Yearly Performances</h4>
+            <a href="https://www.instagram.com/explore/search/keyword/?q=%23minasafestival" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-colors">View all performances →</a>
+            </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+              <img src="/media/media_assets/MinasaFest9.jpg" alt="Traditional Dance" class="w-full h-48 object-cover">
+              <div class="p-3 bg-white">
+                <h5 class="font-bold text-gray-800 mb-1">#2025 MINASA FESTIVAL</h5>
+                <p class="text-xs text-gray-500">Photo By: markjj_doto</p>
+              </div>
+            </div>
+            <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+              <img src="/media/media_assets/MinasaFest7.jpg" alt="Folk Dance" class="w-full h-48 object-cover">
+              <div class="p-3 bg-white">
+                <h5 class="font-bold text-gray-800 mb-1">#2024 MINASA FESTIVAL</h5>
+                <p class="text-xs text-gray-500">Photo By: pmdpstudios_bustos</p>
+              </div>
+            </div>
+            <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+              <img src="/media/media_assets/MinasaFest10.jpg" alt="Cultural Dance" class="w-full h-48 object-cover">
+              <div class="p-3 bg-white">
+                <h5 class="font-bold text-gray-800 mb-1">#2023 MINASA FESTIVAL</h5>
+                <p class="text-xs text-gray-500">Photo By: ash_enrile</p>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+
+        <!-- Latest Stories Section -->
+        <div>
+          <div>
+          <div class="flex items-center justify-between mb-6">
+            <h4 class="text-2xl font-bold text-gray-800">Latest Performances</h4>
+          </div>
+
+          <!-- Embedded Video Section -->
+          <div class="w-full">
+            <div class="rounded-xl overflow-hidden shadow-md">
+              <iframe 
+                class="w-full h-64 md:h-96"
+                src="https://www.youtube-nocookie.com/embed/BekGcYm0jMk?rel=0" 
+                title="Minasa Festival Video"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+        <!-- Cultural Highlights Section -->
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h4 class="text-2xl font-bold text-gray-800">Cultural Highlights</h4>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+              <img src="/media/media_assets/MinasaFest11.jpg" alt="Cultural Highlight 1" class="w-full h-48 object-cover">
+              <div class="p-3 bg-white">
+                <h5 class="font-bold text-gray-800 mb-1">Traditional Dance Heritage</h5>
+                <p class="text-xs text-gray-500">Preserving ancient folk dances passed down through generations in the vibrant Bustos community.</p>
+              </div>
+            </div>
+            <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+              <img src="/media/media_assets/MinasaFest12.jpg" alt="Cultural Highlight 2" class="w-full h-48 object-cover">
+              <div class="p-3 bg-white">
+                <h5 class="font-bold text-gray-800 mb-1">Musical Traditions</h5>
+                <p class="text-xs text-gray-500">Celebrating the rich musical heritage and traditional instruments that define Bustos culture.</p>
+              </div>
+            </div>
+            <div class="rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+              <img src="/media/media_assets/MinasaFest13.jpg" alt="Cultural Highlight 3" class="w-full h-48 object-cover">
+              <div class="p-3 bg-white">
+                <h5 class="font-bold text-gray-800 mb-1">Cultural Performances</h5>
+                <p class="text-xs text-gray-500">Showcasing the spirit and creativity of Bustos through colorful performances and storytelling.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
       
-      <div class="prose prose-lg max-w-none">
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Traditional Folk Dances</h4>
-        <p class="text-gray-700 mb-4">
-          The Cultural Stage comes alive with traditional Filipino folk dances that tell stories of harvest,
-          celebration, and community life. These performances feature colorful costumes, rhythmic movements,
-          and music that has been part of Bustos culture for generations. Dancers train year-round to perfect
-          their craft, ensuring that each performance captures the authentic spirit of Filipino heritage.
-        </p>
-        
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Musical Heritage</h4>
-        <p class="text-gray-700 mb-4">
-          The sounds of traditional instruments fill the air during the festival—from the rhythmic beating
-          of drums to the melodic notes of bamboo instruments. Local musicians preserve ancient musical
-          traditions while also composing new pieces that celebrate contemporary Bustos life. The festival
-          serves as a platform for both seasoned performers and young talents to showcase their skills.
-        </p>
-        
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Costume and Artistry</h4>
-        <p class="text-gray-700 mb-4">
-          The elaborate costumes worn during performances are works of art in themselves. Each outfit is
-          carefully crafted to represent different aspects of Bustos heritage, featuring intricate embroidery,
-          vibrant colors, and traditional patterns. Local artisans spend months creating these costumes,
-          ensuring that every detail reflects the pride and creativity of the community.
-        </p>
-        
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Community Participation</h4>
-        <p class="text-gray-700 mb-4">
-          The Cultural Stage is not just for professional performers—it's a community celebration where
-          people of all ages participate. Schools prepare special presentations, community groups showcase
-          traditional dances, and families come together to celebrate their shared heritage. This inclusive
-          spirit ensures that cultural traditions are passed on to future generations and that everyone feels
-          connected to the festival's meaning.
-        </p>
-      </div>
     `
   },
   farmer: {
     title: "Farmer's Corner - Agricultural Heritage",
     content: `
-      <h3 class="text-2xl font-bold text-gray-800 mb-4">Agricultural Heritage and Farming Practices</h3>
-      
-      <div class="prose prose-lg max-w-none">
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">The Life of Arrowroot Farmers</h4>
-        <p class="text-gray-700 mb-4">
-          The farmers of Bustos are the heart and soul of the Minasa Festival. Their dedication to cultivating
-          arrowroot has sustained the community for generations. From preparing the soil to harvesting the
-          mature roots, these farmers employ techniques that have been refined over centuries, working in
-          harmony with nature's rhythms and the changing seasons.
-        </p>
+      <div class="space-y-8">
+        <!-- Hero Image -->
+        <div class="w-full h-80 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative">
+          <img src="/media/media_assets/FarmerPic2.jpg" alt="Farmers Corner Hero" class="w-full h-full object-cover">
+          <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Farmer Hero Image</span>
+        </div>
         
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Sustainable Farming Practices</h4>
-        <p class="text-gray-700 mb-4">
-          Bustos farmers have long practiced sustainable agriculture, understanding that the health of their
-          land ensures future harvests. Crop rotation, natural pest control, and organic fertilization methods
-          are integral to their farming philosophy. These eco-friendly practices not only protect the
-          environment but also produce higher-quality arrowroot that is prized for its purity and nutritional
-          value.
-        </p>
+        <!-- Introduction Section -->
+        <div class="prose prose-lg max-w-none">
+          <h3 class="text-3xl font-bold text-gray-800 mb-4">Agricultural Heritage and Farming Practices</h3>
+          <p class="text-gray-700 text-lg leading-relaxed mb-6">
+            The farmers of Bustos are the heart and soul of the Minasa Festival. Their dedication to cultivating arrowroot has sustained the community for generations, preserving both tradition and the land that defines our heritage.
+          </p>
+        </div>
         
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">From Field to Table</h4>
-        <p class="text-gray-700 mb-4">
-          The journey of arrowroot from field to table is a fascinating process that the Farmer's Corner
-          explores in detail. Visitors can learn about the careful harvesting of the roots, the extraction
-          of starch, and the processing methods that transform raw arrowroot into the fine flour used in
-          traditional recipes. Each step requires skill, patience, and respect for the plant that has
-          nurtured the community.
-        </p>
+        <!-- Two Column Section: Life of Farmers -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h4 class="text-2xl font-semibold text-gray-800 mb-4">The Life of Arrowroot Farmers</h4>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              From preparing the soil to harvesting the mature roots, these farmers employ techniques that have been refined over centuries, working in harmony with nature's rhythms and the changing seasons.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+              Their deep understanding of the land and dedication to quality ensures that every harvest honors the traditions passed down through countless generations.
+            </p>
+          </div>
+          <div class="w-full h-72 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative">
+            <img src="/media/media_assets/FarmerPic3.jpg" alt="Arrowroot Farmers" class="w-full h-full object-cover">
+            <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Farmers Image</span>
+          </div>
+        </div>
         
-        <h4 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Future of Farming in Bustos</h4>
-        <p class="text-gray-700 mb-4">
-          While honoring traditional methods, Bustos farmers are also embracing innovations that improve
-          efficiency and sustainability. Modern irrigation systems, improved crop varieties, and cooperative
-          farming initiatives are helping to secure the future of arrowroot cultivation. The Farmer's Corner
-          showcases how tradition and innovation can work together to support the next generation of farmers
-          and ensure that the Minasa Festival continues for years to come.
-        </p>
+        <!-- Two Column Section: Sustainable Practices (Image Left) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="w-full h-72 bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative order-2 md:order-1">
+            <img src="/media/media_assets/FarmerPic4.jpg" alt="Sustainable Farming" class="w-full h-full object-cover">
+            <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Sustainable Farming Image</span>
+          </div>
+          <div class="order-1 md:order-2">
+            <h4 class="text-2xl font-semibold text-gray-800 mb-4">Sustainable Farming Practices</h4>
+            <p class="text-gray-700 leading-relaxed mb-4">
+              Bustos farmers have long practiced sustainable agriculture, understanding that the health of their land ensures future harvests. Crop rotation, natural pest control, and organic fertilization methods are integral to their farming philosophy.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+              These eco-friendly practices not only protect the environment but also produce higher-quality arrowroot that is prized for its purity and nutritional value.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Full Width Section: Field to Table -->
+        <div class="bg-gradient-to-br from-green-50 to-yellow-50 rounded-xl p-8">
+          <h4 class="text-2xl font-semibold text-gray-800 mb-4">From Field to Table</h4>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            The journey of arrowroot from field to table is a fascinating process that the Farmer's Corner explores in detail. Visitors can learn about the careful harvesting of the roots, the extraction of starch, and the processing methods that transform raw arrowroot into the fine flour used in traditional recipes.
+          </p>
+          <p class="text-gray-700 leading-relaxed">
+            Each step requires skill, patience, and respect for the plant that has nurtured the community for generations.
+          </p>
+        </div>
+        
+        <!-- Image Gallery Section -->
+        <div>
+          <h4 class="text-2xl font-semibold text-gray-800 mb-6">Farming Heritage</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden relative">
+              <img src="/media/media_assets/FarmerPic5.jpg" alt="Farming 1" class="w-full h-full object-cover">
+              <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Farming 1</span>
+            </div>
+            <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden relative">
+              <img src="/media/media_assets/FarmerPic6.jpg" alt="Farming 2" class="w-full h-full object-cover">
+              <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Farming 2</span>
+            </div>
+            <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden relative">
+              <img src="/media/media_assets/FarmerPic7.jpg" alt="Farming 3" class="w-full h-full object-cover">
+              <span class="absolute text-gray-400 text-sm bg-white bg-opacity-75 px-3 py-1 rounded hidden">Farming 3</span>
+            </div>
+          </div>
+          <p class="text-gray-700 leading-relaxed">
+            The Farmer's Corner celebrates the hardworking farmers who are the backbone of Bustos. Their commitment to quality and sustainability ensures that the traditions of arrowroot cultivation continue to thrive.
+          </p>
+        </div>
+        
+        <!-- Future of Farming Section -->
+        <div>
+          <h4 class="text-2xl font-semibold text-gray-800 mb-4">Future of Farming in Bustos</h4>
+          <p class="text-gray-700 leading-relaxed mb-6">
+            While honoring traditional methods, Bustos farmers are also embracing innovations that improve efficiency and sustainability. Modern irrigation systems, improved crop varieties, and cooperative farming initiatives are helping to secure the future of arrowroot cultivation.
+          </p>
+          <p class="text-gray-700 leading-relaxed">
+            The Farmer's Corner showcases how tradition and innovation can work together to support the next generation of farmers and ensure that the Minasa Festival continues for years to come.
+          </p>
+        </div>
+        
+        <!-- Video Section 1 -->
+        <div>
+          <h4 class="text-2xl font-semibold text-gray-800 mb-4">Arrowroot Farming Documentary</h4>
+          <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg mb-3">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube-nocookie.com/embed/xJQAt_00At8?rel=0"
+              title="Arrowroot Farming Video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              class="w-full h-full">
+            </iframe>
+          </div>
+        </div>
+        
+        <!-- Video Section 2 -->
+        <div>
+          <h4 class="text-2xl font-semibold text-gray-800 mb-4">Farming Practices & Techniques</h4>
+          <div class="w-full aspect-video rounded-xl overflow-hidden shadow-lg mb-3">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube-nocookie.com/embed/Y3tGf92PK6w?rel=0"
+              title="Farming Practices Video"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              class="w-full h-full">
+            </iframe>
+          </div>
+        </div>
       </div>
     `
   }
@@ -1219,16 +1679,12 @@ function initModalScrollAnimations() {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        entry.target.classList.remove('hidden');
-      } else {
-        entry.target.classList.remove('visible');
-        entry.target.classList.add('hidden');
       }
     });
   }, {
     root: modalScrollContainer,
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px -100px 0px'
   });
   
   // Observe all content items
@@ -1242,12 +1698,39 @@ function openModal(type) {
   const modalBox = modal.querySelector('.bg-white');
   const content = document.getElementById('modalContent');
   
-  // Set content based on type
-  const article = modalContent[type];
-  content.innerHTML = `
-    <h2 class="text-3xl font-bold text-green-600 mb-6">${article.title}</h2>
-    ${article.content}
-  `;
+  // Special handling for recipe modal
+  if (type === 'recipe') {
+    currentRecipePage = 1;
+    const recipeContent = generateRecipeContent(currentRecipePage);
+    content.innerHTML = `
+      <h2 class="text-3xl font-bold text-green-600 mb-6 modal-content-item">Recipe Tent</h2>
+      ${recipeContent}
+    `;
+  } else {
+    // Set content based on type for other modals
+    const article = modalContent[type];
+    content.innerHTML = `
+      <h2 class="text-3xl font-bold text-green-600 mb-6 modal-content-item">${article.title}</h2>
+      ${article.content}
+    `;
+  }
+  
+  // Wrap all major content sections with modal-content-item class
+  setTimeout(function() {
+    const contentSections = content.querySelectorAll('div.space-y-8 > div, div.space-y-6 > div, div.prose, h3, h4');
+    contentSections.forEach(function(section) {
+      // Exclude pagination from animation
+      if (!section.classList.contains('modal-content-item') && !section.classList.contains('flex')) {
+        section.classList.add('modal-content-item');
+      }
+    });
+    
+    // Make pagination buttons visible immediately
+    const paginationDiv = content.querySelector('.flex.items-center.justify-center.gap-4');
+    if (paginationDiv) {
+      paginationDiv.classList.add('modal-content-item', 'visible');
+    }
+  }, 0);
   
   // Show modal with animation
   modal.classList.remove('hidden');
@@ -1452,7 +1935,7 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
         </div>
       </div>
 
-      <div class="text-center mt-6">
+      <div class="text-center mt-4">
         <!-- <p class="text-white font-semibold text-lg drop-shadow">🎉 Get ready for the celebration!</p> -->
       </div>
     </div>
@@ -1553,7 +2036,7 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
   <section id="booth-section-1" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="0" style="overflow: visible;">
     <!-- Top - Image -->
     <div class="relative h-64">
-      <img src="/media/media_assets/pic1.jpg" alt="History Booth" class="w-full h-full object-cover">
+      <img src="/media/media_assets/minasaFest2.jpg" alt="History Booth" class="w-full h-full object-cover">
       <div class="absolute top-4 left-4">
         <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 1</span>
       </div>
@@ -1668,7 +2151,7 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
   <section id="booth-section-2" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="1" style="overflow: visible;">
     <!-- Top - Image -->
     <div class="relative h-64">
-      <img src="/media/media_assets/MinasaCookies.jpg" alt="Recipe Tent" class="w-full h-full object-cover">
+      <img src="/media/media_assets/MinasaBackground.jpg" alt="Recipe Tent" class="w-full h-full object-cover ">
       <div class="absolute top-4 left-4">
         <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 2</span>
       </div>
@@ -1769,7 +2252,7 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
   <section id="booth-section-3" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="2" style="overflow: visible;">
     <!-- Top - Image -->
     <div class="relative h-64">
-      <img src="/media/media_assets/pic1.jpg" alt="Cultural Stage" class="w-full h-full object-cover">
+      <img src="/media/media_assets/minasaFest5.jpg" alt="Cultural Stage" class="w-full h-full object-cover">
       <div class="absolute top-4 left-4">
         <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 3</span>
       </div>
@@ -1806,14 +2289,6 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
                   </svg>
                 </div>
                 <span class="text-sm text-gray-700">Traditional folk dances</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-                  <svg class="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
-                  </svg>
-                </div>
-                <span class="text-sm text-gray-700">Live performances</span>
               </div>
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
@@ -1869,7 +2344,7 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
   <section id="booth-section-4" class="booth-card bg-white rounded-xl shadow-md booth-animate" data-delay="3" style="overflow: visible;">
     <!-- Top - Image -->
     <div class="relative h-64">
-      <img src="/media/media_assets/pic1.jpg" alt="Farmer's Corner" class="w-full h-full object-cover">
+      <img src="/media/media_assets/FarmerPic2.jpg" alt="Farmer's Corner" class="w-full h-full object-cover">
       <div class="absolute top-4 left-4">
         <span class="px-4 py-1.5 bg-green-600 text-white rounded-md text-sm font-bold">Booth 4</span>
       </div>
@@ -1914,14 +2389,6 @@ function toggleBooth(boothId, buttonElement, sectionElement) {
                   </svg>
                 </div>
                 <span class="text-sm text-gray-700">Video tutorials</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-lime-100 flex items-center justify-center">
-                  <svg class="w-4 h-4 text-lime-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                  </svg>
-                </div>
-                <span class="text-sm text-gray-700">Crop cultivation guides</span>
               </div>
             </div>
             
