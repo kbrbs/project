@@ -606,7 +606,9 @@ document.addEventListener('DOMContentLoaded', function() {
           {% if a.header_image %}
             <img src="{{ a.header_image.url }}" alt="{{ a.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
           {% else %}
-            <img src="{% static 'pictures/arrowroot-image.png' %}" alt="Arrowroot" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="w-full h-full flex items-center justify-center">
+              <img src="{% static 'pictures/minasa-mascot.png' %}" alt="Minasa Mascot" class="h-full object-contain group-hover:scale-110 transition-transform duration-500 filter drop-shadow-lg">
+            </div>
           {% endif %}
           <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
