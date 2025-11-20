@@ -831,9 +831,13 @@ setTimeout(function () {
 
   // Countdown timer functionality
   function initCountdown() {
-    // Set your festival date here (Year, Month-1, Day, Hour, Minute)
-    // Example: December 15, 2025 at 8:00 AM
+    // Retrieve festival date from Django template
+    {% if festival_date %}
+    const festivalDate = new Date('{{ festival_date|date:"c" }}').getTime();
+    {% else %}
+    // Fallback date if not set in database (December 15, 2025 at 8:00 AM)
     const festivalDate = new Date('2025-12-15T08:00:00').getTime();
+    {% endif %}
 
     function updateCountdown() {
       const now = new Date().getTime();

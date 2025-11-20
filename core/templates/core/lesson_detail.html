@@ -94,6 +94,7 @@
   .page-content {
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 40px;
     background: linear-gradient(to right, #fdfcfb 0%, #ffffff 10%, #ffffff 90%, #f8f7f5 100%);
     backface-visibility: hidden;
@@ -110,6 +111,7 @@
     background: #f5f5f0;
     padding: 40px;
     overflow-y: auto;
+    overflow-x: hidden;
   }
   
   .book-spine {
@@ -328,12 +330,14 @@
       headerImage: {% if section.header_image %}"{{ section.header_image.url }}"{% else %}null{% endif %},
       content: `{{ section.content|escapejs|linebreaks }}`,
       hasPdf: {% if section.pdf %}true{% else %}false{% endif %},
-      pdfUrl: {% if section.pdf %}"{{ section.pdf.url }}"{% else %}null{% endif %}
+      pdfUrl: {% if section.pdf %}"{{ section.pdf.url }}"{% else %}null{% endif %},
+      hasQuiz: {% if quiz %}true{% else %}false{% endif %},
+      quizId: {% if quiz %}{{ quiz.id }}{% else %}null{% endif %}
     };
 
     const imageCount = images.length;
     const imageSpreads = Math.ceil(imageCount / 2);
-    const calculatedTotalPages = 1 + imageSpreads + 2; // intro + images + resources + thank you
+    const calculatedTotalPages = 1 + imageSpreads + 1; // intro + images + resources/back cover
     
     return {
       currentPage: 0,
@@ -399,14 +403,14 @@
             const pageNum = ((page - 1) * 2) + 1;
             
             return `
-              <div class="paper-texture flex flex-col justify-center h-full">
+              <div class="paper-texture flex flex-col h-full overflow-y-auto">
                 ${showTitle ? '<h3 class="text-2xl font-black text-gray-800 mb-6 border-b-4 border-green-200 pb-3">📷 Visual Guide</h3>' : ''}
-                <div class="rounded-xl overflow-hidden shadow-lg border-4 border-green-200 mb-4">
-                  <img src="${img.url}" alt="${img.caption || this.section.title}" class="w-full h-auto max-h-96 object-contain bg-white" />
+                <div class="rounded-xl overflow-hidden shadow-lg border-4 border-green-200 mb-4 flex-shrink-0">
+                  <img src="${img.url}" alt="${img.caption || this.section.title}" class="w-full h-auto object-contain bg-white" />
                 </div>
                 ${img.caption ? `
-                  <div class="bg-green-50 px-6 py-4 rounded-xl border-2 border-green-200">
-                    <p class="text-base text-gray-700 italic font-medium leading-relaxed">${img.caption}</p>
+                  <div class="bg-green-50 px-6 py-4 rounded-xl border-2 border-green-200 mb-4">
+                    <p class="text-base text-gray-700 italic font-medium leading-relaxed whitespace-pre-wrap">${img.caption}</p>
                   </div>
                 ` : ''}
                 <div class="page-number page-number-left">${pageNum}</div>
@@ -415,21 +419,21 @@
           }
         }
         
-        // Resources page (second to last)
-        if (page === this.totalPages - 1) {
-          const pageNum = ((this.totalPages - 2) * 2) + 1;
+        // Resources page (last page left side, paired with back cover)
+        if (page === this.totalPages) {
+          const pageNum = ((this.totalPages - 1) * 2) + 1;
           return `
             <div class="paper-texture">
               <h3 class="text-2xl font-black text-gray-800 mb-6 border-b-4 border-green-200 pb-3">📚 Learning Resources</h3>
               
               <div class="space-y-4">
-                <button onclick="document.dispatchEvent(new CustomEvent('open-quiz'))" class="w-full flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl hover:scale-105">
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-                  </svg>
-                  <span>Test Your Knowledge</span>
-                </button>
+                  <a href="/quizzes" class="w-full flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                      <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Test Your Knowledge</span>
+                  </a>
                 
                 ${this.section.hasPdf ? `
                   <a href="${this.section.pdfUrl}" class="w-full flex items-center gap-3 px-6 py-4 bg-white border-3 border-green-300 text-green-700 font-black rounded-xl hover:border-green-500 hover:bg-green-50 transition-all shadow-lg hover:shadow-xl hover:scale-105">
@@ -439,33 +443,12 @@
                     <span>Download PDF Guide</span>
                   </a>
                 ` : ''}
-
-                <button class="w-full flex items-center gap-3 px-6 py-4 bg-white border-3 border-orange-300 text-orange-700 font-black rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-all shadow-lg hover:shadow-xl hover:scale-105">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-                  </svg>
-                  <span>Bookmark Lesson</span>
-                </button>
               </div>
 
               <div class="mt-8 p-4 bg-green-50 border-2 border-green-200 rounded-xl">
-                <p class="text-center text-sm text-gray-600 font-bold">Continue to next page for completion</p>
+                <p class="text-center text-sm text-gray-600 font-bold">Thank you for completing this lesson!</p>
               </div>
               
-              <div class="page-number page-number-left">${pageNum}</div>
-            </div>
-          `;
-        }
-        
-        // Last page left (empty)
-        if (page === this.totalPages) {
-          const pageNum = ((this.totalPages - 1) * 2) + 1;
-          return `
-            <div class="paper-texture flex items-center justify-center h-full">
-              <div class="text-center text-gray-400">
-                <div class="text-6xl mb-4">📖</div>
-                <p class="text-sm font-medium">End of content</p>
-              </div>
               <div class="page-number page-number-left">${pageNum}</div>
             </div>
           `;
@@ -538,13 +521,13 @@
             const pageNum = ((page - 1) * 2) + 2;
             
             return `
-              <div class="paper-texture flex flex-col justify-center h-full">
-                <div class="rounded-xl overflow-hidden shadow-lg border-4 border-green-200 mb-4">
-                  <img src="${img.url}" alt="${img.caption || this.section.title}" class="w-full h-auto max-h-96 object-contain bg-white" />
+              <div class="paper-texture flex flex-col h-full overflow-y-auto">
+                <div class="rounded-xl overflow-hidden shadow-lg border-4 border-green-200 mb-4 flex-shrink-0">
+                  <img src="${img.url}" alt="${img.caption || this.section.title}" class="w-full h-auto object-contain bg-white" />
                 </div>
                 ${img.caption ? `
-                  <div class="bg-green-50 px-6 py-4 rounded-xl border-2 border-green-200">
-                    <p class="text-base text-gray-700 italic font-medium leading-relaxed">${img.caption}</p>
+                  <div class="bg-green-50 px-6 py-4 rounded-xl border-2 border-green-200 mb-4">
+                    <p class="text-base text-gray-700 italic font-medium leading-relaxed whitespace-pre-wrap">${img.caption}</p>
                   </div>
                 ` : ''}
                 <div class="page-number page-number-right">${pageNum}</div>
@@ -565,28 +548,7 @@
           }
         }
         
-        // Resources page right side (second to last)
-        if (page === this.totalPages - 1) {
-          const pageNum = ((this.totalPages - 2) * 2) + 2;
-          return `
-            <div class="paper-texture flex items-center justify-center h-full">
-              <div class="text-center max-w-md">
-                <div class="text-6xl mb-6">✨</div>
-                <h3 class="text-2xl font-black text-gray-800 mb-4">You've completed the lesson!</h3>
-                <p class="text-gray-600 font-medium mb-6">Check out the resources on the left, then proceed to the final page.</p>
-                <div class="inline-flex items-center gap-2 px-6 py-3 bg-green-100 text-green-700 rounded-full font-bold">
-                  <span>Next: Thank You</span>
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </div>
-              </div>
-              <div class="page-number page-number-right">${pageNum}</div>
-            </div>
-          `;
-        }
-        
-        // Back cover (last page)
+        // Back cover (last page right side, paired with resources on left)
         if (page === this.totalPages) {
           const pageNum = ((this.totalPages - 1) * 2) + 2;
           return `

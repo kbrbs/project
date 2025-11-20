@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
-from .models import Article, Progress, EducationalSection, ActivityLog
+from .models import Article, Progress, EducationalSection, ActivityLog, FestivalDate
 from quizzes.models import Quiz
 from django.db.models import Count, Avg
 from django.contrib.auth.forms import UserCreationForm
@@ -77,6 +77,8 @@ def lesson_detail(request, slug):
     section = get_object_or_404(EducationalSection, slug=slug)
     # Get all content images for the section
     section_images = section.content_images.all().order_by('order', 'created_at')
+    # Get all content videos for the section
+    section_videos = section.content_videos.all().order_by('order', 'created_at')
     
     # Try to find a related quiz (look for quiz linked to article with same title, if any)
     quiz = None
@@ -98,7 +100,8 @@ def lesson_detail(request, slug):
     return render(request, 'core/lesson_detail.html', {
         'section': section,
         'quiz': quiz,
-        'section_images': section_images
+        'section_images': section_images,
+        'section_videos': section_videos
     })
 
 def festival_tour(request):
@@ -110,6 +113,10 @@ def festival_tour(request):
         {'id': 'cultural', 'title': 'Cultural Stage', 'summary': 'Folk dances and songs'},
         {'id': 'farmers', 'title': "Farmer's Corner", 'summary': 'Planting & harvesting stories'},
     ]
+    
+    # Get festival date from database
+    festival_date_obj = FestivalDate.get_instance()
+    festival_date = festival_date_obj.festival_date if festival_date_obj else None
     
     # Log activity (only for authenticated users)
     if request.user.is_authenticated:
@@ -130,6 +137,7 @@ def festival_tour(request):
     
     context = {
         'booths': booths,
+        'festival_date': festival_date,
     }
     context.update(get_public_access_context(request.user))
     return render(request, 'core/festival_tour.html', context)

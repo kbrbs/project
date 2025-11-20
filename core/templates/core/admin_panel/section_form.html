@@ -115,6 +115,7 @@
                           {% endfor %}
                         </ul>
                       {% endif %}
+                      <p class="text-xs text-gray-500 mt-1">You can write multiple paragraphs here</p>
                     </div>
                   </div>
                 </div>
@@ -147,6 +148,7 @@
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Caption (optional)</label>
                     {{ formset.empty_form.caption }}
+                    <p class="text-xs text-gray-500 mt-1">You can write multiple paragraphs here</p>
                   </div>
                 </div>
               </div>
@@ -512,7 +514,7 @@
       
       visibleForms.forEach((form, index) => {
         const previewImg = form.querySelector('.preview-image');
-        const captionInput = form.querySelector('input[name*="caption"]');
+        const captionInput = form.querySelector('textarea[name*="caption"]');
         
         if (previewImg && previewImg.src && !previewImg.classList.contains('hidden')) {
           const imgWrapper = document.createElement('div');
@@ -586,7 +588,7 @@
       }
       
       // Attach caption listener to the new caption input
-      const captionInput = formDiv.querySelector('input[name*="caption"]');
+      const captionInput = formDiv.querySelector('textarea[name*="caption"]');
       if (captionInput) {
         attachCaptionListener(captionInput);
       }
@@ -643,7 +645,7 @@
     });
     
     // Attach caption listeners to all existing caption inputs
-    formsetContainer.querySelectorAll('input[name*="caption"]').forEach(captionInput => {
+    formsetContainer.querySelectorAll('textarea[name*="caption"]').forEach(captionInput => {
       attachCaptionListener(captionInput);
     });
     

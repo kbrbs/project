@@ -98,7 +98,7 @@ class SectionImage(models.Model):
     """Multiple content images for an EducationalSection."""
     section = models.ForeignKey(EducationalSection, on_delete=models.CASCADE, related_name='content_images')
     image = models.ImageField(upload_to='section_content/', blank=False)
-    caption = models.CharField(max_length=255, blank=True)
+    caption = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -107,6 +107,43 @@ class SectionImage(models.Model):
 
     def __str__(self):
         return f"{self.section.title} - Image {self.id}"
+
+
+class SectionVideo(models.Model):
+    """YouTube videos for an EducationalSection."""
+    section = models.ForeignKey(EducationalSection, on_delete=models.CASCADE, related_name='content_videos')
+    youtube_url = models.URLField(max_length=500, help_text="YouTube video URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID)")
+    caption = models.CharField(max_length=255, blank=True, help_text="Optional description or caption for the video")
+    order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'created_at']
+
+    def __str__(self):
+        return f"{self.section.title} - Video {self.id}"
+    
+    def get_embed_url(self):
+        """Convert YouTube URL to embed URL."""
+        import re
+        if not self.youtube_url:
+            return ''
+        
+        # Match different YouTube URL formats
+        patterns = [
+            r'(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_-]+)',
+            r'(?:https?://)?(?:www\.)?youtu\.be/([a-zA-Z0-9_-]+)',
+            r'(?:https?://)?(?:www\.)?youtube\.com/embed/([a-zA-Z0-9_-]+)',
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, self.youtube_url)
+            if match:
+                video_id = match.group(1)
+                return f'https://www.youtube.com/embed/{video_id}'
+        
+        # If no pattern matches, return empty string
+        return ''
 
 
 class MediaAsset(models.Model):

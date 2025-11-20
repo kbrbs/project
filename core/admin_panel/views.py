@@ -8,7 +8,7 @@ from django.contrib import messages
 from django import forms
 from django.db.models import Count, Max
 
-from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile, SectionImage, FestivalDate
+from core.models import Article, EducationalSection, MediaAsset, ContentModeration, Visit, Download, StudentProfile, SectionImage, SectionVideo, FestivalDate
 from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseRedirect
 from django.conf import settings
 import os
@@ -113,7 +113,20 @@ SectionImageFormSet = inlineformset_factory(
     can_delete=True,
     widgets={
         'image': forms.FileInput(attrs={'class': 'file-input'}),
-        'caption': forms.TextInput(attrs={'placeholder': 'Optional caption'}),
+        'caption': forms.Textarea(attrs={'placeholder': 'Optional caption', 'rows': 3}),
+    }
+)
+
+# Inline formset for SectionVideo
+SectionVideoFormSet = inlineformset_factory(
+    EducationalSection,
+    SectionVideo,
+    fields=('youtube_url', 'caption'),
+    extra=0,
+    can_delete=True,
+    widgets={
+        'youtube_url': forms.URLInput(attrs={'placeholder': 'https://www.youtube.com/watch?v=...'}),
+        'caption': forms.TextInput(attrs={'placeholder': 'Optional description'}),
     }
 )
 
