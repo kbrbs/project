@@ -1,6 +1,247 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+<style>
+  .book-container {
+    perspective: 2000px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .book {
+    position: relative;
+    width: 100%;
+    height: 700px;
+    transform-style: preserve-3d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .page {
+    position: absolute;
+    width: 48%;
+    height: 100%;
+    background: white;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), box-shadow 0.8s ease;
+    overflow: hidden;
+  }
+  
+  .page-left {
+    left: 1%;
+    border-radius: 20px 0 0 20px;
+    transform-origin: right center;
+  }
+  
+  .page-right {
+    right: 1%;
+    border-radius: 0 20px 20px 0;
+    transform-origin: left center;
+  }
+  
+  .page.flipping-next {
+    animation: flipPageNext 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+    z-index: 150;
+  }
+  
+  .page.flipping-prev {
+    animation: flipPagePrev 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+    z-index: 150;
+  }
+  
+  .page.flip-left {
+    transform: rotateY(-180deg);
+    z-index: 1;
+  }
+  
+  .page.flip-right {
+    transform: rotateY(180deg);
+    z-index: 1;
+  }
+  
+  @keyframes flipPageNext {
+    0% {
+      transform: rotateY(0deg);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    50% {
+      transform: rotateY(-90deg);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    100% {
+      transform: rotateY(-180deg);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+  }
+  
+  @keyframes flipPagePrev {
+    0% {
+      transform: rotateY(-180deg);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    50% {
+      transform: rotateY(-90deg);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    100% {
+      transform: rotateY(0deg);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+  }
+  
+  .page-content {
+    height: 100%;
+    overflow-y: auto;
+    padding: 40px;
+    background: linear-gradient(to right, #fdfcfb 0%, #ffffff 10%, #ffffff 90%, #f8f7f5 100%);
+    backface-visibility: hidden;
+  }
+  
+  .page-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    background: #f5f5f0;
+    padding: 40px;
+    overflow-y: auto;
+  }
+  
+  .book-spine {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 8px;
+    height: 100%;
+    background: linear-gradient(to bottom, #8b7355, #6b5a45);
+    transform: translateX(-50%);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    z-index: 100;
+  }
+  
+  .page-number {
+    position: absolute;
+    bottom: 20px;
+    font-size: 14px;
+    color: #666;
+    font-weight: bold;
+  }
+  
+  .page-number-left {
+    left: 20px;
+  }
+  
+  .page-number-right {
+    right: 20px;
+  }
+  
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    background: rgba(16, 185, 129, 0.9);
+    backdrop-filter: blur(10px);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  
+  .nav-button:hover:not(:disabled) {
+    background: rgba(5, 150, 105, 1);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  }
+  
+  .nav-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  
+  .nav-button-prev {
+    left: -80px;
+  }
+  
+  .nav-button-next {
+    right: -80px;
+  }
+  
+  .book-cover {
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+    border: 4px solid #065f46;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .book-cover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="80" opacity="0.1" fill="white">📚</text></svg>');
+    background-size: 200px;
+    opacity: 0.1;
+  }
+  
+  .book-cover-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+    z-index: 1;
+  }
+  
+  .book-cover-subtitle {
+    font-size: 1.5rem;
+    color: #d1fae5;
+    font-weight: 600;
+    z-index: 1;
+  }
+  
+  .paper-texture {
+    background-image: 
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 29px,
+        rgba(16, 185, 129, 0.05) 29px,
+        rgba(16, 185, 129, 0.05) 30px
+      );
+  }
+
+  .book-back-cover {
+    background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%);
+    border: 4px solid #065f46;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+  }
+</style>
+
 <!-- Info Banner for Public Users -->
 {% if not user.is_authenticated %}
 <div class="mb-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white rounded-3xl shadow-2xl p-6 flex items-center justify-between border-4 border-green-200 hover:scale-[1.02] transition-transform">
@@ -23,189 +264,346 @@
 </div>
 {% endif %}
 
-<!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"> -->
-  <!-- Main Content -->
-  <div class="lg:col-span-2">
-    <article class="bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-green-100 hover:shadow-3xl transition-all">
-      <!-- Header Image -->
-      {% if section.header_image %}
-        <div class="relative w-full h-80 overflow-hidden">
-          <img src="{{ section.header_image.url }}" alt="{{ section.title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        </div>
-      {% else %}
-        <div class="relative h-64 bg-gradient-to-br from-green-400 via-emerald-400 to-green-500 flex items-center justify-center">
-          <div class="w-32 h-32 bg-white rounded-3xl shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
-            <span class="text-7xl">
-              {% if section.category == 'planting' %}🌱
-              {% elif section.category == 'historical' %}📜
-              {% elif section.category == 'cultural' %}🎭
-              {% elif section.category == 'economic' %}💰
-              {% else %}📚{% endif %}
-            </span>
-          </div>
-        </div>
-      {% endif %}
+<div class="book-container" x-data="bookReader()">
+  <div class="relative">
+    <button @click="prevPage()" :disabled="currentPage === 0" class="nav-button nav-button-prev">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+    
+    <div class="book">
+      <div class="book-spine"></div>
 
-      <!-- Content -->
-      <div class="p-10">
-        <div class="flex items-center gap-3 mb-4">
-          <span class="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 rounded-full text-sm font-black shadow-md">
-            {{ section.get_category_display|default:"General" }}
-          </span>
-          <span class="text-sm text-gray-400 font-bold">•</span>
-          <span class="text-sm text-gray-600 font-bold">15 min read</span>
-        </div>
-
-        <h1 class="text-4xl font-black text-gray-800 mb-6 leading-tight">{{ section.title }}</h1>
-        
-        <!-- Article Meta -->
-        <div class="flex items-center gap-4 pb-6 mb-8 border-b-2 border-green-100">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-              <span class="text-white text-base font-black">RK</span>
-            </div>
-            <div>
-              <p class="text-sm font-black text-gray-800">Rooted in Knowledge</p>
-              <p class="text-xs text-gray-500 font-bold">Educational Team</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Content Body -->
-        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed font-medium">
-          {{ section.content|linebreaks }}
-        </div>
-
-        <!-- Content Images (multiple images from section) -->
-        {% if section_images %}
-          <div class="mt-10 space-y-8">
-            {% for section_image in section_images %}
-              <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 transition-all hover:shadow-2xl">
-                <div class="flex justify-center items-center p-6">
-                  <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ section.title }} - Image {{ forloop.counter }}{% endif %}" class="max-w-full h-auto max-h-[500px] object-contain rounded-xl shadow-lg hover:scale-105 transition-transform duration-300" />
-                </div>
-                {% if section_image.caption %}
-                  <div class="bg-white px-6 py-4 border-t-2 border-green-200">
-                    <p class="text-sm text-gray-700 italic text-center font-medium">{{ section_image.caption }}</p>
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        {% elif section.content_image %}
-          <!-- Fallback to single content_image if no SectionImage objects exist -->
-          <div class="mt-8 rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
-            <div class="flex justify-center items-center p-6">
-              <img src="{{ section.content_image.url }}" alt="{{ section.title }}" class="max-w-full h-auto max-h-[500px] object-contain rounded-xl shadow-lg" />
-            </div>
-          </div>
-        {% endif %}
-
-        {% if section.video %}
-          <div class="mt-10">
-            <h3 class="text-2xl font-black text-gray-800 mb-4">🎥 Video Lesson</h3>
-            <div class="rounded-2xl overflow-hidden shadow-2xl border-4 border-green-200 hover:border-green-400 transition-all">
-              <video controls class="w-full">
-                <source src="{{ section.video.url }}">
-              </video>
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- Action Buttons -->
-        <div class="mt-10 flex flex-wrap gap-4">
-          <button x-data x-on:click="$dispatch('open-quiz')" class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-2xl hover:scale-105">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
-            </svg>
-            Test Yourself
-          </button>
-          
-          {% if section.pdf %}
-            <a href="{{ section.pdf.url }}" class="flex items-center gap-3 px-8 py-4 bg-white border-4 border-green-200 text-green-700 font-black rounded-2xl hover:border-green-500 hover:bg-green-50 transition-all duration-200 shadow-lg hover:shadow-2xl hover:scale-105">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
-              Download Guide (PDF)
-            </a>
-          {% endif %}
-
-          <button class="flex items-center gap-3 px-8 py-4 bg-white border-4 border-orange-200 text-orange-700 font-black rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all duration-200 shadow-lg hover:shadow-2xl hover:scale-105">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
-            </svg>
-            Bookmark
-          </button>
-        </div>
+      <!-- Left Page (Even pages) -->
+      <div class="page page-left" :class="{'flip-left': shouldFlipLeft()}" x-show="currentPage > 0">
+        <div class="page-content paper-texture" x-html="getLeftPageContent()"></div>
       </div>
-    </article>
+
+      <!-- Right Page (Odd pages) -->
+      <div class="page page-right" :class="{'flip-right': shouldFlipRight()}">
+        <div class="page-content" x-html="getRightPageContent()"></div>
+      </div>
+    </div>
+
+    <button @click="nextPage()" :disabled="currentPage === totalPages" class="nav-button nav-button-next">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
   </div>
+  
+  <!-- Page Counter -->
+  <div class="text-center mt-6">
+    <span class="px-6 py-3 bg-white rounded-full shadow-lg text-sm font-bold text-gray-700 border-2 border-green-200">
+      <span x-text="currentPage === 0 ? 'Cover' : 'Page ' + ((currentPage - 1) * 2 + 1) + '-' + ((currentPage - 1) * 2 + 2)"></span>
+    </span>
+  </div>
+</div>
 
-  <!-- Sidebar -->
-  <!-- <div class="space-y-6"> -->
-    <!-- Quick Actions -->
-    <!-- <div class="bg-white rounded-2xl shadow-sm p-6">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h3>
-      <div class="space-y-3">
-        <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition text-left">
-          <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
-            </svg>
-          </div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-800">Share Lesson</p>
-            <p class="text-xs text-gray-500">Send to friends</p>
-          </div>
-        </button>
-        
-        <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition text-left">
-          <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
-            </svg>
-          </div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-800">Get Help</p>
-            <p class="text-xs text-gray-500">Ask questions</p>
-          </div>
-        </button>
-      </div>
-    </div> -->
+<script>
+  function bookReader() {
+    // Prepare images data from Django
+    const images = [
+      {% if section.content_image %}
+      {
+        url: "{{ section.content_image.url }}",
+        caption: null,
+        isContentImage: true
+      },
+      {% endif %}
+      {% for image in section_images %}
+      {
+        url: "{{ image.image.url }}",
+        caption: {% if image.caption %}"{{ image.caption|escapejs }}"{% else %}null{% endif %},
+        isContentImage: false
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ];
 
-    <!-- Related Lessons -->
-    <!-- <div class="bg-white rounded-2xl shadow-sm p-6">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">Related Lessons</h3>
-      <div class="space-y-3">
-        <a href="#" class="block p-3 rounded-lg hover:bg-gray-50 transition">
-          <div class="flex gap-3">
-            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center flex-shrink-0">
-              <span class="text-2xl">🌱</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800 mb-1 line-clamp-1">Planting Arrowroot</p>
-              <p class="text-xs text-gray-500">5 min read</p>
-            </div>
-          </div>
-        </a>
+    const sectionData = {
+      title: "{{ section.title|escapejs }}",
+      category: "{{ section.get_category_display|default:'General'|escapejs }}",
+      categoryIcon: "{% if section.category == 'planting' %}🌱{% elif section.category == 'historical' %}📜{% elif section.category == 'cultural' %}🎭{% elif section.category == 'economic' %}💰{% else %}📚{% endif %}",
+      headerImage: {% if section.header_image %}"{{ section.header_image.url }}"{% else %}null{% endif %},
+      content: `{{ section.content|escapejs|linebreaks }}`,
+      hasPdf: {% if section.pdf %}true{% else %}false{% endif %},
+      pdfUrl: {% if section.pdf %}"{{ section.pdf.url }}"{% else %}null{% endif %}
+    };
+
+    const imageCount = images.length;
+    const imageSpreads = Math.ceil(imageCount / 2);
+    const calculatedTotalPages = 1 + imageSpreads + 2; // intro + images + resources + thank you
+    
+    return {
+      currentPage: 0,
+      totalPages: calculatedTotalPages,
+      images: images,
+      section: sectionData,
+      
+      nextPage() {
+        if (this.currentPage < this.totalPages) {
+          this.currentPage++;
+        }
+      },
+      
+      prevPage() {
+        if (this.currentPage > 0) {
+          this.currentPage--;
+        }
+      },
+      
+      shouldFlipLeft() {
+        return this.currentPage === 0;
+      },
+      
+      shouldFlipRight() {
+        return false;
+      },
+
+      getLeftPageContent() {
+        const page = this.currentPage;
         
-        <a href="#" class="block p-3 rounded-lg hover:bg-gray-50 transition">
-          <div class="flex gap-3">
-            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center flex-shrink-0">
-              <span class="text-2xl">🥘</span>
+        // Page 1: Quote
+        if (page === 1) {
+          const pageNum = 1;
+          return `
+            <div class="paper-texture flex flex-col items-center justify-center h-full">
+              <div class="text-center max-w-lg">
+                <div class="text-6xl mb-8">📚</div>
+                <blockquote class="text-3xl font-black text-gray-800 mb-6 leading-relaxed italic">
+                  "Learning is a treasure that will follow its owner everywhere."
+                </blockquote>
+                <p class="text-xl text-green-600 font-bold">— Chinese Proverb</p>
+                <div class="mt-12 pt-8 border-t-2 border-green-200">
+                  <p class="text-lg text-gray-600 font-medium">
+                    Welcome to your learning journey!<br>
+                    Let's explore together.
+                  </p>
+                </div>
+              </div>
+              <div class="page-number page-number-left">${pageNum}</div>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800 truncate">Making Uraro</p>
-              <p class="text-xs text-gray-500">8 min read</p>
+          `;
+        }
+        
+        // Image pages (left side = odd image indices: 0, 2, 4, ...)
+        const imagePageStart = 2;
+        if (page >= imagePageStart && page < imagePageStart + imageSpreads) {
+          const imageSpreadIndex = page - imagePageStart;
+          const leftImageIndex = imageSpreadIndex * 2;
+          
+          if (leftImageIndex < this.images.length) {
+            const img = this.images[leftImageIndex];
+            const showTitle = (leftImageIndex === 0);
+            const pageNum = ((page - 1) * 2) + 1;
+            
+            return `
+              <div class="paper-texture flex flex-col justify-center h-full">
+                ${showTitle ? '<h3 class="text-2xl font-black text-gray-800 mb-6 border-b-4 border-green-200 pb-3">📷 Visual Guide</h3>' : ''}
+                <div class="rounded-xl overflow-hidden shadow-lg border-4 border-green-200 mb-4">
+                  <img src="${img.url}" alt="${img.caption || this.section.title}" class="w-full h-auto max-h-96 object-contain bg-white" />
+                </div>
+                ${img.caption ? `
+                  <div class="bg-green-50 px-6 py-4 rounded-xl border-2 border-green-200">
+                    <p class="text-base text-gray-700 italic font-medium leading-relaxed">${img.caption}</p>
+                  </div>
+                ` : ''}
+                <div class="page-number page-number-left">${pageNum}</div>
+              </div>
+            `;
+          }
+        }
+        
+        // Resources page (second to last)
+        if (page === this.totalPages - 1) {
+          const pageNum = ((this.totalPages - 2) * 2) + 1;
+          return `
+            <div class="paper-texture">
+              <h3 class="text-2xl font-black text-gray-800 mb-6 border-b-4 border-green-200 pb-3">📚 Learning Resources</h3>
+              
+              <div class="space-y-4">
+                <button onclick="document.dispatchEvent(new CustomEvent('open-quiz'))" class="w-full flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>Test Your Knowledge</span>
+                </button>
+                
+                ${this.section.hasPdf ? `
+                  <a href="${this.section.pdfUrl}" class="w-full flex items-center gap-3 px-6 py-4 bg-white border-3 border-green-300 text-green-700 font-black rounded-xl hover:border-green-500 hover:bg-green-50 transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Download PDF Guide</span>
+                  </a>
+                ` : ''}
+
+                <button class="w-full flex items-center gap-3 px-6 py-4 bg-white border-3 border-orange-300 text-orange-700 font-black rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                  </svg>
+                  <span>Bookmark Lesson</span>
+                </button>
+              </div>
+
+              <div class="mt-8 p-4 bg-green-50 border-2 border-green-200 rounded-xl">
+                <p class="text-center text-sm text-gray-600 font-bold">Continue to next page for completion</p>
+              </div>
+              
+              <div class="page-number page-number-left">${pageNum}</div>
             </div>
-          </div>
-        </a>
-      </div>
-    </div> -->
-  <!-- </div> -->
-<!-- </div> -->
+          `;
+        }
+        
+        // Last page left (empty)
+        if (page === this.totalPages) {
+          const pageNum = ((this.totalPages - 1) * 2) + 1;
+          return `
+            <div class="paper-texture flex items-center justify-center h-full">
+              <div class="text-center text-gray-400">
+                <div class="text-6xl mb-4">📖</div>
+                <p class="text-sm font-medium">End of content</p>
+              </div>
+              <div class="page-number page-number-left">${pageNum}</div>
+            </div>
+          `;
+        }
+        
+        return '';
+      },
+
+      getRightPageContent() {
+        const page = this.currentPage;
+        
+        // Page 0: Cover
+        if (page === 0) {
+          return `
+            <div class="book-cover -m-10" style ="height: 112.9%;">
+              <div class="text-8xl mb-6">${this.section.categoryIcon}</div>
+              <h1 class="book-cover-title">${this.section.title}</h1>
+              <p class="book-cover-subtitle">${this.section.category}</p>
+            </div>
+          `;
+        }
+        
+        // Page 1: Header/Intro
+        if (page === 1) {
+          const pageNum = 2;
+          return `
+            <div class="paper-texture h-full">
+              ${this.section.headerImage ? `
+                <div class="relative w-full h-64 overflow-hidden rounded-2xl mb-6 shadow-lg border-4 border-green-200">
+                  <img src="${this.section.headerImage}" alt="${this.section.title}" class="w-full object-cover h-full"/>
+                </div>
+              ` : ''}
+              
+              <div class="flex items-center gap-3 mb-4">
+                <span class="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 rounded-full text-sm font-black shadow-md">
+                  ${this.section.category}
+                </span>
+                <span class="text-sm text-gray-600 font-bold">📖 15 min read</span>
+              </div>
+
+              <h2 class="text-3xl font-black text-gray-800 mb-6 border-b-4 border-green-200 pb-4">${this.section.title}</h2>
+              
+              <div class="flex items-center gap-3 mb-6 bg-green-50 p-4 rounded-xl border-2 border-green-200">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                  <span class="text-white text-base font-black">RK</span>
+                </div>
+                <div>
+                  <p class="text-sm font-black text-gray-800">Rooted in Knowledge</p>
+                  <p class="text-xs text-gray-500 font-bold">Educational Team</p>
+                </div>
+              </div>
+
+              <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed font-medium">
+                ${this.section.content}
+              </div>
+              
+              <div class="page-number page-number-right">${pageNum}</div>
+            </div>
+          `;
+        }
+        
+        // Image pages (right side = even image indices: 1, 3, 5, ...)
+        const imagePageStart = 2;
+        if (page >= imagePageStart && page < imagePageStart + imageSpreads) {
+          const imageSpreadIndex = page - imagePageStart;
+          const rightImageIndex = (imageSpreadIndex * 2) + 1;
+          
+          if (rightImageIndex < this.images.length) {
+            const img = this.images[rightImageIndex];
+            const pageNum = ((page - 1) * 2) + 2;
+            
+            return `
+              <div class="paper-texture flex flex-col justify-center h-full">
+                <div class="rounded-xl overflow-hidden shadow-lg border-4 border-green-200 mb-4">
+                  <img src="${img.url}" alt="${img.caption || this.section.title}" class="w-full h-auto max-h-96 object-contain bg-white" />
+                </div>
+                ${img.caption ? `
+                  <div class="bg-green-50 px-6 py-4 rounded-xl border-2 border-green-200">
+                    <p class="text-base text-gray-700 italic font-medium leading-relaxed">${img.caption}</p>
+                  </div>
+                ` : ''}
+                <div class="page-number page-number-right">${pageNum}</div>
+              </div>
+            `;
+          } else {
+            // No right image for this spread (odd number of images)
+            const pageNum = ((page - 1) * 2) + 2;
+            return `
+              <div class="paper-texture flex items-center justify-center h-full">
+                <div class="text-center text-gray-300">
+                  <div class="text-6xl mb-4">✨</div>
+                  <p class="text-sm font-medium">Continue reading</p>
+                </div>
+                <div class="page-number page-number-right">${pageNum}</div>
+              </div>
+            `;
+          }
+        }
+        
+        // Resources page right side (second to last)
+        if (page === this.totalPages - 1) {
+          const pageNum = ((this.totalPages - 2) * 2) + 2;
+          return `
+            <div class="paper-texture flex items-center justify-center h-full">
+              <div class="text-center max-w-md">
+                <div class="text-6xl mb-6">✨</div>
+                <h3 class="text-2xl font-black text-gray-800 mb-4">You've completed the lesson!</h3>
+                <p class="text-gray-600 font-medium mb-6">Check out the resources on the left, then proceed to the final page.</p>
+                <div class="inline-flex items-center gap-2 px-6 py-3 bg-green-100 text-green-700 rounded-full font-bold">
+                  <span>Next: Thank You</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="page-number page-number-right">${pageNum}</div>
+            </div>
+          `;
+        }
+        
+        // Back cover (last page)
+        if (page === this.totalPages) {
+          const pageNum = ((this.totalPages - 1) * 2) + 2;
+          return `
+            <div class="book-back-cover flex flex-col items-center justify-center text-white -m-10" style ="height: 112.9%;">
+              <div class="text-6xl mb-4">✨</div>
+              <h3 class="text-2xl font-black mb-4">Thank You for Learning!</h3>
+              <p class="text-green-100 text-center max-w-md">Continue exploring more lessons about our rich cultural heritage and agricultural practices.</p>
+              <div class="page-number page-number-right" style="color: rgba(255,255,255,0.6);">${pageNum}</div>
+            </div>
+          `;
+        }
+        
+        return '';
+      }
+    }
+  }
+</script>
 
 {% if quiz %}
   <!-- Quiz Modal -->
@@ -226,10 +624,8 @@
         <div id="quiz-data" data-quiz-id="{{ quiz.id }}" data-api-url="{% url 'quizzes:quiz_api_detail' pk=quiz.id %}" data-submit-url="{% url 'quizzes:quiz_submit' pk=quiz.id %}" class="hidden"></div>
         <script>
           (function() {
-            // Quiz bootstrap
             const quizAppEl = document.getElementById('quiz-app');
             const quizDataEl = document.getElementById('quiz-data');
-            const quizId = quizDataEl ? quizDataEl.getAttribute('data-quiz-id') : null;
             const apiUrl = quizDataEl ? quizDataEl.getAttribute('data-api-url') : null;
             const submitUrl = quizDataEl ? quizDataEl.getAttribute('data-submit-url') : null;
 
@@ -337,7 +733,7 @@
               }
             }
 
-            window.addEventListener('open-quiz', loadQuiz);
+            document.addEventListener('open-quiz', loadQuiz);
           })();
         </script>
       </div>
