@@ -3,20 +3,20 @@
 {% block content %}
 <!-- Info Banner for Public Users -->
 {% if not user.is_authenticated %}
-<div class="mb-6 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-2xl shadow-lg p-4 flex items-center justify-between max-w-7xl mx-auto px-4">
+<div class="mb-6 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl p-6 flex items-center justify-between max-w-7xl mx-auto px-4 border-4 border-green-200">
   <div class="flex items-center gap-3">
-    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+      <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
       </svg>
     </div>
     <div class="flex-1">
-      <p class="font-bold text-lg">🎯 Taking the quiz? Your score won't be saved unless you register!</p>
-      <p class="text-indigo-100 text-sm">Create a FREE account to save scores, track progress, and earn achievement badges!</p>
+      <p class="font-bold text-xl">🎯 Taking the quiz? Your score won't be saved unless you register!</p>
+      <p class="text-green-100 text-base font-medium">Create a FREE account to save scores, track progress, and earn achievement badges!</p>
     </div>
   </div>
   <div class="flex gap-2">
-    <a href="{% url 'core:signup' %}" class="px-6 py-2 bg-white text-indigo-600 font-bold rounded-lg hover:bg-indigo-50 transition-all whitespace-nowrap">
+    <a href="{% url 'core:signup' %}" class="px-8 py-3 bg-white text-green-600 font-bold rounded-xl hover:bg-green-50 transition-all whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105">
       Register FREE
     </a>
   </div>
@@ -253,8 +253,9 @@ async function submitQuiz() {
     }
   }
 
-  // Stop timer
+  // Stop timer and calculate time taken
   clearInterval(timerInterval);
+  const timeTaken = Math.floor((Date.now() - startTime) / 1000);
 
   try {
     const response = await fetch('/quizzes/submit/{{ quiz.id }}/', {
@@ -263,7 +264,10 @@ async function submitQuiz() {
         'Content-Type': 'application/json',
         'X-CSRFToken': '{{ csrf_token }}'
       },
-      body: JSON.stringify(userAnswers)
+      body: JSON.stringify({
+        answers: userAnswers,
+        time_taken: timeTaken
+      })
     });
 
     const results = await response.json();

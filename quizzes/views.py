@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Quiz
+from .models import Quiz, QuizAttempt
 from core.utils import log_activity
 from core.access_control import limit_public_access, get_public_access_context, PUBLIC_QUIZZES_LIMIT
 
@@ -65,7 +65,9 @@ def quiz_submit(request, pk):
     quiz = get_object_or_404(Quiz, pk=pk)
     
     try:
-        answers = json.loads(request.body)  # {'q_id': choice_id, ...}
+        data = json.loads(request.body)
+        answers = data.get('answers', {})  # {'q_id': choice_id, ...}
+        time_taken = data.get('time_taken', None)
     except:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     
@@ -107,6 +109,18 @@ def quiz_submit(request, pk):
         })
     
     score_percentage = (correct_count / total_questions * 100) if total_questions > 0 else 0
+    
+    # Save quiz attempt for authenticated users
+    if request.user.is_authenticated:
+        QuizAttempt.objects.create(
+            user=request.user,
+            quiz=quiz,
+            score=correct_count,
+            total_questions=total_questions,
+            time_taken=time_taken,
+            answers=answers,
+            completed=True
+        )
     
     # Log quiz completion (only for authenticated users)
     if request.user.is_authenticated:

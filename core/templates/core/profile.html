@@ -258,7 +258,7 @@
 
     <!-- Progress Overview -->
     {% if not user.is_staff %}
-    <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+    <!-- <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
       <h3 class="text-lg font-bold text-green-700 mb-4">Learning Progress</h3>
       <div class="space-y-4">
         <div>
@@ -280,6 +280,142 @@
           </div>
         </div>
       </div>
+    </div> -->
+
+    <!-- Game Scores & Results -->
+    <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-bold text-green-700">🎮 Game Scores & Results</h3>
+        <a href="{% url 'games:game_list' %}" class="text-sm text-green-600 hover:text-green-700 font-semibold">View All Games →</a>
+      </div>
+      
+      {% if game_stats.total_games %}
+      <!-- Game Statistics Overview -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
+          <div class="text-3xl font-black text-green-600">{{ game_stats.total_games }}</div>
+          <div class="text-xs text-gray-600 font-bold mt-1">Games Played</div>
+        </div>
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 text-center">
+          <div class="text-3xl font-black text-orange-600">{{ game_stats.total_score|default:0 }}</div>
+          <div class="text-xs text-gray-600 font-bold mt-1">Total Points</div>
+        </div>
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center">
+          <div class="text-3xl font-black text-purple-600">{{ game_stats.avg_percentage|floatformat:0|default:0 }}%</div>
+          <div class="text-xs text-gray-600 font-bold mt-1">Avg Score</div>
+        </div>
+      </div>
+
+      <!-- Recent Game Attempts -->
+      <div class="space-y-3">
+        <h4 class="text-sm font-bold text-gray-700 mb-3">Recent Attempts</h4>
+        {% for attempt in game_attempts %}
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200 hover:border-green-400 transition-all hover:shadow-md">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex-1">
+              <h5 class="font-bold text-gray-800 text-sm">{{ attempt.game.title }}</h5>
+              <p class="text-xs text-gray-500 font-medium">{{ attempt.game.get_game_type_display }}</p>
+            </div>
+            <div class="text-right">
+              <div class="text-lg font-black {% if attempt.get_percentage >= 80 %}text-green-600{% elif attempt.get_percentage >= 60 %}text-orange-600{% else %}text-red-600{% endif %}">
+                {{ attempt.score }}/{{ attempt.max_score }}
+              </div>
+              <div class="text-xs text-gray-500 font-bold">{{ attempt.get_percentage }}%</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-xs text-gray-500">
+            <span class="font-medium">{{ attempt.created_at|timesince }} ago</span>
+            {% if attempt.time_taken %}
+            <span class="font-medium">⏱️ {{ attempt.time_taken }}s</span>
+            {% endif %}
+          </div>
+          
+          <!-- Score Bar -->
+          <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full {% if attempt.get_percentage >= 80 %}bg-gradient-to-r from-green-500 to-green-600{% elif attempt.get_percentage >= 60 %}bg-gradient-to-r from-orange-500 to-orange-600{% else %}bg-gradient-to-r from-red-500 to-red-600{% endif %} rounded-full transition-all" style="width: {{ attempt.get_percentage }}%"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <!-- No games played yet -->
+      <div class="text-center py-8">
+        <div class="text-6xl mb-4">🎮</div>
+        <p class="text-gray-600 font-semibold mb-2">No games played yet!</p>
+        <p class="text-sm text-gray-500 mb-4">Start playing games to see your scores here</p>
+        <a href="{% url 'games:game_list' %}" class="inline-block px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl hover:scale-105">
+          Browse Games
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Quiz Scores & Results -->
+    <div class="mt-6 bg-white rounded-2xl shadow-sm p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-bold text-green-700">🎯 Quiz Scores & Results</h3>
+        <a href="{% url 'quizzes:quiz_list' %}" class="text-sm text-green-600 hover:text-green-700 font-semibold">View All Quizzes →</a>
+      </div>
+      
+      {% if quiz_stats.total_quizzes %}
+      <!-- Quiz Statistics Overview -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center">
+          <div class="text-3xl font-black text-purple-600">{{ quiz_stats.total_quizzes }}</div>
+          <div class="text-xs text-gray-600 font-bold mt-1">Quizzes Taken</div>
+        </div>
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center">
+          <div class="text-3xl font-black text-blue-600">{{ quiz_stats.total_score|default:0 }}</div>
+          <div class="text-xs text-gray-600 font-bold mt-1">Total Correct</div>
+        </div>
+        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center">
+          <div class="text-3xl font-black text-green-600">{{ quiz_stats.avg_percentage|floatformat:0|default:0 }}%</div>
+          <div class="text-xs text-gray-600 font-bold mt-1">Avg Score</div>
+        </div>
+      </div>
+
+      <!-- Recent Quiz Attempts -->
+      <div class="space-y-3">
+        <h4 class="text-sm font-bold text-gray-700 mb-3">Recent Attempts</h4>
+        {% for attempt in quiz_attempts %}
+        <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 border-2 border-purple-200 hover:border-purple-400 transition-all hover:shadow-md">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex-1">
+              <h5 class="font-bold text-gray-800 text-sm">{{ attempt.quiz.title }}</h5>
+              <p class="text-xs text-gray-500 font-medium">Knowledge Quiz</p>
+            </div>
+            <div class="text-right">
+              <div class="text-lg font-black {% if attempt.get_percentage >= 80 %}text-green-600{% elif attempt.get_percentage >= 60 %}text-orange-600{% else %}text-red-600{% endif %}">
+                {{ attempt.score }}/{{ attempt.total_questions }}
+              </div>
+              <div class="text-xs text-gray-500 font-bold">{{ attempt.get_percentage }}%</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-xs text-gray-500">
+            <span class="font-medium">{{ attempt.created_at|timesince }} ago</span>
+            {% if attempt.time_taken %}
+            <span class="font-medium">⏱️ {{ attempt.time_taken }}s</span>
+            {% endif %}
+          </div>
+          
+          <!-- Score Bar -->
+          <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full {% if attempt.get_percentage >= 80 %}bg-gradient-to-r from-green-500 to-green-600{% elif attempt.get_percentage >= 60 %}bg-gradient-to-r from-orange-500 to-orange-600{% else %}bg-gradient-to-r from-red-500 to-red-600{% endif %} rounded-full transition-all" style="width: {{ attempt.get_percentage }}%"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <!-- No quizzes taken yet -->
+      <div class="text-center py-8">
+        <div class="text-6xl mb-4">🎯</div>
+        <p class="text-gray-600 font-semibold mb-2">No quizzes taken yet!</p>
+        <p class="text-sm text-gray-500 mb-4">Start taking quizzes to see your scores here</p>
+        <a href="{% url 'quizzes:quiz_list' %}" class="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl hover:scale-105">
+          Browse Quizzes
+        </a>
+      </div>
+      {% endif %}
     </div>
     {% endif %}
   </div>

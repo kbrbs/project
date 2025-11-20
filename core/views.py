@@ -136,9 +136,76 @@ def festival_tour(request):
 
 @login_required
 def profile(request):
+    from games.models import GameAttempt
+    from quizzes.models import QuizAttempt
+    from django.db.models import Count, Avg, Sum, F, FloatField
+    from django.db.models.functions import Cast
+    
     # Get recent activities for the user
     recent_activities = ActivityLog.objects.filter(user=request.user)[:10]
-    return render(request, 'core/profile.html', {'recent_activities': recent_activities})
+    
+    # Get game attempts
+    game_attempts = GameAttempt.objects.filter(
+        user=request.user,
+        completed=True
+    ).select_related('game').order_by('-created_at')[:10]
+    
+    # Calculate game statistics
+    game_stats = GameAttempt.objects.filter(
+        user=request.user,
+        completed=True
+    ).aggregate(
+        total_games=Count('id'),
+        total_score=Sum('score'),
+        avg_score=Avg('score'),
+        avg_max_score=Avg('max_score')
+    )
+    
+    # Calculate average percentage manually after aggregation
+    if game_stats['avg_max_score'] and game_stats['avg_max_score'] > 0:
+        game_stats['avg_percentage'] = (game_stats['avg_score'] / game_stats['avg_max_score']) * 100
+    else:
+        game_stats['avg_percentage'] = 0
+    
+    # Get best scores per game
+    from django.db.models import Max
+    best_scores = {}
+    for attempt in GameAttempt.objects.filter(user=request.user, completed=True).values('game_id').annotate(best_score=Max('score')):
+        best_scores[attempt['game_id']] = attempt['best_score']
+    
+    # Get quiz attempts
+    quiz_attempts = QuizAttempt.objects.filter(
+        user=request.user,
+        completed=True
+    ).select_related('quiz').order_by('-created_at')[:10]
+    
+    # Calculate quiz statistics
+    quiz_stats = QuizAttempt.objects.filter(
+        user=request.user,
+        completed=True
+    ).aggregate(
+        total_quizzes=Count('id'),
+        total_score=Sum('score'),
+        avg_score=Avg('score'),
+        avg_total_questions=Avg('total_questions')
+    )
+    
+    # Calculate average percentage manually after aggregation
+    if quiz_stats['avg_total_questions'] and quiz_stats['avg_total_questions'] > 0:
+        quiz_stats['avg_percentage'] = (quiz_stats['avg_score'] / quiz_stats['avg_total_questions']) * 100
+    else:
+        quiz_stats['avg_percentage'] = 0
+    
+    context = {
+        'recent_activities': recent_activities,
+        'game_attempts': game_attempts,
+        'game_stats': game_stats,
+        'best_scores': best_scores,
+        'quiz_attempts': quiz_attempts,
+        'quiz_stats': quiz_stats,
+    }
+    
+    return render(request, 'core/profile.html', context)
 
 
 @login_required

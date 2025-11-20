@@ -3,20 +3,20 @@
 {% block content %}
 <!-- Info Banner for Public Users -->
 {% if not user.is_authenticated %}
-<div class="mb-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl shadow-lg p-4 flex items-center justify-between">
-  <div class="flex items-center gap-3">
-    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+<div class="mb-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white rounded-3xl shadow-2xl p-6 flex items-center justify-between border-4 border-green-200 hover:scale-[1.02] transition-transform">
+  <div class="flex items-center gap-4">
+    <div class="w-16 h-16 bg-white bg-opacity-30 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+      <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
       </svg>
     </div>
     <div class="flex-1">
-      <p class="font-bold text-lg">💡 Like this lesson? Register to save your progress!</p>
-      <p class="text-blue-100 text-sm">Create a FREE account to bookmark lessons, track completion, and download study materials!</p>
+      <p class="font-black text-xl mb-1">💡 Like this lesson? Register to save your progress!</p>
+      <p class="text-green-100 text-base font-medium">Create a FREE account to bookmark lessons, track completion, and download study materials!</p>
     </div>
   </div>
-  <div class="flex gap-2">
-    <a href="{% url 'core:signup' %}" class="px-6 py-2 bg-white text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition-all whitespace-nowrap">
+  <div class="flex gap-3">
+    <a href="{% url 'core:signup' %}" class="px-8 py-3 bg-white text-green-600 font-black rounded-xl hover:bg-green-50 transition-all whitespace-nowrap shadow-lg hover:shadow-xl hover:scale-105">
       Register FREE
     </a>
   </div>
@@ -26,16 +26,17 @@
 <!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"> -->
   <!-- Main Content -->
   <div class="lg:col-span-2">
-    <article class="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <article class="bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-green-100 hover:shadow-3xl transition-all">
       <!-- Header Image -->
       {% if section.header_image %}
-        <div class="relative w-full h-64 overflow-hidden">
-          <img src="{{ section.header_image.url }}" alt="{{ section.title }}" class="w-full h-full object-cover" />
+        <div class="relative w-full h-80 overflow-hidden">
+          <img src="{{ section.header_image.url }}" alt="{{ section.title }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
         </div>
       {% else %}
-        <div class="relative h-48 bg-gradient-to-br from-purple-100 via-blue-50 to-pink-50 flex items-center justify-center">
-          <div class="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center">
-            <span class="text-5xl">
+        <div class="relative h-64 bg-gradient-to-br from-green-400 via-emerald-400 to-green-500 flex items-center justify-center">
+          <div class="w-32 h-32 bg-white rounded-3xl shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
+            <span class="text-7xl">
               {% if section.category == 'planting' %}🌱
               {% elif section.category == 'historical' %}📜
               {% elif section.category == 'cultural' %}🎭
@@ -47,46 +48,46 @@
       {% endif %}
 
       <!-- Content -->
-      <div class="p-8">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-medium">
+      <div class="p-10">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 rounded-full text-sm font-black shadow-md">
             {{ section.get_category_display|default:"General" }}
           </span>
-          <span class="text-sm text-gray-400">•</span>
-          <span class="text-sm text-gray-500">15 min read</span>
+          <span class="text-sm text-gray-400 font-bold">•</span>
+          <span class="text-sm text-gray-600 font-bold">15 min read</span>
         </div>
 
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ section.title }}</h1>
+        <h1 class="text-4xl font-black text-gray-800 mb-6 leading-tight">{{ section.title }}</h1>
         
         <!-- Article Meta -->
-        <div class="flex items-center gap-4 pb-6 mb-6 border-b border-gray-100">
-          <div class="flex items-center gap-2">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center">
-              <span class="text-white text-sm font-semibold">RK</span>
+        <div class="flex items-center gap-4 pb-6 mb-8 border-b-2 border-green-100">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+              <span class="text-white text-base font-black">RK</span>
             </div>
             <div>
-              <p class="text-sm font-medium text-gray-800">Rooted in Knowledge</p>
-              <p class="text-xs text-gray-500">Educational Team</p>
+              <p class="text-sm font-black text-gray-800">Rooted in Knowledge</p>
+              <p class="text-xs text-gray-500 font-bold">Educational Team</p>
             </div>
           </div>
         </div>
 
         <!-- Content Body -->
-        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed font-medium">
           {{ section.content|linebreaks }}
         </div>
 
         <!-- Content Images (multiple images from section) -->
         {% if section_images %}
-          <div class="mt-8 space-y-6">
+          <div class="mt-10 space-y-8">
             {% for section_image in section_images %}
-              <div class="rounded-xl overflow-hidden shadow-md bg-gray-50">
-                <div class="flex justify-center items-center p-4">
-                  <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ section.title }} - Image {{ forloop.counter }}{% endif %}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
+              <div class="rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 hover:border-green-400 transition-all hover:shadow-2xl">
+                <div class="flex justify-center items-center p-6">
+                  <img src="{{ section_image.image.url }}" alt="{% if section_image.caption %}{{ section_image.caption }}{% else %}{{ section.title }} - Image {{ forloop.counter }}{% endif %}" class="max-w-full h-auto max-h-[500px] object-contain rounded-xl shadow-lg hover:scale-105 transition-transform duration-300" />
                 </div>
                 {% if section_image.caption %}
-                  <div class="bg-gray-50 px-4 py-3 border-t border-gray-200">
-                    <p class="text-sm text-gray-600 italic text-center">{{ section_image.caption }}</p>
+                  <div class="bg-white px-6 py-4 border-t-2 border-green-200">
+                    <p class="text-sm text-gray-700 italic text-center font-medium">{{ section_image.caption }}</p>
                   </div>
                 {% endif %}
               </div>
@@ -94,17 +95,17 @@
           </div>
         {% elif section.content_image %}
           <!-- Fallback to single content_image if no SectionImage objects exist -->
-          <div class="mt-6 rounded-xl overflow-hidden shadow-md bg-gray-50">
-            <div class="flex justify-center items-center p-4">
-              <img src="{{ section.content_image.url }}" alt="{{ section.title }}" class="max-w-full h-auto max-h-96 object-contain rounded-lg" />
+          <div class="mt-8 rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200">
+            <div class="flex justify-center items-center p-6">
+              <img src="{{ section.content_image.url }}" alt="{{ section.title }}" class="max-w-full h-auto max-h-[500px] object-contain rounded-xl shadow-lg" />
             </div>
           </div>
         {% endif %}
 
         {% if section.video %}
-          <div class="mt-8">
-            <h3 class="text-lg font-bold text-gray-800 mb-4">Video Lesson</h3>
-            <div class="rounded-xl overflow-hidden shadow-md">
+          <div class="mt-10">
+            <h3 class="text-2xl font-black text-gray-800 mb-4">🎥 Video Lesson</h3>
+            <div class="rounded-2xl overflow-hidden shadow-2xl border-4 border-green-200 hover:border-green-400 transition-all">
               <video controls class="w-full">
                 <source src="{{ section.video.url }}">
               </video>
@@ -113,9 +114,9 @@
         {% endif %}
 
         <!-- Action Buttons -->
-        <div class="mt-8 flex flex-wrap gap-3">
-          <button x-data x-on:click="$dispatch('open-quiz')" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-200 shadow-sm hover:shadow-md">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <div class="mt-10 flex flex-wrap gap-4">
+          <button x-data x-on:click="$dispatch('open-quiz')" class="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-2xl hover:scale-105">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
               <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
             </svg>
@@ -123,16 +124,16 @@
           </button>
           
           {% if section.pdf %}
-            <a href="{{ section.pdf.url }}" class="flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-medium rounded-lg hover:border-purple-500 hover:text-purple-600 transition-all duration-200">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ section.pdf.url }}" class="flex items-center gap-3 px-8 py-4 bg-white border-4 border-green-200 text-green-700 font-black rounded-2xl hover:border-green-500 hover:bg-green-50 transition-all duration-200 shadow-lg hover:shadow-2xl hover:scale-105">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
               Download Guide (PDF)
             </a>
           {% endif %}
 
-          <button class="flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 font-medium rounded-lg hover:border-purple-500 hover:text-purple-600 transition-all duration-200">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button class="flex items-center gap-3 px-8 py-4 bg-white border-4 border-orange-200 text-orange-700 font-black rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all duration-200 shadow-lg hover:shadow-2xl hover:scale-105">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
             </svg>
             Bookmark
@@ -209,18 +210,18 @@
 {% if quiz %}
   <!-- Quiz Modal -->
   <div x-data @open-quiz.window="document.getElementById('quiz-modal').classList.remove('hidden')">
-    <div id="quiz-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div class="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
-          <h3 class="text-xl font-bold text-gray-800">Quiz: {{ quiz.title }}</h3>
-          <button onclick="document.getElementById('quiz-modal').classList.add('hidden')" class="p-2 hover:bg-gray-100 rounded-lg transition">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div id="quiz-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto border-4 border-green-200 animate-in">
+        <div class="p-8 border-b-2 border-green-100 flex items-center justify-between sticky top-0 bg-gradient-to-r from-green-50 to-emerald-50 z-10">
+          <h3 class="text-2xl font-black text-green-700">📝 Quiz: {{ quiz.title }}</h3>
+          <button onclick="document.getElementById('quiz-modal').classList.add('hidden')" class="p-3 hover:bg-green-100 rounded-xl transition-all hover:scale-110">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
         </div>
-        <div id="quiz-app" class="p-6">
-          <p class="text-sm text-gray-600">Loading quiz...</p>
+        <div id="quiz-app" class="p-8">
+          <p class="text-sm text-gray-600 font-medium">Loading quiz...</p>
         </div>
         <div id="quiz-data" data-quiz-id="{{ quiz.id }}" data-api-url="{% url 'quizzes:quiz_api_detail' pk=quiz.id %}" data-submit-url="{% url 'quizzes:quiz_submit' pk=quiz.id %}" class="hidden"></div>
         <script>
@@ -246,24 +247,24 @@
               parts.push('<div class="space-y-6">');
               quizData.questions.forEach(function(q, idx) {
                 parts.push(
-                  '<div class="border border-gray-100 rounded-xl p-4">' +
-                    '<div class="font-medium text-gray-800 mb-3">' + (idx + 1) + '. ' + escapeHtml(q.text) + '</div>' +
-                    '<div class="space-y-2">'
+                  '<div class="border-4 border-green-100 rounded-2xl p-6 bg-gradient-to-br from-white to-green-50 hover:border-green-300 transition-all hover:shadow-lg">' +
+                    '<div class="font-black text-gray-800 mb-4 text-lg">' + (idx + 1) + '. ' + escapeHtml(q.text) + '</div>' +
+                    '<div class="space-y-3">'
                 );
                 (q.choices || []).forEach(function(choice) {
                   const inputId = 'q' + q.id + '_c' + choice.id;
                   parts.push(
-                    '<label for="' + inputId + '" class="flex items-start gap-2 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">' +
-                      '<input type="radio" name="q_' + q.id + '" id="' + inputId + '" value="' + choice.id + '" class="mt-1">' +
-                      '<span class="text-gray-700">' + escapeHtml(choice.text) + '</span>' +
+                    '<label for="' + inputId + '" class="flex items-start gap-3 p-4 rounded-xl hover:bg-green-100 cursor-pointer border-2 border-transparent hover:border-green-300 transition-all">' +
+                      '<input type="radio" name="q_' + q.id + '" id="' + inputId + '" value="' + choice.id + '" class="mt-1 w-5 h-5 text-green-600">' +
+                      '<span class="text-gray-700 font-medium">' + escapeHtml(choice.text) + '</span>' +
                     '</label>'
                   );
                 });
                 parts.push('</div></div>');
               });
               parts.push(
-                '<div class="pt-2">' +
-                  '<button id="submit-quiz" class="px-5 py-2.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all">Submit</button>' +
+                '<div class="pt-4">' +
+                  '<button id="submit-quiz" class="px-10 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black text-lg rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-2xl hover:scale-105">Submit Quiz</button>' +
                 '</div>'
               );
               parts.push('</div>');
@@ -294,7 +295,7 @@
                   const result = await resp.json();
                   renderResults(result);
                 } catch (e) {
-                  quizAppEl.innerHTML = '<p class="text-red-600">Failed to submit quiz. Please try again.</p>';
+                  quizAppEl.innerHTML = '<p class="text-red-600 font-bold">Failed to submit quiz. Please try again.</p>';
                 }
               });
             }
@@ -302,18 +303,22 @@
             function renderResults(result) {
               const parts = [];
               parts.push(
-                '<div class="space-y-4">' +
-                  '<div class="p-4 rounded-xl bg-purple-50 text-purple-700 font-medium">' +
-                    'Score: ' + (result.score_percentage || 0) + '% (' + (result.correct_count || 0) + '/' + (result.total_questions || 0) + ')' +
+                '<div class="space-y-6">' +
+                  '<div class="p-6 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 text-white font-black shadow-xl border-4 border-green-300">' +
+                    '<div class="text-4xl mb-2">🎉 Score: ' + (result.score_percentage || 0) + '%</div>' +
+                    '<div class="text-lg">Correct: ' + (result.correct_count || 0) + ' / ' + (result.total_questions || 0) + ' questions</div>' +
                   '</div>'
               );
               (result.results || []).forEach(function(r, idx) {
+                const isCorrect = r.is_correct;
                 parts.push(
-                  '<div class="border border-gray-100 rounded-xl p-4">' +
-                    '<div class="font-medium text-gray-800 mb-2">' + (idx + 1) + '. ' + escapeHtml(r.question_text) + '</div>' +
-                    '<div class="text-sm ' + (r.is_correct ? 'text-green-700' : 'text-red-700') + '">' + (r.is_correct ? 'Correct' : 'Incorrect') + '</div>' +
-                    '<div class="text-sm text-gray-600 mt-1">Your answer: ' + (r.user_answer ? escapeHtml(r.user_answer) : '—') + '</div>' +
-                    '<div class="text-sm text-gray-600">Correct answer: ' + (r.correct_answer ? escapeHtml(r.correct_answer) : '—') + '</div>' +
+                  '<div class="border-4 ' + (isCorrect ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50') + ' rounded-2xl p-6">' +
+                    '<div class="font-black text-gray-800 mb-3 text-lg">' + (idx + 1) + '. ' + escapeHtml(r.question_text) + '</div>' +
+                    '<div class="text-base font-bold mb-2 ' + (isCorrect ? 'text-green-700' : 'text-red-700') + '">' + 
+                      (isCorrect ? '✅ Correct!' : '❌ Incorrect') + 
+                    '</div>' +
+                    '<div class="text-sm text-gray-700 mt-2 font-medium"><strong>Your answer:</strong> ' + (r.user_answer ? escapeHtml(r.user_answer) : '—') + '</div>' +
+                    '<div class="text-sm text-gray-700 font-medium"><strong>Correct answer:</strong> ' + (r.correct_answer ? escapeHtml(r.correct_answer) : '—') + '</div>' +
                   '</div>'
                 );
               });
@@ -322,13 +327,13 @@
             }
 
             async function loadQuiz() {
-              quizAppEl.innerHTML = '<p class="text-sm text-gray-600">Loading quiz...</p>';
+              quizAppEl.innerHTML = '<p class="text-sm text-gray-600 font-medium">Loading quiz...</p>';
               try {
                 const resp = await fetch(apiUrl, { credentials: 'same-origin' });
                 const data = await resp.json();
                 renderQuiz(data);
               } catch (e) {
-                quizAppEl.innerHTML = '<p class="text-red-600">Failed to load quiz.</p>';
+                quizAppEl.innerHTML = '<p class="text-red-600 font-bold">Failed to load quiz.</p>';
               }
             }
 

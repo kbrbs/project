@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from core.models import Article
 
 
@@ -37,4 +38,28 @@ class Question(models.Model):
             }
             for idx, choice in enumerate(choices_list)
         ]
+
+
+class QuizAttempt(models.Model):
+    """Store quiz attempt results for authenticated users"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quiz_attempts')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
+    score = models.IntegerField(help_text="Number of correct answers")
+    total_questions = models.IntegerField(help_text="Total number of questions")
+    time_taken = models.IntegerField(help_text="Time taken in seconds", null=True, blank=True)
+    answers = models.JSONField(default=dict, help_text="User's answers as JSON")
+    completed = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.quiz.title} - {self.get_percentage()}%"
+    
+    def get_percentage(self):
+        """Return score as percentage"""
+        if self.total_questions > 0:
+            return round((self.score / self.total_questions) * 100)
+        return 0
 
