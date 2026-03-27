@@ -4,59 +4,77 @@ An interactive learning web app built with Django for exploring lessons about Mi
 
 ## Key Features
 
-### Public Learning Access (No Account Needed)
-- **Homepage** with featured lessons
-- **Lessons**: browse and view lesson content
-- **Quizzes**: view and take quizzes
-- **Games**: browse all games; **play the first 3 games** without logging in
-- **Festival Tour**: view the virtual tour content (some interactive actions are reserved for logged-in users)
+### Student Side (Public + Logged-in Students)
 
-### Student Accounts
-- Sign up, login/logout, change password
-- **Profile page** with:
+**Public / Anonymous (no account needed):**
+- Browse the homepage and lesson catalog
+- View lesson content pages
+- View and take quizzes
+- Browse all games; **play the first 3 games** without logging in
+- View the Festival Tour content
+
+**Logged-in Students:**
+- Account flows: sign up, login/logout, change password
+- Profile dashboard:
 	- recent activity timeline
-	- quiz attempt history + stats
-	- game attempt history + stats
-	- profile picture upload
-	- editable profile fields (name/grade/birthday)
+	- quiz attempt history + summary stats
+	- game attempt history + summary stats
+	- best scores per game
+- Profile management:
+	- upload profile picture
+	- update profile fields (name/grade/birthday)
 
-### Quizzes
+**Quizzes (student experience):**
 - Quiz list + quiz detail page
-- JSON API endpoint for quiz data (used by the frontend)
-- Quiz submission endpoint returning:
-	- per-question correctness
-	- score and percentage
-- For authenticated users: quiz attempts are saved and shown in the profile
+- Quiz submission provides per-question feedback + overall score
+- Attempts are saved for authenticated users and shown in the profile
 
-### Educational Games
-Game types supported:
-- **Word Scramble**
-- **Drag & Drop** (fill-in-the-blanks and legacy sorting support)
-- **Image Identification** (uploaded question image + text choices, plus legacy option-based format)
-- **Memory Match** (text-based and image-based grids)
+**Games (student experience):**
+Supported game types:
+- Word Scramble
+- Drag & Drop (fill-in-the-blanks + legacy sorting format)
+- Image Identification (uploaded question image + text choices, plus legacy option-based format)
+- Memory Match (text-based and image-based grids)
 
 For authenticated users:
-- game attempts are saved
-- score, max score, and attempt history are shown in the profile
+- attempts are saved
+- score/max score and history are shown in the profile
 
-### Custom Admin Panel (Staff Only)
+### Admin/Staff Side
+
+This project includes **two** staff interfaces:
+
+**1) Django Admin (`/admin/`)**
+- Standard Django admin for managing models and reviewing records (including activity logs)
+
+**2) Custom Admin Panel (`/admin-panel/`) (staff only)**
 - Dashboard with summary metrics
-- CRUD management for:
-	- lesson sections (EducationalSection)
-	- section images and YouTube videos
-	- media assets and moderation records
-	- quizzes and questions
-	- games and questions (including image uploads)
-	- users
-- Exports:
-	- visits CSV
-	- moderation CSV
-	- users CSV
-- JSON endpoints for admin charts (visits + top pages)
+- Lesson/Section management:
+	- create/edit/delete lesson sections (EducationalSection)
+	- manage section images and YouTube videos
+- Media + moderation:
+	- manage media assets
+	- moderate content (approve/reject) records
+- Quizzes management:
+	- create/edit/delete quizzes
+	- create/edit questions and answer choices
+- Games management:
+	- create/edit/delete games
+	- manage questions (including uploads for image-based games)
+	- stats/leaderboards pages for games
+- User management:
+	- list/add/edit/delete users (non-admin users)
+- Reporting:
+	- export visits CSV
+	- export moderation CSV
+	- export users CSV
+- Admin analytics endpoints for charts:
+	- visits JSON
+	- top pages JSON
 
 ### Analytics + Activity Logging
-- **Visit tracking middleware** records GET page visits (excluding `/static/` and `/media/`)
-- **Activity logging** tracks authenticated user actions (login/logout, lesson views, quiz/game start & completion, profile updates, etc.)
+- Visit tracking middleware records GET page visits (excluding `/static/` and `/media/`)
+- Activity logging tracks authenticated user actions (login/logout, lesson views, quiz/game events, profile updates, etc.)
 
 ## Tech Stack
 - Django + Django REST Framework
@@ -119,13 +137,3 @@ Uploads go to `media/` (served automatically in development when `DEBUG=True`).
 Email sending is configurable via environment variables. Recommended approach for GitHub/production:
 - keep credentials out of the repo
 - set `DJANGO_EMAIL_BACKEND`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `DEFAULT_FROM_EMAIL` in your host/CI secrets
-
-## Documentation
-- See ACTIVITY_LOGGING_GUIDE.md for the activity log system
-- See GAMES_IMPLEMENTATION.md for game types and admin setup
-- See PUBLIC_ACCESS_IMPLEMENTATION.md for anonymous vs authenticated access rules
-
-## Notes for Publishing to GitHub
-- Do **not** commit real secrets (SMTP passwords, Django secret key). Use environment variables instead.
-- If you plan to deploy, set `DEBUG=False`, configure `ALLOWED_HOSTS`, and use a production database.
-
