@@ -63,14 +63,7 @@ This project includes **two** staff interfaces:
 	- manage questions (including uploads for image-based games)
 	- stats/leaderboards pages for games
 - User management:
-	- list/add/edit/delete users (non-admin users)
-- Reporting:
-	- export visits CSV
-	- export moderation CSV
-	- export users CSV
-- Admin analytics endpoints for charts:
-	- visits JSON
-	- top pages JSON
+	- view and block users (non-admin users)
 
 ### Analytics + Activity Logging
 - Visit tracking middleware records GET page visits (excluding `/static/` and `/media/`)
